@@ -42,6 +42,7 @@ export default {
 
 .q-field--standout.q-field--readonly .q-field__control::before {
     opacity: 1;
+    background: transparent;
     border: 0px solid;
 }
 
