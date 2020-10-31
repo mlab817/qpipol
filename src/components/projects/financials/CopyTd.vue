@@ -1,6 +1,7 @@
 <template>
 	<q-td>
 		<q-input
+                        standout
 			v-model="internalValue"
 			input-class="text-right"
 			dense
