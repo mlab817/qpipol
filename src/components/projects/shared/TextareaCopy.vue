@@ -1,6 +1,7 @@
 <template>
   <q-input
     readonly
+standout
     type="textarea"
 		autogrow
     v-model="value"
@@ -38,4 +39,10 @@ export default {
 .q-textarea .q-field__native {
   resize: none !important;
 }
+
+.q-field--standout.q-field--readonly .q-field__control::before {
+    opacity: 1;
+    border: 0px solid;
+}
+
 </style>
