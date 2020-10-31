@@ -5,6 +5,7 @@
     :label="label"
     :hint="`value: ${money}`"
     :rules="rules"
+		:dense="$q.screen.lt.md"
   >
     <template v-slot:control="{ id, floatingLabel, value, emitValue }">
       <money

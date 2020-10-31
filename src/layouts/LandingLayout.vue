@@ -6,7 +6,7 @@
           class="offset-xl-2 col-xl-8 offset-lg-3 col-lg-6 offset-md-1 col-md-10 offset-sm-1 col-sm-10 offset-xs-0 col-xs-12"
         >
           <div class="row q-gutter-sm items-center">
-            <img src="statics/app-logo-128x128.png" style="height: 40px;" />
+            <img src="~assets/app-logo-128x128.png" style="height: 40px;" />
 
             <div class="gt-xs">
               Investment Programming &amp; Management System
@@ -49,7 +49,7 @@
       <router-view />
     </q-page-container>
 
-    <q-footer class="bg-accent text-secondary">
+    <q-footer class="bg-dark text-white">
       <q-separator />
       <app-footer></app-footer>
     </q-footer>

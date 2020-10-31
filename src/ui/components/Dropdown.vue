@@ -1,10 +1,10 @@
 <template>
   <q-menu square max-width="300px" :offset="[0, 15]">
     <q-img
-      class="absolute-top"
-      src="statics/agri.jpg"
-      style="height: 190px; z-index: -1;"
-    >
+			class="absolute-top"
+			src="~assets/agri.jpg"
+			style="height: 190px; z-index: -1;"
+		>
       <q-btn
         flat
         round
@@ -42,59 +42,35 @@
     <q-separator />
 
     <q-list style="min-width: 280px; margin-top: 185px;" dense>
-      <menu-item label="Dashboard" to="/dashboard" icon="dashboard"></menu-item>
-      <menu-item label="Programs" to="/programs" icon="view_module"></menu-item>
-      <menu-item label="Projects" to="/projects" icon="list"></menu-item>
-      <menu-item label="Trash" to="/projects/trash" icon="delete"></menu-item>
-      <menu-item label="Profile" to="/profile" icon="tune"></menu-item>
-      <q-separator></q-separator>
+      <menu-item label="Dashboard" to="/dashboard" icon="dashboard" />
+      <menu-item label="Programs" to="/programs" icon="view_module" />
+      <menu-item label="Projects" to="/projects" icon="list" />
+      <menu-item label="Trash" to="/projects/trash" icon="delete" />
+      <menu-item label="Profile" to="/profile" icon="tune" />
+      <q-separator />
       <menu-item
         label="Activity"
         to="/activity"
         icon="work_outline"
       ></menu-item>
-      <menu-item label="Security" to="/security" icon="vpn_key"></menu-item>
-      <menu-item label="Settings" to="/settings" icon="settings"></menu-item>
+      <menu-item label="Security" to="/security" icon="vpn_key" />
+      <menu-item label="Settings" to="/settings" icon="settings" />
       <q-separator />
-      <q-item
-        clickable
-        v-close-popup
-        @click="openURL('https://github.com/mlab817/q-pipol/issues')"
+      <menu-item
+				label="Report Issues"
+				icon="open_in_new"
+        @click="openURL('https://github.com/mlab817/qpipol/issues')"
         type="a"
         target="_blank"
-      >
-        <q-item-section avatar>
-          <q-avatar>
-            <q-icon name="img:statics/github.svg" />
-          </q-avatar>
-        </q-item-section>
-        <q-item-section>
-          <q-item-label>
-            Report Issues
-          </q-item-label>
-        </q-item-section>
-        <q-item-section side>
-          <q-icon name="open_in_new">
-            <q-tooltip>This opens a new window.</q-tooltip>
-          </q-icon>
-        </q-item-section>
-      </q-item>
+      />
       <q-separator></q-separator>
-      <q-item clickable v-close-popup @click="handleSignoutUser">
-        <q-item-section avatar>
-          <q-avatar>
-            <q-icon name="exit_to_app" />
-          </q-avatar>
-        </q-item-section>
-        <q-item-section>Logout</q-item-section>
-      </q-item>
+			<menu-item label="Logout" icon="exit_to_app" @click="handleSignoutUser"></menu-item>
     </q-list>
   </q-menu>
 </template>
 
 <script>
 import { openURL } from 'quasar';
-import github from '@/statics/github.svg';
 import MenuItem from './MenuItem';
 import { GET_CURRENT_USER } from '@/graphql';
 
@@ -109,12 +85,6 @@ export default {
     getCurrentUser: {
       query: GET_CURRENT_USER
     }
-  },
-
-  data() {
-    return {
-      github: null
-    };
   },
 
   methods: {
@@ -133,10 +103,6 @@ export default {
     refetch() {
       this.$apollo.queries.getCurrentUser.refetch();
     }
-  },
-
-  created() {
-    this.github = github;
   }
 };
 </script>

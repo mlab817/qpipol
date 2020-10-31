@@ -5,50 +5,42 @@
       <q-space />
       <q-btn flat round icon="close" v-close-popup />
     </q-bar>
+
     <template v-if="$apollo.loading">
       <div class="row text-h6 q-pa-md">
         Loading...
       </div>
     </template>
 
-    <q-form @submit="handleSubmit" class="q-pa-md" v-else>
+    <q-form @submit.prevent="handleSubmit" class="q-pa-md" v-else>
+			<q-item-label class="text-weight-bold text-negative">Note: This form is for Tier 1 PAPs only. For Tier 2 PAPs, use the Add Project Module.</q-item-label>
       <q-list>
         <q-item>
           <q-item-section>
             <q-item-label>Program</q-item-label>
+						<q-item-label caption>Type to filter...</q-item-label>
           </q-item-section>
           <q-item-section class="col-10">
-            <q-select
-              label="Program"
+            <single-select
               v-model="investmentToSubmit.prexc_program_id"
-              stack-label
               :options="prexc_programs"
-              option-value="id"
-              option-label="name"
-              emit-value
-              map-options
               :rules="[val => !!val || '* Required']"
               :disable="editMode"
-            ></q-select>
+            ></single-select>
           </q-item-section>
         </q-item>
         <q-item>
           <q-item-section>
             <q-item-label>Subprogram</q-item-label>
+						<q-item-label caption>Type to filter...</q-item-label>
           </q-item-section>
           <q-item-section class="col-10">
-            <q-select
-              label="Subprogram"
+            <single-select
               v-model="investmentToSubmit.prexc_subprogram_id"
-              stack-label
               :options="filterSubprograms"
-              option-value="id"
-              option-label="name"
-              emit-value
-              map-options
               :rules="[val => !!val || '* Required']"
               :disable="editMode"
-            ></q-select>
+            ></single-select>
           </q-item-section>
         </q-item>
         <q-item>
@@ -56,27 +48,27 @@
             <q-item-label>Activity</q-item-label>
           </q-item-section>
           <q-item-section class="col-10">
-            <q-input
-              label="Activity Name"
+            <text-input
               v-model="investmentToSubmit.name"
               stack-label
               :rules="[val => !!val || '* Required']"
               :disable="editMode"
-            ></q-input>
+            ></text-input>
           </q-item-section>
         </q-item>
         <q-item>
           <q-item-section>
             <q-item-label>UACS Code</q-item-label>
+						<q-item-label caption>Type N/A if this activity has no UACS code yet...</q-item-label>
           </q-item-section>
           <q-item-section class="col-10">
-            <q-input
-              label="UACS Code"
+            <text-input
               v-model="investmentToSubmit.uacs_code"
               stack-label
               :rules="[val => !!val || '* Required']"
               :disable="editMode"
-            ></q-input>
+							with-na
+            ></text-input>
           </q-item-section>
         </q-item>
       </q-list>
@@ -98,189 +90,139 @@
           <tr>
             <td>2016 &amp; Prior</td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.infrastructure_target_2016"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.investment_target_2016"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.gaa_2016"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.nep_2016"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.disbursement_2016"
-              ></q-input>
+              ></money-input>
             </td>
           </tr>
           <tr>
             <td>2017</td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.infrastructure_target_2017"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.investment_target_2017"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.gaa_2017"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.nep_2017"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.disbursement_2017"
-              ></q-input>
+              ></money-input>
             </td>
           </tr>
           <tr>
             <td>2018</td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.infrastructure_target_2018"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.investment_target_2018"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.gaa_2018"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.nep_2018"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.disbursement_2018"
-              ></q-input>
+              ></money-input>
             </td>
           </tr>
           <tr>
             <td>2019</td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.infrastructure_target_2019"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.investment_target_2019"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.gaa_2019"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.nep_2019"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.disbursement_2019"
-              ></q-input>
+              ></money-input>
             </td>
           </tr>
           <tr>
             <td>2020</td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.infrastructure_target_2020"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.investment_target_2020"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.gaa_2020"
               />
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.nep_2020"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.disbursement_2020"
               />
             </td>
@@ -288,37 +230,27 @@
           <tr>
             <td>2021</td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.infrastructure_target_2021"
               />
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.investment_target_2021"
               />
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.gaa_2021"
               />
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.nep_2021"
               />
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.disbursement_2021"
               />
             </td>
@@ -326,37 +258,27 @@
           <tr>
             <td>2022</td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.infrastructure_target_2022"
               />
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.investment_target_2022"
               />
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.gaa_2022"
               />
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.nep_2022"
               />
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.disbursement_2022"
               />
             </td>
@@ -364,37 +286,29 @@
           <tr>
             <td>2023</td>
             <td>
-              <q-input
+              <money-input
                 dense
                 input-class="text-right"
                 v-model="investmentToSubmit.infrastructure_target_2023"
               />
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.investment_target_2023"
               />
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.gaa_2023"
               />
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.nep_2023"
               />
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.disbursement_2023"
               />
             </td>
@@ -402,77 +316,57 @@
           <tr>
             <td>2024</td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.infrastructure_target_2024"
               />
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.investment_target_2024"
               />
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.gaa_2024"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.nep_2024"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.disbursement_2024"
-              ></q-input>
+              ></money-input>
             </td>
           </tr>
           <tr>
             <td>2025 &amp; Beyond</td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.infrastructure_target_2025"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.investment_target_2025"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.gaa_2025"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.nep_2025"
-              ></q-input>
+              ></money-input>
             </td>
             <td>
-              <q-input
-                dense
-                input-class="text-right"
+              <money-input
                 v-model="investmentToSubmit.disbursement_2025"
-              ></q-input>
+              ></money-input>
             </td>
           </tr>
         </tbody>
@@ -480,23 +374,27 @@
           <tr class="text-weight-bold">
             <td>Total</td>
             <td class="text-right">
-              {{ infrastructure_target_total.toFixed(2) }}
+              {{ infrastructure_target_total | money }}
             </td>
-            <td class="text-right">{{ investment_target_total.toFixed(2) }}</td>
-            <td class="text-right">{{ gaa_total.toFixed(2) }}</td>
-            <td class="text-right">{{ nep_total.toFixed(2) }}</td>
-            <td class="text-right">{{ disbursement_total.toFixed(2) }}</td>
+            <td class="text-right">{{ investment_target_total | money }}</td>
+            <td class="text-right">{{ gaa_total | money }}</td>
+            <td class="text-right">{{ nep_total | money }}</td>
+            <td class="text-right">{{ disbursement_total | money }}</td>
           </tr>
         </tfoot>
       </q-markup-table>
 
       <div class="row justify-end q-py-md q-gutter-sm">
-        <q-btn color="primary" type="submit" label="Submit" v-if="editMode" />
+        <q-btn
+					color="primary"
+					type="submit"
+					label="Submit"
+					v-if="editMode" />
         <q-btn
           color="primary"
           label="Validate"
           @click="confirmValidation"
-          v-if="isReviewer"
+          v-if="isEncoder"
         />
       </div>
     </q-form>
@@ -505,11 +403,31 @@
 
 <script>
 import { PREXC_ACTIVITY } from '@/graphql';
-import { programService } from 'src/services';
+import { programService } from '@/services';
+import MoneyInput from '@/ui/form-inputs/MoneyInput'
+import TextInput from '@/ui/form-inputs/TextInput'
+import SingleSelect from '../../ui/form-inputs/SingleSelect'
 
 export default {
+	components: {
+		SingleSelect,
+		TextInput,
+		MoneyInput
+	},
   name: 'PrexcActivity',
-  props: ['prexc_programs', 'prexc_subprograms', 'prexc_activities', 'id'],
+  props: {
+		prexc_programs: Array,
+  	prexc_subprograms: Array,
+		prexc_activities: Array,
+		id: Number,
+		mode: {
+			type: String,
+			validator: (value) => {
+				return ['add','edit','validate'].indexOf(value) !== -1
+			},
+			default: 'add'
+		}
+	},
   apollo: {
     prexc_activity: {
       query: PREXC_ACTIVITY,
@@ -531,14 +449,14 @@ export default {
     }
   },
   computed: {
-    isReviewer() {
-      return this.$store.getters['auth/isReviewer'];
+    isEncoder() {
+      return this.$store.getters['auth/isEncoder'];
     },
     filterSubprograms() {
       const subprograms = this.prexc_subprograms;
 
       if (!this.investmentToSubmit.prexc_program_id) {
-        return [{ label: 'Select program first', value: null }];
+        return [{ name: 'Select program first', id: null }];
       } else {
         return subprograms.filter(
           s => s.prexc_program_id === this.investmentToSubmit.prexc_program_id
@@ -819,6 +737,14 @@ export default {
         )
         .finally(() => this.$q.loading.hide());
     }
-  }
+  },
+	filters: {
+		money(val) {
+			if (val) {
+				return val.toLocaleString('en-US', {maximumFractionDigits:2})
+			}
+			return 0.00
+		}
+	}
 };
 </script>

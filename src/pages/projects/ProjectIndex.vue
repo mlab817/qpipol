@@ -27,7 +27,20 @@
           {{ lastUpdated ? `Last updated on ${lastUpdated}` : null }}
         </div>
       </template>
-      <template v-slot:top-right>
+
+			<template v-slot:header="props">
+				<q-tr :props="props" class="bg-black text-white">
+					<q-th
+							v-for="col in props.cols"
+							:key="col.name"
+							:props="props"
+					>
+						{{ col.label }}
+					</q-th>
+				</q-tr>
+			</template>
+
+      <template v-slot:top-right="props">
         <div class="row q-gutter-sm">
           <search v-model="filter"></search>
 
@@ -44,6 +57,8 @@
           <refresh-button @click="refetch"></refresh-button>
 
           <download-button @click="exportTable"></download-button>
+
+					<fullscreen-button @click="props.toggleFullscreen" :in-fullscreen="props.inFullscreen"></fullscreen-button>
         </div>
       </template>
 
@@ -207,9 +222,13 @@ import PageTitle from '@/ui/page/PageTitle.vue';
 import { ALL_PROJECTS } from '@/graphql';
 import { SUBMISSION_STATUSES } from '../../graphql';
 import { timeAgo, wrapCsvValue } from 'src/utils';
-import DownloadButton from '@/ui/buttons/DownloadButton.vue';
-import RefreshButton from '@/ui/buttons/RefreshButton.vue';
-import Search from '@/ui/form-inputs/Search.vue';
+
+import {
+	FullscreenButton,
+	RefreshButton,
+	DownloadButton,
+	Search
+} from '@/ui'
 
 export default {
   components: {
@@ -218,7 +237,8 @@ export default {
     PageTitle,
     DownloadButton,
     RefreshButton,
-    Search
+    Search,
+	  FullscreenButton
   },
 
   name: 'ProjectsIndex',

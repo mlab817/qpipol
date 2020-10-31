@@ -95,12 +95,9 @@
       selection="multiple"
       style="margin-bottom: 70px;"
     >
-      <template v-slot:top-right>
-        <q-input borderless v-model="filter" placeholder="Search">
-          <template v-slot:append>
-            <q-icon name="search" />
-          </template>
-        </q-input>
+      <template v-slot:top-right="props">
+				<search v-model="filter" />
+
         <q-btn
           flat
           round
@@ -110,8 +107,12 @@
         >
           <q-tooltip>Finalize multiple activities at once</q-tooltip>
         </q-btn>
-        <q-btn flat round icon="refresh" @click="refetch"></q-btn>
-        <q-btn flat round icon="archive" @click="download"></q-btn>
+
+				<refresh-button @click="refetch" />
+
+				<download-button @click="download" />
+
+				<fullscreen-button @click="props.toggleFullscreen" :in-fullscreen="props.inFullscreen"></fullscreen-button>
       </template>
 
       <template v-slot:body-selection="scope">
@@ -185,17 +186,14 @@
 
       <template v-slot:bottom-row>
         <q-tr class="text-weight-bold">
-          <q-td>TOTAL</q-td>
-          <q-td></q-td>
-          <q-td></q-td>
-          <q-td></q-td>
+          <q-td colspan="4">TOTAL</q-td>
           <q-td class="text-right">{{
-            totalRow.infrastructure_target_total
+            totalRow.infrastructure_target_total | money
           }}</q-td>
-          <q-td class="text-right">{{ totalRow.investment_target_total }}</q-td>
-          <q-td class="text-right">{{ totalRow.gaa_total }}</q-td>
-          <q-td class="text-right">{{ totalRow.nep_total }}</q-td>
-          <q-td class="text-right">{{ totalRow.disbursement_total }}</q-td>
+          <q-td class="text-right">{{ totalRow.investment_target_total  | money }}</q-td>
+          <q-td class="text-right">{{ totalRow.gaa_total  | money }}</q-td>
+          <q-td class="text-right">{{ totalRow.nep_total  | money }}</q-td>
+          <q-td class="text-right">{{ totalRow.disbursement_total  | money }}</q-td>
           <q-td></q-td>
         </q-tr>
       </template>
@@ -213,8 +211,15 @@ import { wrapCsvValue } from 'src/utils';
 import { exportFile } from 'quasar';
 import { programService } from 'src/services';
 
+import {
+	RefreshButton,
+	DownloadButton,
+	Search,
+	FullscreenButton
+} from '@/ui'
+
 export default {
-  components: { PageContainer, PageTitle, PrexcActivity, ViewActivity },
+  components: { Search, DownloadButton, RefreshButton, PageContainer, PageTitle, PrexcActivity, ViewActivity, FullscreenButton },
   name: 'PrexcActivities',
   apollo: {
     prexc_programs: {
@@ -454,6 +459,14 @@ export default {
             .then(() => this.$q.loading.hide());
         });
     }
-  }
+  },
+	filters: {
+		money(val) {
+			if (val) {
+				return val.toLocaleString('en-US', {maximumFractionDigits:2})
+			}
+			return 0.00
+		}
+	}
 };
 </script>

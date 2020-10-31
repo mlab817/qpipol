@@ -2,14 +2,15 @@
   <div class="col">
     <span class="text-caption text-weight-bold">{{ label }}</span>
     <q-select
+			use-input
       square
       v-model="model"
-      :options="selectOptions"
+      :options="internalOptions"
       option-label="name"
       option-value="id"
       behavior="menu"
-      :dense="dense"
-      :options-dense="dense"
+      :dense="$q.screen.lt.md"
+      :options-dense="$q.screen.lt.md"
       outlined
       :hint="hint ? hint : void 0"
       label-color="secondary"
@@ -21,21 +22,8 @@
       map-options
       emit-value
       clearable
+			@filter="filterFn"
     >
-      <template v-slot:before-options v-if="options.length > 10">
-        <q-item>
-          <q-item-section class="text-grey">
-            <q-input
-              ref="filter"
-              placeholder="Filter"
-              v-model="filterText"
-              outlined
-              :dense="dense"
-              autofocus
-            />
-          </q-item-section>
-        </q-item>
-      </template>
     </q-select>
   </div>
 </template>
@@ -49,10 +37,6 @@ export default {
     label: {
       type: String,
       default: ''
-    },
-    optionsDense: {
-      type: Boolean,
-      default: false
     },
     options: {
       type: Array
@@ -71,42 +55,28 @@ export default {
       set(val) {
         this.$emit('input', val);
       }
-    },
-    selectOptions() {
-      const filterText = this.filterText.trim();
-      const options = this.$props.options;
-
-      let selectOptions = [];
-
-      if (!filterText) {
-        selectOptions = options;
-      } else {
-        const filterTextLowerCase = filterText.toLowerCase();
-
-        const filteredOptions = options.filter(
-          v => v.name.toLowerCase().indexOf(filterTextLowerCase) > -1
-        );
-
-        if (!filteredOptions.length) {
-          selectOptions = [
-            {
-              id: 0,
-              name: 'No results'
-            }
-          ];
-        } else {
-          selectOptions = filteredOptions;
-        }
-      }
-
-      return selectOptions;
     }
   },
-  data() {
-    return {
-      filterText: '',
-      filtering: false
-    };
-  }
+	data() {
+  	return {
+  		internalOptions: []
+		}
+	},
+	methods: {
+		filterFn (val, update) {
+			const options = this.options
+			if (val === '') {
+				update(() => {
+					this.internalOptions = options
+				})
+				return
+			}
+
+			update(() => {
+				const needle = val.toLowerCase()
+				this.internalOptions = options.filter(v => v.name.toLowerCase().indexOf(needle) > -1)
+			})
+		}
+	}
 };
 </script>

@@ -16,35 +16,13 @@
     >
       <template v-slot:top-right="props">
         <div class="row q-gutter-sm">
-          <q-input
-            v-model="filter"
-            dense
-            borderless
-            placeholder="Search..."
-            clearable
-          >
-            <template v-slot:append>
-              <q-icon name="search" />
-            </template>
-          </q-input>
+					<search v-model="filter" />
 
-          <q-btn flat round icon="refresh" @click="refetch">
-            <q-tooltip>Refetch projects</q-tooltip>
-          </q-btn>
+					<refresh-button @click="refetch" />
 
-          <q-btn flat round icon="archive" @click="exportTable">
-            <q-tooltip>Download</q-tooltip>
-          </q-btn>
+					<download-button @click="exportTable" />
 
-          <q-btn
-            flat
-            round
-            dense
-            :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-            @click="props.toggleFullscreen"
-          >
-            <q-tooltip>Enter fullscreen mode</q-tooltip>
-          </q-btn>
+					<fullscreen-button @click="props.toggleFullscreen" :in-fullscreen="props.inFullscreen"></fullscreen-button>
         </div>
       </template>
 
@@ -157,9 +135,17 @@ import PageTitle from '@/ui/page/PageTitle';
 import { DELETED_PROJECTS_QUERY } from '@/graphql';
 import { wrapCsvValue, timeAgo } from '@/utils';
 import { exportFile } from 'quasar';
+import Search from '../../ui/form-inputs/Search'
+import RefreshButton from '../../ui/buttons/RefreshButton'
+import DownloadButton from '../../ui/buttons/DownloadButton'
+import FullscreenButton from '../../ui/buttons/FullscreenButton'
 
 export default {
   components: {
+	  FullscreenButton,
+	  DownloadButton,
+	  RefreshButton,
+	  Search,
     PageContainer,
     PageTitle
   },
