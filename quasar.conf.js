@@ -74,7 +74,7 @@ module.exports = function(ctx) {
       vueRouterMode: 'history',
       // vueCompiler: true,
       gzip: true,
-      analyze: true, // analyze after build
+      analyze: process.env.DEV, // analyze after build
       // extractCSS: false,
       extendWebpack(cfg) {
         cfg.resolve.alias = {
