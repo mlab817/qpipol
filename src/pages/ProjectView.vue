@@ -61,7 +61,7 @@
         </q-banner>
       </div>
 
-      <project-profile :project="project" />
+      <view-pipol :project="project" />
 
       <review-result :review="project.review" v-if="project.review" />
 
@@ -99,22 +99,24 @@
 </template>
 
 <script>
-import PageTitle from '@/ui/page/PageTitle.vue';
-import PageContainer from '@/ui/page/PageContainer.vue';
-import ProjectProfile from '@/components/projects/ProjectProfile';
+import {
+	PageTitle,
+	PageContainer
+} from '@/ui'
+import ViewPipol from '@/components/projects/ViewPipol';
 import ReviewResult from '@/components/projects/ReviewResult';
 import ProjectMenu from '@/components/projects/dropdowns/ProjectMenu';
 import { FETCH_PROJECT_QUERY } from '@/graphql/queries';
 import axios from 'axios';
 import { showError } from '@/utils';
-import UploadSigned from '../../components/projects/shared/UploadSigned';
+import UploadSigned from '../components/projects/shared/UploadSigned';
 
 export default {
   components: {
     UploadSigned,
     PageContainer,
     PageTitle,
-    ProjectProfile,
+	  ViewPipol,
     ProjectMenu,
     ReviewResult
   },

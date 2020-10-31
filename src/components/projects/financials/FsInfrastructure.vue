@@ -110,10 +110,10 @@
       hide-bottom
     >
       <template v-slot:top-right>
-        <q-btn icon="add" label="Add" color="primary" @click="addRow" />
+        <q-btn icon="add" label="Add" color="primary" @click="addRow" v-if="!noActions"/>
       </template>
 
-      <template v-slot:body-cell-actions="props">
+      <template v-slot:body-cell-actions="props" v-if="!noActions">
         <q-td :props="props">
           <q-btn
             icon="edit"
@@ -155,8 +155,15 @@ import { FETCH_FUNDING_SOURCES } from 'src/graphql';
 import { projectService } from 'src/services';
 
 export default {
-  name: 'FsFinancials',
-  props: ['data', 'projectId'],
+  name: 'FsInfrastructure',
+  props: {
+  	data: Array,
+  	projectId: [Number, String],
+		noActions: {
+  		type: Boolean,
+			default: false
+		}
+	},
   apollo: {
     funding_sources: {
       query: FETCH_FUNDING_SOURCES

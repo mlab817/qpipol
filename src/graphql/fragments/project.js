@@ -150,6 +150,10 @@ export const PROJECT_FRAGMENT = gql`
     implementation_risk
     income_increase
     infrastructure
+	  infrastructure_subsectors {
+		  id
+		  name
+	  }
     infrastructure_target_2016
     infrastructure_target_2017
     infrastructure_target_2018
@@ -201,6 +205,10 @@ export const PROJECT_FRAGMENT = gql`
     outcomes
     pcip
     pdp_chapter_id
+		pdp_indicators {
+			id
+			name
+		}
     pip
     priority_ranking
     processing_status {
@@ -312,6 +320,10 @@ export const PROJECT_FRAGMENT = gql`
       id
       name
     }
+		ten_point_agenda {
+			id
+			name
+		}
     tier_id
     tier {
       id
@@ -349,6 +361,10 @@ export const PROJECT_FRAGMENT = gql`
       id
       name
     }
+	  sustainable_development_goals {
+		  id
+		  name
+	  }
     latest_status
     signed_copy
     attachments {

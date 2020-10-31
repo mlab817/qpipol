@@ -171,7 +171,7 @@
                 />
                 <div class="row justify-between">
                   <checkbox-input
-                    label="RCD Endorsed"
+                    label="RDC Endorsed"
                     v-model="project.rdc_endorsed"
                     v-if="project.rdip"
                     class="q-ml-md"

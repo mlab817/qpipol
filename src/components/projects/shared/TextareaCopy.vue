@@ -1,13 +1,12 @@
 <template>
   <q-input
-    filled
     readonly
-    :type="type"
+    type="textarea"
+		autogrow
     v-model="value"
     placeholder="No data"
-    disable
   >
-    <template v-slot:after>
+    <template v-slot:append>
       <q-btn
         flat
         round

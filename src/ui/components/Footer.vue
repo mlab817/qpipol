@@ -26,8 +26,6 @@
 
 <script>
 import AboutComponent from './About';
-import { CONFIG } from '@/config';
-import github from '@/statics/github.svg';
 
 export default {
   name: 'AppFooter',

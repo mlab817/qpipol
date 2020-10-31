@@ -135,10 +135,10 @@ import PageTitle from '@/ui/page/PageTitle';
 import { DELETED_PROJECTS_QUERY } from '@/graphql';
 import { wrapCsvValue, timeAgo } from '@/utils';
 import { exportFile } from 'quasar';
-import Search from '../../ui/form-inputs/Search'
-import RefreshButton from '../../ui/buttons/RefreshButton'
-import DownloadButton from '../../ui/buttons/DownloadButton'
-import FullscreenButton from '../../ui/buttons/FullscreenButton'
+import Search from '../ui/form-inputs/Search'
+import RefreshButton from '../ui/buttons/RefreshButton'
+import DownloadButton from '../ui/buttons/DownloadButton'
+import FullscreenButton from '../ui/buttons/FullscreenButton'
 
 export default {
   components: {

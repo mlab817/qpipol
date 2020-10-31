@@ -1,10 +1,11 @@
 <template>
   <q-card class="bg-white">
     <q-bar class="bg-accent text-white">
-      <div>Add/Edit Activity</div>
+      <div>View Activity</div>
       <q-space />
       <q-btn flat round icon="close" v-close-popup />
     </q-bar>
+
     <template v-if="$apollo.loading">
       <div class="row text-h6 q-pa-md">
         Loading...
@@ -93,197 +94,93 @@
         <tbody>
           <tr>
             <td>2016 &amp; Prior</td>
-            <td class="text-right">
-              {{ investmentToSubmit.infrastructure_target_2016 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.investment_target_2016 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.gaa_2016 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.nep_2016 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.disbursement_2016 }}
-            </td>
+						<td-money :value="investmentToSubmit.infrastructure_target_2016" />
+						<td-money :value="investmentToSubmit.investment_target_2016" />
+						<td-money :value="investmentToSubmit.gaa_2016" />
+						<td-money :value="investmentToSubmit.nep_2016" />
+						<td-money :value="investmentToSubmit.disbursement_2016" />
           </tr>
           <tr>
             <td>2017</td>
-            <td class="text-right">
-              {{ investmentToSubmit.infrastructure_target_2017 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.investment_target_2017 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.gaa_2017 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.nep_2017 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.disbursement_2017 }}
-            </td>
+						<td-money :value="investmentToSubmit.infrastructure_target_2017" />
+						<td-money :value="investmentToSubmit.investment_target_2017" />
+						<td-money :value="investmentToSubmit.gaa_2017" />
+						<td-money :value="investmentToSubmit.nep_2017" />
+						<td-money :value="investmentToSubmit.disbursement_2017" />
           </tr>
           <tr>
             <td>2018</td>
-            <td class="text-right">
-              {{ investmentToSubmit.infrastructure_target_2018 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.investment_target_2018 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.gaa_2018 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.nep_2018 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.disbursement_2018 }}
-            </td>
+						<td-money :value="investmentToSubmit.infrastructure_target_2018" />
+						<td-money :value="investmentToSubmit.investment_target_2018" />
+						<td-money :value="investmentToSubmit.gaa_2018" />
+						<td-money :value="investmentToSubmit.nep_2018" />
+						<td-money :value="investmentToSubmit.disbursement_2018" />
           </tr>
           <tr>
             <td>2019</td>
-            <td class="text-right">
-              {{ investmentToSubmit.infrastructure_target_2019 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.investment_target_2019 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.gaa_2019 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.nep_2019 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.disbursement_2019 }}
-            </td>
+						<td-money :value="investmentToSubmit.infrastructure_target_2019" />
+						<td-money :value="investmentToSubmit.investment_target_2019" />
+						<td-money :value="investmentToSubmit.gaa_2019" />
+						<td-money :value="investmentToSubmit.nep_2019" />
+						<td-money :value="investmentToSubmit.disbursement_2019" />
           </tr>
           <tr>
             <td>2020</td>
-            <td class="text-right">
-              {{ investmentToSubmit.infrastructure_target_2020 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.investment_target_2020 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.gaa_2020 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.nep_2020 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.disbursement_2020 }}
-            </td>
+						<td-money :value="investmentToSubmit.infrastructure_target_2020" />
+						<td-money :value="investmentToSubmit.investment_target_2020" />
+						<td-money :value="investmentToSubmit.gaa_2020" />
+						<td-money :value="investmentToSubmit.nep_2020" />
+						<td-money :value="investmentToSubmit.disbursement_2020" />
           </tr>
           <tr>
             <td>2021</td>
-            <td class="text-right">
-              {{ investmentToSubmit.infrastructure_target_2021 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.investment_target_2021 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.gaa_2021 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.nep_2021 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.disbursement_2021 }}
-            </td>
+						<td-money :value="investmentToSubmit.infrastructure_target_2021" />
+						<td-money :value="investmentToSubmit.investment_target_2021" />
+						<td-money :value="investmentToSubmit.gaa_2021" />
+						<td-money :value="investmentToSubmit.nep_2021" />
+						<td-money :value="investmentToSubmit.disbursement_2021" />
           </tr>
           <tr>
             <td>2022</td>
-            <td class="text-right">
-              {{ investmentToSubmit.infrastructure_target_2022 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.investment_target_2022 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.gaa_2022 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.nep_2022 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.disbursement_2022 }}
-            </td>
+						<td-money :value="investmentToSubmit.infrastructure_target_2022" />
+						<td-money :value="investmentToSubmit.investment_target_2022" />
+						<td-money :value="investmentToSubmit.gaa_2022" />
+						<td-money :value="investmentToSubmit.nep_2022" />
+						<td-money :value="investmentToSubmit.disbursement_2022" />
           </tr>
           <tr>
             <td>2023</td>
-            <td class="text-right">
-              {{ investmentToSubmit.infrastructure_target_2023 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.investment_target_2023 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.gaa_2023 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.nep_2023 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.disbursement_2023 }}
-            </td>
+						<td-money :value="investmentToSubmit.infrastructure_target_2023" />
+						<td-money :value="investmentToSubmit.investment_target_2023" />
+						<td-money :value="investmentToSubmit.gaa_2023" />
+						<td-money :value="investmentToSubmit.nep_2023" />
+						<td-money :value="investmentToSubmit.disbursement_2023" />
           </tr>
           <tr>
             <td>2024</td>
-            <td class="text-right">
-              {{ investmentToSubmit.infrastructure_target_2024 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.investment_target_2024 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.gaa_2024 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.nep_2024 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.disbursement_2024 }}
-            </td>
+						<td-money :value="investmentToSubmit.infrastructure_target_2024" />
+						<td-money :value="investmentToSubmit.investment_target_2024" />
+						<td-money :value="investmentToSubmit.gaa_2024" />
+						<td-money :value="investmentToSubmit.nep_2024" />
+						<td-money :value="investmentToSubmit.disbursement_2024" />
           </tr>
           <tr>
             <td>2025 &amp; Beyond</td>
-            <td class="text-right">
-              {{ investmentToSubmit.infrastructure_target_2025 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.investment_target_2025 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.gaa_2025 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.nep_2025 }}
-            </td>
-            <td class="text-right">
-              {{ investmentToSubmit.disbursement_2025 }}
-            </td>
+						<td-money :value="investmentToSubmit.infrastructure_target_2025" />
+						<td-money :value="investmentToSubmit.investment_target_2025" />
+						<td-money :value="investmentToSubmit.gaa_2025" />
+						<td-money :value="investmentToSubmit.nep_2025" />
+						<td-money :value="investmentToSubmit.disbursement_2025" />
           </tr>
         </tbody>
         <tfoot>
           <tr class="text-weight-bold">
-            <td class="text-right">Total</td>
-            <td class="text-right">
-              {{ infrastructure_target_total.toFixed(2) }}
-            </td>
-            <td class="text-right">
-              {{ investment_target_total.toFixed(2) }}
-            </td>
-            <td class="text-right">{{ gaa_total.toFixed(2) }}</td>
-            <td class="text-right">{{ nep_total.toFixed(2) }}</td>
-            <td class="text-right">{{ disbursement_total.toFixed(2) }}</td>
+						<td-money value="Total" />
+						<td-money :value="infrastructure_target_total" />
+						<td-money :value="investment_target_total" />
+						<td-money :value="gaa_total" />
+						<td-money :value="nep_total" />
+						<td-money :value="disbursement_total" />
           </tr>
         </tfoot>
       </q-markup-table>
@@ -294,10 +191,12 @@
 <script>
 import { PREXC_ACTIVITY } from '@/graphql';
 import { programService } from 'src/services';
+import TdMoney from '../../ui/components/TdMoney'
 
 export default {
   name: 'PrexcActivity',
-  props: ['prexc_programs', 'prexc_subprograms', 'prexc_activities', 'id'],
+	components: {TdMoney},
+	props: ['prexc_programs', 'prexc_subprograms', 'prexc_activities', 'id'],
   apollo: {
     prexc_activity: {
       query: PREXC_ACTIVITY,
@@ -554,6 +453,14 @@ export default {
 
       return investmentToSubmit;
     }
-  }
+  },
+	filters: {
+  	money(val) {
+  		if (val) {
+  			return val.toLocaleString('en-US', { maximumFractionDigits: 2 })
+			}
+  		return 0.00
+		}
+	}
 };
 </script>

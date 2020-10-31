@@ -216,11 +216,11 @@
 
 <script>
 import { exportFile, LocalStorage, date } from 'quasar';
-import ProjectMenu from '../../components/projects/dropdowns/ProjectMenu.vue';
+import ProjectMenu from '../components/projects/dropdowns/ProjectMenu.vue';
 import PageContainer from '@/ui/page/PageContainer.vue';
 import PageTitle from '@/ui/page/PageTitle.vue';
 import { ALL_PROJECTS } from '@/graphql';
-import { SUBMISSION_STATUSES } from '../../graphql';
+import { SUBMISSION_STATUSES } from '../graphql';
 import { timeAgo, wrapCsvValue } from 'src/utils';
 
 import {

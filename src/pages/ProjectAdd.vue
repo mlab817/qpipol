@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import AddProject from '../../components/projects/AddProjectv2';
+import AddProject from '../components/projects/AddProjectv2';
 import PageTitle from '@/ui/page/PageTitle';
 import PageContainer from '@/ui/page/PageContainer';
 

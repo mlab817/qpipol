@@ -17,7 +17,7 @@
 import PageTitle from '@/ui/page/PageTitle';
 import PageContainer from '@/ui/page/PageContainer';
 // import EditProject from '../../components/projects/EditProject';
-import EditPipol from '../../components/projects/EditPipol';
+import EditPipol from '../components/projects/EditPipol';
 import { FETCH_PROJECT_QUERY } from '@/graphql';
 
 export default {

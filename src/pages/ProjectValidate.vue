@@ -34,10 +34,10 @@ const PageTitle = () =>
   import(/* webpackChunkName: 'PageTitle' */ '@/ui/page/PageTitle');
 const PageContainer = () =>
   import(/* webpackChunkName: 'PageTitle' */ '@/ui/page/PageContainer');
-const ProjectProfile = () => import('../../components/projects/ProjectProfile');
+const ProjectProfile = () => import('../components/projects/ProjectProfile');
 
 import { FETCH_PROJECT_QUERY } from '@/graphql/queries';
-import ValidateProject from '../../components/projects/dialogs/ValidateProject';
+import ValidateProject from '../components/projects/dialogs/ValidateProject';
 
 export default {
   components: {
