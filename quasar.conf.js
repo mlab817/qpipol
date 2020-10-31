@@ -70,11 +70,10 @@ module.exports = function(ctx) {
 
     build: {
       scopeHoisting: true,
-      // vueRouterMode: 'history',
       vueRouterMode: 'history',
       // vueCompiler: true,
       gzip: true,
-      analyze: process.env.DEV, // analyze after build
+      analyze: false, // analyze after build
       // extractCSS: false,
       extendWebpack(cfg) {
         cfg.resolve.alias = {
