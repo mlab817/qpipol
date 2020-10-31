@@ -1329,7 +1329,7 @@ import DateInput from '@/ui/form-inputs/DateInput';
 // dropdowns
 import ImplementingAgency from './dropdowns/ImplementingAgency';
 import ProjectStatus from './dropdowns/ProjectStatus';
-import SectionHeader from './shared/SectionHeader';
+import {SectionHeader} from '@/ui';
 import EditButton from './shared/EditButton';
 import CardHeader from '@/ui/cards/CardHeader';
 import CheckboxItem from '@/ui/form-inputs/CheckboxItem';
