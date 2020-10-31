@@ -1,0 +1,73 @@
+{
+  "name": "qpipol",
+  "version": "0.0.1",
+  "description": "A Quasar Framework app",
+  "productName": "Quasar App",
+  "author": "mlab817 <mlab817@gmail.com>",
+  "private": true,
+  "scripts": {
+    "lint": "eslint --ext .js,.vue src",
+    "test": "echo \"See package.json => scripts for available tests.\" && exit 0",
+    "test:unit": "jest --updateSnapshot",
+    "test:unit:coverage": "jest --coverage",
+    "test:unit:watch": "jest --watch",
+    "test:unit:watchAll": "jest --watchAll",
+    "serve:test:coverage": "quasar serve test/jest/coverage/lcov-report/ --port 8788",
+    "concurrently:dev:jest": "concurrently \"quasar dev\" \"jest --watch\"",
+    "test:unit:ui": "majestic",
+    "test:e2e": "cypress open",
+    "test:e2e:CI": "cypress run",
+    "deploy:staging": "cross-env QENV=staging firebase deploy -P staging --only hosting",
+    "deploy:prod": "cross-env QENV=production firebase deploy -P default --only hosting",
+    "build": "cross-env QENV=production quasar build -m pwa",
+    "dev": "cross-env QENV=development quasar dev",
+    "staging": "cross-env QENV=staging quasar dev",
+    "build:staging": "cross-env QENV=staging quasar build -m pwa"
+  },
+  "dependencies": {
+    "@quasar/extras": "^1.0.0",
+    "apollo-cache-inmemory": "^1.6.6",
+    "apollo-cache-persist": "^0.1.1",
+    "apollo-client": "^2.6.10",
+    "apollo-link": "^1.2.14",
+    "apollo-link-error": "^1.1.13",
+    "apollo-link-http": "^1.5.17",
+    "apollo-upload-client": "^14.1.2",
+    "axios": "^0.18.1",
+    "core-js": "^3.6.5",
+    "firebase": "^8.0.0",
+    "graphql": "^15.4.0",
+    "graphql-tag": "^2.11.0",
+    "localforage": "^1.9.0",
+    "quasar": "^1.0.0",
+    "v-money": "^0.8.1",
+    "vcopy": "^0.0.1",
+    "vue-apollo": "^3.0.5"
+  },
+  "devDependencies": {
+    "@quasar/app": "^2.0.0",
+    "@quasar/quasar-app-extension-qenv": "^1.0.3",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-loader": "^3.0.3",
+    "eslint-plugin-vue": "^6.1.2",
+    "workbox-webpack-plugin": "^5.0.0"
+  },
+  "browserslist": [
+    "last 10 Chrome versions",
+    "last 10 Firefox versions",
+    "last 4 Edge versions",
+    "last 7 Safari versions",
+    "last 8 Android versions",
+    "last 8 ChromeAndroid versions",
+    "last 8 FirefoxAndroid versions",
+    "last 10 iOS versions",
+    "last 5 Opera versions"
+  ],
+  "engines": {
+    "node": ">= 10.18.1",
+    "npm": ">= 6.13.4",
+    "yarn": ">= 1.21.1"
+  }
+}
