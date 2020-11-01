@@ -330,11 +330,11 @@ export const ALL_PROJECTS = gql`
         image
       }
       updated_at
+	    created_by
       creator {
         id
         nickname
       }
-      finalized
       investment_target_total
       main_funding_source {
         id
@@ -345,6 +345,7 @@ export const ALL_PROJECTS = gql`
         name
       }
       version
+			signed_copy_link
     }
   }
 `;
@@ -1026,183 +1027,10 @@ export const FINALIZED_PROJECTS = gql`
 export const DOWNLOAD_PROJECT = gql`
   query($id: ID!) {
     project(id: $id) {
-      id
-      title
-      operating_unit {
-        id
-        name
-        agency_head_name
-        agency_head_designation
-      }
-      main_funding_source {
-        id
-        name
-      }
-      implementation_mode {
-        id
-        name
-      }
-      currency {
-        id
-        name
-      }
-      total_project_cost
-      target_start_year
-      target_end_year
-      spatial_coverage {
-        id
-        name
-      }
-      project_status {
-        id
-        name
-      }
-      type {
-        id
-        name
-      }
-      description
-      outcomes
-      purpose
-      beneficiaries
-      employment_generated
-      clearinghouse
-      clearinghouse_date
-      neda_submission
-      neda_submission_date
-      neda_secretariat_review
-      neda_secretariat_review_date
-      icc_endorsed
-      icc_endorsed_date
-      icc_approved
-      icc_approved_date
-      neda_board
-      neda_board_date
-      implementation_risk
-      main_funding_source {
-        id
-        name
-      }
-      funding_institution {
-        id
-        name
-      }
-      tier {
-        id
-        name
-      }
-      uacs_code
-      updates
-      updates_date
-
-      fs_target_2017
-      fs_target_2018
-      fs_target_2019
-      fs_target_2020
-      fs_target_2021
-      fs_target_2022
-      fs_target_total
-      rap_target_2017
-      rap_target_2018
-      rap_target_2019
-      rap_target_2020
-      rap_target_2021
-      rap_target_2022
-      rap_target_total
-      rap_affected
-      row_target_2017
-      row_target_2018
-      row_target_2019
-      row_target_2020
-      row_target_2021
-      row_target_2022
-      row_target_total
-      row_affected
-      investment_target_2016
-      investment_target_2017
-      investment_target_2018
-      investment_target_2019
-      investment_target_2020
-      investment_target_2021
-      investment_target_2022
-      investment_target_2023
-      investment_target_total
-      infrastructure_target_2016
-      infrastructure_target_2017
-      infrastructure_target_2018
-      infrastructure_target_2019
-      infrastructure_target_2020
-      infrastructure_target_2021
-      infrastructure_target_2022
-      infrastructure_target_2023
-      infrastructure_target_total
-      nep_2016
-      nep_2017
-      nep_2018
-      nep_2019
-      nep_2020
-      nep_2021
-      nep_2022
-      nep_2023
-      nep_total
-      gaa_2016
-      gaa_2017
-      gaa_2018
-      gaa_2019
-      gaa_2020
-      gaa_2021
-      gaa_2022
-      gaa_2023
-      gaa_total
-      disbursement_2016
-      disbursement_2017
-      disbursement_2018
-      disbursement_2019
-      disbursement_2020
-      disbursement_2021
-      disbursement_2022
-      disbursement_2023
-      disbursement_total
-
-      regions {
-        id
-        name
-        pivot {
-          target_2016
-          target_2017
-          target_2018
-          target_2019
-          target_2020
-          target_2021
-          target_2022
-          target_2023
-          target_total
-        }
-      }
-
-      funding_sources {
-        id
-        name
-        pivot {
-          target_2016
-          target_2017
-          target_2018
-          target_2019
-          target_2020
-          target_2021
-          target_2022
-          target_2023
-          target_total
-        }
-      }
-
-      creator {
-        id
-        name
-        position
-      }
+      ...projectFragment
     }
   }
+	${PROJECT_FRAGMENT}
 `;
 
 export const COST_STRUCTURES = gql`

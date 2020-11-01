@@ -1,12 +1,7 @@
 <template>
   <q-list>
     <menu-item @click="viewProject" label="View" icon="search"></menu-item>
-    <menu-item
-      @click="viewReturned"
-      label="View Returned"
-      icon="search"
-      v-if="showReturnedItem"
-    ></menu-item>
+
     <menu-item
       @click="updateProject"
       label="Update"
@@ -14,37 +9,16 @@
       v-if="showUpdateItem"
       tooltip="Restricted to owner only"
     ></menu-item>
+
     <menu-item
       @click="validateProject"
       label="Validate"
-      icon="img:statics/icons/fact_check-black-18dp.svg"
-      v-if="showValidateItem"
+      icon="fact_check"
+      v-if="isReviewer && status === 'endorsed'"
     ></menu-item>
-    <menu-item
-      @click="reviewProject"
-      label="Review"
-      icon="rate_review"
-      v-if="showReviewItem"
-    ></menu-item>
-    <menu-item
-      @click="acceptProject"
-      label="Accept"
-      icon="playlist_add_check"
-      v-if="showAcceptItem"
-    ></menu-item>
-    <menu-item
-      @click="approveProject"
-      label="Approve"
-      icon="thumb_up_alt"
-      v-if="showApproveItem"
-    ></menu-item>
-    <menu-item
-      @click="encodeProject"
-      label="Encode"
-      icon="computer"
-      v-if="showEncodeItem"
-    ></menu-item>
+
     <q-separator />
+
     <menu-item
       @click="handleTransferProject"
       label="Transfer"
@@ -52,14 +26,9 @@
       tooltip="Restricted to owner only"
       :disable="!showTransferItem"
     ></menu-item>
-    <menu-item
-      @click="handleShareProject"
-      label="Share"
-      icon="share"
-      tooltip="Restricted to owner only"
-      :disable="!isOwner"
-    ></menu-item>
+
     <q-separator />
+
     <menu-item
       @click="promptDelete(id)"
       label="Delete"
@@ -67,12 +36,20 @@
       tooltip="Restricted to owner only"
       :disable="!isOwner"
     ></menu-item>
+
     <q-separator />
+
+		<menu-item
+			:to="signedCopy"
+			label="Download"
+			icon="save_alt"
+			v-if="signedCopy"/>
+
     <menu-item
       @click="downloadFile"
       label="Download"
       icon="save_alt"
-      v-if="download"
+			v-else
     ></menu-item>
   </q-list>
 </template>
@@ -83,24 +60,19 @@ import MenuItem from './MenuItem';
 
 import { validateEmail } from '@/utils';
 import { SHARE_PROJECT, FETCH_ENCODERS_QUERY } from '@/graphql';
-// import { openURL } from 'quasar';
-import ReturnProject from '../dialogs/ReturnProject';
 import { showError } from '@/utils';
 import axios from 'axios';
 
 export default {
   components: { MenuItem },
+
   name: 'ProjectMenu',
 
   props: {
     id: String,
     status: String,
-    ownerId: String,
-    finalized: Boolean,
-    download: {
-      type: Boolean,
-      default: false
-    }
+    owner: [Number, String],
+		signedCopy: String
   },
 
   apollo: {
@@ -121,55 +93,32 @@ export default {
   },
 
   computed: {
-    ...mapState('auth', ['user']),
-    ...mapGetters('auth', ['isEncoder', 'isReviewer', 'isLead', 'isChief']),
+  	user() {
+  		return this.$store.getters['auth/user']
+		},
+  	isReviewer() {
+  		return this.$store.getters['auth/isReviewer']
+		},
     isOwner() {
-      const ownerId = this.$props.ownerId;
-      const isOwner = this.user.id === ownerId;
+      const owner = this.owner;
+      const isOwner = this.user.id === owner;
       return isOwner;
     },
     isDraft() {
-      return this.$props.finalized;
+      return this.status === 'draft'
     },
-    showReviewItem() {
-      const status = this.$props.status;
+	  showValidateItem() {
+		  const status = this.status;
 
-      return this.isReviewer && status === 'validated';
-    },
+		  return this.isReviewer && status === 'endorsed';
+	  },
     showUpdateItem() {
-      const status = this.$props.status;
+      const status = this.status;
 
-      // project not finalized
-      // project finalized but no signed copy yet
-      return this.isOwner && (status === 'created' || status === 'updated');
-    },
-    showValidateItem() {
-      const status = this.$props.status;
-
-      return this.isReviewer && status === 'endorsed';
+      return this.isOwner && (status === 'draft' || status === 'updated');
     },
     showTransferItem() {
       return this.isOwner;
-    },
-    showAcceptItem() {
-      const status = this.$props.status;
-
-      return this.isLead && status === 'reviewed';
-    },
-    showApproveItem() {
-      const status = this.$props.status;
-
-      return this.isChief && status === 'accepted';
-    },
-    showEncodeItem() {
-      const status = this.$props.status;
-
-      return this.isReviewer && status === 'approved';
-    },
-    showReturnedItem() {
-      const status = this.$props.status;
-
-      return this.isOwner && status === 'returned';
     }
   },
   data() {
@@ -223,76 +172,6 @@ export default {
               });
             })
             .finally(() => this.$q.loading.hide());
-        });
-    },
-
-    handleShareProject() {
-      this.$q
-        .dialog({
-          title: 'Share Project',
-          message: 'Please enter email you would like to send the project to.',
-          prompt: {
-            model: '',
-            type: 'text',
-            isValid: val => validateEmail(val)
-          },
-          cancel: true,
-          persistent: true
-        })
-        .onOk(email => {
-          this.shareProject(email);
-        });
-    },
-
-    shareProject(email) {
-      const id = this.$props.id;
-      this.$apollo
-        .mutate({
-          mutation: SHARE_PROJECT,
-          variables: {
-            project_id: id,
-            email: email
-          }
-        })
-        .then(() => {
-          this.$q.notify({
-            type: 'positive',
-            message: 'Successfully shared project',
-            position: 'bottom-right'
-          });
-        })
-        .catch(showError);
-    },
-
-    acceptProject() {
-      const id = this.$props.id;
-
-      this.$q
-        .dialog({
-          title: 'Accept Project',
-          component: ReturnProject
-        })
-        .onOk(data => {
-          this.$store.dispatch('projects/acceptProject', {
-            id: id,
-            remarks: data
-          });
-        });
-    },
-
-    approveProject() {
-      const id = this.$props.id;
-
-      this.$q
-        .dialog({
-          title: 'Approve Project',
-          component: ReturnProject
-        })
-        .onOk(data => {
-          this.$store.dispatch('projects/approveProject', {
-            id: id,
-            remarks: data
-          });
         });
     },
 
@@ -361,10 +240,6 @@ export default {
         })
         .catch(err => console.log(err.message))
         .finally(() => this.$q.loading.hide());
-    },
-
-    viewReturned() {
-      this.$router.push(`/projects/${this.$props.id}/returned`);
     }
   }
 };

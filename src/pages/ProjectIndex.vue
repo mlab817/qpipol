@@ -100,14 +100,10 @@
               square
             >
               <project-menu
-                :owner-id="props.row.creator ? props.row.creator.id : 0"
+                :owner="props.row.created_by"
                 :id="props.row.id"
-                :status="
-                  props.row.processing_status
-                    ? props.row.processing_status.name
-                    : 'draft'
-                "
-                :finalized="!!props.row.finalized"
+                :status="props.row.submission_status ? props.row.submission_status.name : ''"
+								:signed-copy="props.row.signed_copy_link"
               ></project-menu>
             </q-menu>
           </q-btn>
