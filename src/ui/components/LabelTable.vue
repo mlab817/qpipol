@@ -3,7 +3,7 @@
 		<div class="row">
 			<q-item-label header>{{label}}</q-item-label>
 		</div>
-		<div class="row text-black">
+		<div class="row text-black q-pa-md">
 			<slot />
 		</div>
 	</div>

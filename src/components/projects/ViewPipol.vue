@@ -38,6 +38,10 @@
 					<section-header sectionTitle="General Information"></section-header>
 					<q-card square bordered flat>
 						<q-card-section class="q-gutter-y-md">
+							<label-value label="Program" :value="project.prexc_program ? project.prexc_program.name : ''" />
+
+							<label-value label="Subprogram" :value="project.prexc_subprogram ? project.prexc_subprogram.name : ''" />
+
 							<label-value label="PAP Title" :value="project.title" />
 
 							<label-value label="Locally-Funded or Foreign Assisted" :value="project.type ? project.type.name : null" />
@@ -98,19 +102,13 @@
 						<section-header
 							sectionTitle="Three-Year Rolling Investment Program"
 						></section-header>
-						<q-card square>
+						<q-card square bordered flat>
 							<q-card-section class="q-gutter-sm">
 								<label-list label="Infrastructure Sectors" :value="project.infrastructure_subsectors"></label-list>
 								<label-list label="Technical Readiness" :value="project.technical_readinesses"></label-list>
 								<label-value label="Implementation Risk &amp; Mitigation Strategy" :value="project.implementation_risk" />
 								<label-table label="Infrastructure Investment by Funding Source">
-									<fs-infrastructure
-										v-if="project.funding_source_infrastructures && project.funding_source_infrastructures.length"
-										:data="project.funding_source_infrastructures"
-										:project-id="project.id"
-										no-actions
-									></fs-infrastructure>
-									<div v-else>No data.</div>
+									<vfs-infrastructures :data="project.funding_source_infrastructures" />
 								</label-table>
 							</q-card-section>
 						</q-card>
@@ -119,7 +117,7 @@
 					<section-header
 							sectionTitle="Physical and Financial Status"
 					></section-header>
-					<q-card square>
+					<q-card square bordered flat>
 						<q-card-section class="q-gutter-sm">
 							<label-value label="Project Status" :value="project.project_status" />
 							<label-value label="Will require Investment Coordination Committee/NEDA Board Approval (ICC-able)?" :value="project.iccable" />
@@ -152,7 +150,7 @@
 					<section-header
 							sectionTitle="Philippine Development (PDP) Chapter"
 					></section-header>
-					<q-card square>
+					<q-card square bordered flat>
 						<q-card-section class="q-gutter-sm">
 							<label-value label="Main PDP Chapter" :value="project.pdp_chapter"></label-value>
 							<label-list label="Other PDP Chapters" :value="project.pdp_chapters"></label-list>
@@ -162,7 +160,7 @@
 					<section-header
 							sectionTitle="Philippine Development (PDP) Results Matrices"
 					></section-header>
-					<q-card square>
+					<q-card square bordered flat>
 						<q-card-section class="q-gutter-sm">
 							<label-list
 									label="Results Matrices Indicators"
@@ -178,7 +176,7 @@
 					/>
 
 					<section-header sectionTitle="Ten Point Agenda"></section-header>
-					<q-card square>
+					<q-card square bordered flat>
 						<q-card-section class="q-gutter-sm">
 							<label-list label="Ten Point Agenda" :value="project.ten_point_agenda"></label-list>
 						</q-card-section>
@@ -187,7 +185,7 @@
 					<section-header
 							sectionTitle="Sustainable Development Goals"
 					></section-header>
-					<q-card square>
+					<q-card square bordered flat>
 						<q-card-section class="q-gutter-sm">
 							<label-list
 								label="Sustainable Development Goals"
@@ -200,7 +198,7 @@
 						<section-header
 								sectionTitle="Gender and Development Responsiveness"
 						></section-header>
-						<q-card square bordered>
+						<q-card square bordered flat>
 							<q-card-section>
 								<label-value label="GAD Responsiveness" :value="project.gad" />
 							</q-card-section>
@@ -223,7 +221,7 @@
 					<section-header
 							sectionTitle="Project Preparation Details"
 					></section-header>
-					<q-card square>
+					<q-card square bordered flat>
 						<q-card-section class="q-gutter-sm">
 							<label-value label="Project Preparation Document" :value="project.project_preparation_document" />
 
@@ -269,7 +267,7 @@
 					</q-card>
 
 					<section-header sectionTitle="Pre-construction Costs"></section-header>
-					<q-card square>
+					<q-card square bordered flat>
 						<q-card-section>
 							<label-value label="Right of Way" :value="project.has_row"></label-value>
 
@@ -295,13 +293,13 @@
 									<tbody>
 									<tr>
 										<td>Right of Way</td>
-										<td-money :value="project.row_target_2017" />
-										<td-money :value="project.row_target_2018" />
-										<td-money :value="project.row_target_2019" />
-										<td-money :value="project.row_target_2020" />
-										<td-money :value="project.row_target_2021" />
-										<td-money :value="project.row_target_2022" />
-										<td-money :value="project.row_target_total" />
+										<copy-td :value="project.row_target_2017" />
+										<copy-td :value="project.row_target_2018" />
+										<copy-td :value="project.row_target_2019" />
+										<copy-td :value="project.row_target_2020" />
+										<copy-td :value="project.row_target_2021" />
+										<copy-td :value="project.row_target_2022" />
+										<copy-td :value="project.row_target_total" />
 									</tr>
 									</tbody>
 								</q-markup-table>
@@ -358,7 +356,7 @@
 					</q-card>
 
 					<section-header sectionTitle="Employment Generation"></section-header>
-					<q-card square>
+					<q-card square bordered flat>
 						<q-card-section>
 							<label-value
 								:value="project.employment_generated"
@@ -370,7 +368,7 @@
 					<section-header
 							sectionTitle="Funding Source and Mode of Implementation"
 					></section-header>
-					<q-card square>
+					<q-card square bordered flat>
 						<q-card-section>
 							<div class="row q-col-gutter-sm">
 								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -393,21 +391,18 @@
 					</q-card>
 
 					<section-header sectionTitle="Project Cost"></section-header>
-					<q-card square>
+					<q-card square bordered flat>
 						<div class="row">
 							<label-table
 									label="Investment Requirements by Funding Source">
-								<fs-financials :data="project.funding_source_financials" />
+								<vfs-financials :data="project.funding_source_financials" />
 							</label-table>
 						</div>
 
 						<div class="row">
 							<label-table
 								label="Investment Requirements by Region">
-								<region-financials
-									:data="project.region_financials"
-									:project-id="project.id"
-								/>
+								<vr-financials :data="project.region_financials" />
 							</label-table>
 						</div>
 					</q-card>
@@ -415,7 +410,7 @@
 					<section-header
 							sectionTitle="Financial Accomplishments"
 					></section-header>
-					<q-card square bordered>
+					<q-card square bordered flat>
 						<q-card-section class="q-gutter-y-md">
 							<!-- Investment Requirements (Total, Infrastructure, GAA, NEP, Disbursement) -->
 							<q-item-label class="text-h6 text-weight-lighter">
@@ -458,189 +453,85 @@
 											Total
 										</td>
 										<copy-td :value="investTotal.investment_target_2016" />
-										<td class="text-right">
-											{{ investTotal.investment_target_2017 | money }}
-										</td>
-										<td class="text-right">
-											{{ investTotal.investment_target_2018 | money }}
-										</td>
-										<td class="text-right">
-											{{ investTotal.investment_target_2019 | money }}
-										</td>
-										<td class="text-right">
-											{{ investTotal.investment_target_2020 | money }}
-										</td>
-										<td class="text-right">
-											{{ investTotal.investment_target_2021 | money }}
-										</td>
-										<td class="text-right">
-											{{ investTotal.investment_target_2022 | money }}
-										</td>
-										<td class="text-right">
-											{{ investTotal.investment_target_2023 | money }}
-										</td>
-										<td class="text-right">
-											{{ investTotal.investment_target_2024 | money }}
-										</td>
-										<td class="text-right">
-											{{ investTotal.investment_target_2025 | money }}
-										</td>
-										<td class="text-right">
-											{{ investTotal.investment_target_total | money }}
-										</td>
+										<copy-td :value="investTotal.investment_target_2017" />
+										<copy-td :value="investTotal.investment_target_2018" />
+										<copy-td :value="investTotal.investment_target_2019" />
+										<copy-td :value="investTotal.investment_target_2020" />
+										<copy-td :value="investTotal.investment_target_2021" />
+										<copy-td :value="investTotal.investment_target_2022" />
+										<copy-td :value="investTotal.investment_target_2023" />
+										<copy-td :value="investTotal.investment_target_2024" />
+										<copy-td :value="investTotal.investment_target_2025" />
+										<copy-td :value="investTotal.investment_target_total" />
 									</tr>
 									<tr>
 										<td>
 											Infrastructure
 										</td>
-										<td class="text-right">
-											{{ infraTotal.infrastructure_target_2016 | money }}
-										</td>
-										<td class="text-right">
-											{{ infraTotal.infrastructure_target_2017 | money }}
-										</td>
-										<td class="text-right">
-											{{ infraTotal.infrastructure_target_2018 | money }}
-										</td>
-										<td class="text-right">
-											{{ infraTotal.infrastructure_target_2019 | money }}
-										</td>
-										<td class="text-right">
-											{{ infraTotal.infrastructure_target_2020 | money }}
-										</td>
-										<td class="text-right">
-											{{ infraTotal.infrastructure_target_2021 | money }}
-										</td>
-										<td class="text-right">
-											{{ infraTotal.infrastructure_target_2022 | money }}
-										</td>
-										<td class="text-right">
-											{{ infraTotal.infrastructure_target_2023 | money }}
-										</td>
-										<td class="text-right">
-											{{ infraTotal.infrastructure_target_2024 | money }}
-										</td>
-										<td class="text-right">
-											{{ infraTotal.infrastructure_target_2025 | money }}
-										</td>
-										<td class="text-right">
-											{{ infraTotal.infrastructure_target_total | money }}
-										</td>
+										<copy-td :value="infraTotal.infrastructure_target_2016" />
+										<copy-td :value="infraTotal.infrastructure_target_2017" />
+										<copy-td :value="infraTotal.infrastructure_target_2018" />
+										<copy-td :value="infraTotal.infrastructure_target_2019" />
+										<copy-td :value="infraTotal.infrastructure_target_2020" />
+										<copy-td :value="infraTotal.infrastructure_target_2021" />
+										<copy-td :value="infraTotal.infrastructure_target_2022" />
+										<copy-td :value="infraTotal.infrastructure_target_2023" />
+										<copy-td :value="infraTotal.infrastructure_target_2024" />
+										<copy-td :value="infraTotal.infrastructure_target_2025" />
+										<copy-td :value="infraTotal.infrastructure_target_total" />
 									</tr>
 									<tr>
 										<td colspan="12">
-											Actual Investments (Click edit button to edit)
+											Actual Investments
 										</td>
 									</tr>
-									<tr @click="editNepDialog = true" class="cursor-pointer">
+									<tr>
 										<td>
 											NEP
 										</td>
-										<td class="text-right">
-											{{ project.nep_2016 | money }}
-										</td>
-										<td class="text-right">
-											{{ project.nep_2017 | money }}
-										</td>
-										<td class="text-right">
-											{{ project.nep_2018 | money }}
-										</td>
-										<td class="text-right">
-											{{ project.nep_2019 | money }}
-										</td>
-										<td class="text-right">
-											{{ project.nep_2020 | money }}
-										</td>
-										<td class="text-right">
-											{{ project.nep_2021 | money }}
-										</td>
-										<td class="text-right">
-											-
-										</td>
-										<td class="text-right">
-											-
-										</td>
-										<td class="text-right">
-											-
-										</td>
-										<td class="text-right">
-											-
-										</td>
-										<td class="text-right">
-											{{ nep_total | money }}
-										</td>
+										<copy-td :value="project.nep_2016" />
+										<copy-td :value="project.nep_2017" />
+										<copy-td :value="project.nep_2018" />
+										<copy-td :value="project.nep_2019" />
+										<copy-td :value="project.nep_2020" />
+										<copy-td :value="project.nep_2021" />
+										<copy-td :value="project.nep_2022" />
+										<copy-td :value="project.nep_2023" />
+										<copy-td :value="project.nep_2024" />
+										<copy-td :value="project.nep_2025" />
+										<copy-td :value="project.nep_total" />
 									</tr>
-									<tr @click="editGaaDialog = true" class="cursor-pointer">
+									<tr>
 										<td>
 											GAA
 										</td>
-										<td class="text-right">
-											{{ project.gaa_2016 | money }}
-										</td>
-										<td class="text-right">
-											{{ project.gaa_2017 | money }}
-										</td>
-										<td class="text-right">
-											{{ project.gaa_2018 | money }}
-										</td>
-										<td class="text-right">
-											{{ project.gaa_2019 | money }}
-										</td>
-										<td class="text-right">
-											{{ project.gaa_2020 | money }}
-										</td>
-										<td class="text-right">
-											-
-										</td>
-										<td class="text-right">
-											-
-										</td>
-										<td class="text-right">
-											-
-										</td>
-										<td class="text-right">
-											-
-										</td>
-										<td class="text-right">
-											-
-										</td>
-										<td class="text-right">
-											{{ gaa_total | money }}
-										</td>
+										<copy-td :value="project.gaa_2016" />
+										<copy-td :value="project.gaa_2017" />
+										<copy-td :value="project.gaa_2018" />
+										<copy-td :value="project.gaa_2019" />
+										<copy-td :value="project.gaa_2020" />
+										<copy-td :value="project.gaa_2021" />
+										<copy-td :value="project.gaa_2022" />
+										<copy-td :value="project.gaa_2023" />
+										<copy-td :value="project.gaa_2024" />
+										<copy-td :value="project.gaa_2025" />
+										<copy-td :value="project.gaa_total" />
 									</tr>
 									<tr>
 										<td>
 											Disbursement
 										</td>
-										<td class="text-right">
-											{{ project.disbursement_2016 | money }}
-										</td>
-										<td class="text-right">
-											{{ project.disbursement_2017 | money }}
-										</td>
-										<td class="text-right">
-											{{ project.disbursement_2018 | money }}
-										</td>
-										<td class="text-right">
-											{{ project.disbursement_2019 | money }}
-										</td>
-										<td class="text-right">
-											{{ project.disbursement_2020 | money }}
-										</td>
-										<td class="text-right">
-											-
-										</td>
-										<td class="text-right">
-											-
-										</td>
-										<td class="text-right">
-											-
-										</td>
-										<td class="text-right">
-											-
-										</td>
-										<td-money value="-" />
-										<td-money :value="disbursement_total" />
+										<copy-td :value="project.disbursement_2016" />
+										<copy-td :value="project.disbursement_2017" />
+										<copy-td :value="project.disbursement_2018" />
+										<copy-td :value="project.disbursement_2019" />
+										<copy-td :value="project.disbursement_2020" />
+										<copy-td :value="project.disbursement_2021" />
+										<copy-td :value="project.disbursement_2022" />
+										<copy-td :value="project.disbursement_2023" />
+										<copy-td :value="project.disbursement_2024" />
+										<copy-td :value="project.disbursement_2025" />
+										<copy-td :value="project.disbursement_total" />
 									</tr>
 									</tbody>
 								</q-markup-table>
@@ -655,19 +546,23 @@
 
 <script>
 	import { date } from 'quasar';
-	import { SectionHeader } from '@/ui';
 	import CopyTd from './financials/CopyTd';
-	import LabelValue from '../../ui/components/LabelValue'
-	import LabelList from '../../ui/components/LabelList'
-	import LabelTable from '../../ui/components/LabelTable'
-	import FsInfrastructure from './financials/FsInfrastructure'
-	import TdMoney from '../../ui/components/TdMoney'
+	import { LabelValue,
+		LabelList,
+		LabelTable,
+		TdMoney,
+		SectionHeader} from '@/ui'
+	import VfsFinancials from './financials/VfsFinancials'
+	import VrFinancials from './financials/VrFinancials'
+	import VfsInfrastructures from './financials/VfsInfrastructures'
 
 	export default {
 		components: {
+			VfsInfrastructures,
+			VrFinancials,
+			VfsFinancials,
 			CopyTd,
 			TdMoney,
-			FsInfrastructure,
 			LabelTable,
 			LabelList,
 			LabelValue,

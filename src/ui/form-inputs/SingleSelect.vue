@@ -18,7 +18,6 @@
       dropdown-icon="unfold_more"
       :readonly="readonly"
       hide-bottom-space
-      :placeholder="label"
       map-options
       emit-value
       clearable
