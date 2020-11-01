@@ -1,122 +1,193 @@
 <template>
-  <q-card :style="$q.screen.gt.xs ? 'min-width:400px' : ''">
-    <card-header title="Update Region Financial Data"></card-header>
+	<q-card style="max-width: 80wh; min-width: 400px;">
+		<q-bar class="bg-accent text-white">
+			<div>Add/Edit Region</div>
+			<q-space />
+			<q-btn flat round dense icon="close" v-close-popup />
+		</q-bar>
 
-    <q-form @submit.prevent="handleSubmit" ref="myForm">
-      <q-card-section class="q-pa-sm q-gutter-y-sm">
-        <region
-          label="Region"
-          v-model="regionToAdd.id"
-          :rules="[val => !!val || '* Field is required']"
-          readonly
-        ></region>
+		<q-form @submit="handleSubmit">
+			<q-card-section class="q-gutter-sm">
+				<single-select
+					label="Region"
+					v-model="investmentToSubmit.region_id"
+					:options="filteredItems"
+					:rules="[val => !!val || '* Required']"
+					:readonly="editMode"
+				></single-select>
 
-        <annual-target
-          class="q-mt-md"
-          v-model="regionToAdd.pivot"
-        ></annual-target>
+				<money-input
+						label="2016 &amp; Prior"
+						v-model="investmentToSubmit.investment_target_2016"
+				/>
+				<money-input
+						label="2017"
+						v-model="investmentToSubmit.investment_target_2017"
+				/>
+				<money-input
+						label="2018"
+						v-model="investmentToSubmit.investment_target_2018"
+				/>
+				<money-input
+						label="2019"
+						v-model="investmentToSubmit.investment_target_2019"
+				/>
+				<money-input
+						label="2020"
+						v-model="investmentToSubmit.investment_target_2020"
+				/>
+				<money-input
+						label="2021"
+						v-model="investmentToSubmit.investment_target_2021"
+				/>
+				<money-input
+						label="2022"
+						v-model="investmentToSubmit.investment_target_2022"
+				/>
+				<money-input
+						label="2023"
+						v-model="investmentToSubmit.investment_target_2023"
+				/>
+				<money-input
+						label="2024"
+						v-model="investmentToSubmit.investment_target_2024"
+				/>
+				<money-input
+						label="2025 &amp; Beyond"
+						v-model="investmentToSubmit.investment_target_2025"
+				/>
+				<money-input
+						label="Total"
+						:value="investment_target_total"
+						readonly
+				/>
 
-        <q-input
-          label="Total"
-          outlined
-          class="col q-mt-md"
-          input-class="text-right"
-          readonly
-          :value="target_total"
-        ></q-input>
-      </q-card-section>
-
-      <q-card-actions align="right">
-        <q-btn
-          outline
-          type="button"
-          label="Cancel"
-          color="negative"
-          v-close-popup
-        ></q-btn>
-        <q-btn type="submit" label="Submit" color="primary"></q-btn>
-      </q-card-actions>
-    </q-form>
-  </q-card>
+			</q-card-section>
+			<q-card-actions align="right">
+				<q-btn label="Cancel" flat v-close-popup color="primary"></q-btn>
+				<q-btn label="Ok" flat type="submit" color="primary"></q-btn>
+			</q-card-actions>
+		</q-form>
+	</q-card>
 </template>
 
 <script>
-import Region from '../dropdowns/Region.vue';
-import AnnualTarget from './AnnualTarget';
-import CardHeader from '@/ui/cards/CardHeader';
+	import {
+		MoneyInput,
+		SingleSelect
+	} from '@/ui'
+	import {FETCH_REGIONS} from '../../../graphql/queries'
+	import { projectService } from '../../../services'
+	import { Notify } from 'quasar'
 
-export default {
-  components: {
-    Region,
-    AnnualTarget,
-    CardHeader
-  },
+	export default {
+		components: { MoneyInput, SingleSelect },
+		props: ['investmentToEdit','taken','projectId','editMode'],
+		name: 'AddRegion',
+		apollo: {
+			regions: {
+				query: FETCH_REGIONS
+			}
+		},
+		computed: {
+			filteredItems() {
+				let items = this.regions,
+					taken = this.taken;
 
-  name: 'AddRegion',
+				// if in edit mode, show all
+				if (this.investmentToSubmit.id) {
+					return items;
+				}
 
-  props: ['region'],
+				// if in add mode, filter
+				return items.filter(x => !taken.includes(x.id));
+			},
+			investment_target_total() {
+				const investmentToSubmit = this.investmentToSubmit
 
-  computed: {
-    target_total() {
-      const {
-        target_2016,
-        target_2017,
-        target_2018,
-        target_2019,
-        target_2020,
-        target_2021,
-        target_2022,
-        target_2023
-      } = this.regionToAdd.pivot;
+				console.log(investmentToSubmit)
 
-      return (
-        target_2016 +
-        target_2017 +
-        target_2018 +
-        target_2019 +
-        target_2020 +
-        target_2021 +
-        target_2022 +
-        target_2023
-      );
-    }
-  },
+				const remove = ['id','region_id','project_id']
 
-  data() {
-    return {
-      regionToAdd: {
-        id: '',
-        pivot: {
-          target_2016: 0,
-          target_2017: 0,
-          target_2018: 0,
-          target_2019: 0,
-          target_2020: 0,
-          target_2021: 0,
-          target_2022: 0,
-          target_2023: 0
-        }
-      }
-    };
-  },
+				return Object.keys(investmentToSubmit).filter(k => (remove.indexOf(k) === -1))
+					.reduce((acc, value) => {
+						console.log(acc, investmentToSubmit[value])
+						acc += investmentToSubmit[value]
+						return acc
+					}, 0)
+			}
+		},
+		data() {
+			return {
+				investmentToSubmit: {
+					region_id: null,
+					project_id: null,
+					investment_target_2016: 0,
+					investment_target_2017: 0,
+					investment_target_2018: 0,
+					investment_target_2019: 0,
+					investment_target_2020: 0,
+					investment_target_2021: 0,
+					investment_target_2022: 0,
+					investment_target_2023: 0,
+					investment_target_2024: 0,
+					investment_target_2025: 0
+				},
+				regions: []
+			}
+		},
+		methods: {
+			handleSubmit() {
+				const investmentToSubmit = this.investmentToSubmit,
+					project_id = this.projectId;
+				console.log(investmentToSubmit)
 
-  methods: {
-    handleSubmit() {
-      this.$refs.myForm.validate().then(success => {
-        if (success) {
-          this.$emit('input', this.regionToAdd);
-        } else {
-          alert('Please check form.');
-        }
-      });
-    }
-  },
+				this.$q.loading.show();
 
-  mounted() {
-    if (typeof this.region !== 'undefined') {
-      // this.regionToAdd = Object.assign({}, this.region)
-      this.regionToAdd = JSON.parse(JSON.stringify(this.region));
-    }
-  }
-};
+				if (investmentToSubmit.id) {
+					// update
+					projectService
+						.updateRegionFinancial(investmentToSubmit)
+						.then(() => {
+							this.$emit('close');
+						})
+						.catch(err => Notify.create({
+							message: err.message
+						}))
+						.finally(() => this.$q.loading.hide());
+				} else {
+					// assign project id here
+					const investmentToCreate = {
+						region_id: investmentToSubmit.region_id,
+						project_id: project_id,
+						investment_target_2016: investmentToSubmit.investment_target_2016,
+						investment_target_2017: investmentToSubmit.investment_target_2017,
+						investment_target_2018: investmentToSubmit.investment_target_2018,
+						investment_target_2019: investmentToSubmit.investment_target_2019,
+						investment_target_2020: investmentToSubmit.investment_target_2020,
+						investment_target_2021: investmentToSubmit.investment_target_2021,
+						investment_target_2022: investmentToSubmit.investment_target_2022,
+						investment_target_2023: investmentToSubmit.investment_target_2023,
+						investment_target_2024: investmentToSubmit.investment_target_2024,
+						investment_target_2025: investmentToSubmit.investment_target_2025,
+						investment_target_total: this.investment_target_total
+					}
+					// create
+					projectService
+						.createRegionFinancial(investmentToCreate)
+						.then(() => {
+							this.$emit('close');
+						})
+						.catch(err => Notify.create({
+							message: err.message
+						}))
+						.finally(() => this.$q.loading.hide());
+				}
+			}
+		},
+		mounted() {
+			this.investmentToSubmit = Object.assign({}, this.investmentToEdit)
+			console.log(this.investmentToSubmit)
+		}
+	}
 </script>

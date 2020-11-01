@@ -2,10 +2,9 @@
   <div class="col">
     <span class="text-caption text-weight-bold">{{ label }}</span>
     <q-select
-			use-input
       square
       v-model="model"
-      :options="internalOptions"
+      :options="options"
       option-label="name"
       option-value="id"
       behavior="menu"
@@ -21,7 +20,6 @@
       map-options
       emit-value
       clearable
-			@filter="filterFn"
     >
     </q-select>
   </div>
@@ -56,26 +54,5 @@ export default {
       }
     }
   },
-	data() {
-  	return {
-  		internalOptions: []
-		}
-	},
-	methods: {
-		filterFn (val, update) {
-			const options = this.options
-			if (val === '') {
-				update(() => {
-					this.internalOptions = options
-				})
-				return
-			}
-
-			update(() => {
-				const needle = val.toLowerCase()
-				this.internalOptions = options.filter(v => v.name.toLowerCase().indexOf(needle) > -1)
-			})
-		}
-	}
 };
 </script>

@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import SingleSelect from '@/ui/form-inputs/SingleSelect';
+import { SingleSelect } from '@/ui';
 import {FETCH_OPERATING_UNITS} from '../../../graphql/queries'
 
 export default {

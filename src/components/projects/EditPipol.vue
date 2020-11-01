@@ -519,9 +519,7 @@
                       <edit-button @click="editFSCostDialog = true" />
                     </td>
                     <td>Total</td>
-                    <td class="text-right">
-                      {{ project.fs_target_2017 }}
-                    </td>
+										<td-money :value="project.fs_target_2017" />
                     <td class="text-right">
                       {{ project.fs_target_2018 }}
                     </td>
@@ -713,6 +711,7 @@
         </q-card>
 
         <section-header sectionTitle="Project Cost"></section-header>
+
         <q-card square>
           <div class="row">
             <fs-financials
@@ -774,77 +773,33 @@
                     <td>
                       Total
                     </td>
-                    <td class="text-right">
-                      {{ investTotal.investment_target_2016 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ investTotal.investment_target_2017 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ investTotal.investment_target_2018 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ investTotal.investment_target_2019 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ investTotal.investment_target_2020 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ investTotal.investment_target_2021 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ investTotal.investment_target_2022 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ investTotal.investment_target_2023 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ investTotal.investment_target_2024 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ investTotal.investment_target_2025 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ investTotal.investment_target_total | money }}
-                    </td>
+										<td-money :value="investTotal.investment_target_2016" />
+										<td-money :value="investTotal.investment_target_2017" />
+										<td-money :value="investTotal.investment_target_2018" />
+										<td-money :value="investTotal.investment_target_2019" />
+										<td-money :value="investTotal.investment_target_2020" />
+										<td-money :value="investTotal.investment_target_2021" />
+										<td-money :value="investTotal.investment_target_2022" />
+										<td-money :value="investTotal.investment_target_2023" />
+										<td-money :value="investTotal.investment_target_2024" />
+										<td-money :value="investTotal.investment_target_2025" />
+										<td-money :value="investTotal.investment_target_total" />
                   </tr>
                   <tr>
                     <td>
                       Infrastructure
                     </td>
-                    <td class="text-right">
-                      {{ infraTotal.infrastructure_target_2016 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ infraTotal.infrastructure_target_2017 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ infraTotal.infrastructure_target_2018 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ infraTotal.infrastructure_target_2019 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ infraTotal.infrastructure_target_2020 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ infraTotal.infrastructure_target_2021 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ infraTotal.infrastructure_target_2022 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ infraTotal.infrastructure_target_2023 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ infraTotal.infrastructure_target_2024 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ infraTotal.infrastructure_target_2025 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ infraTotal.infrastructure_target_total | money }}
-                    </td>
+										<td-money :value="infraTotal.infrastructure_target_2016" />
+										<td-money :value="infraTotal.infrastructure_target_2017" />
+										<td-money :value="infraTotal.infrastructure_target_2018" />
+										<td-money :value="infraTotal.infrastructure_target_2019" />
+										<td-money :value="infraTotal.infrastructure_target_2020" />
+										<td-money :value="infraTotal.infrastructure_target_2021" />
+										<td-money :value="infraTotal.infrastructure_target_2022" />
+										<td-money :value="infraTotal.infrastructure_target_2023" />
+										<td-money :value="infraTotal.infrastructure_target_2024" />
+										<td-money :value="infraTotal.infrastructure_target_2025" />
+										<td-money :value="infraTotal.infrastructure_target_total" />
                   </tr>
                   <tr>
                     <td colspan="12">
@@ -856,39 +811,17 @@
                       <edit-button @click="editNepDialog = true"></edit-button>
                       NEP
                     </td>
-                    <td class="text-right">
-                      {{ project.nep_2016 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.nep_2017 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.nep_2018 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.nep_2019 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.nep_2020 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.nep_2021 | money }}
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      {{ nep_total | money }}
-                    </td>
+										<td-money :value="project.nep_2016" />
+										<td-money :value="project.nep_2017" />
+										<td-money :value="project.nep_2018" />
+										<td-money :value="project.nep_2019" />
+										<td-money :value="project.nep_2020" />
+										<td-money :value="project.nep_2021" />
+										<td-money :value="project.nep_2022" />
+										<td-money :value="project.nep_2023" />
+										<td-money :value="project.nep_2024" />
+										<td-money :value="project.nep_2025" />
+										<td-money :value="nep_total" />
                   </tr>
                   <tr @click="editGaaDialog = true" class="cursor-pointer">
                     <td>
@@ -903,39 +836,17 @@
                       />
                       GAA
                     </td>
-                    <td class="text-right">
-                      {{ project.gaa_2016 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.gaa_2017 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.gaa_2018 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.gaa_2019 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.gaa_2020 | money }}
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      {{ gaa_total | money }}
-                    </td>
+                    <td-money :value="project.gaa_2016" />
+										<td-money :value="project.gaa_2017" />
+										<td-money :value="project.gaa_2018" />
+										<td-money :value="project.gaa_2019" />
+										<td-money :value="project.gaa_2020" />
+										<td-money :value="project.gaa_2021" />
+										<td-money :value="project.gaa_2022" />
+										<td-money :value="project.gaa_2023" />
+										<td-money :value="project.gaa_2024" />
+										<td-money :value="project.gaa_2025" />
+										<td-money :value="gaa_total" />
                   </tr>
                   <tr
                     @click="editDisbursementDialog = true"
@@ -953,39 +864,17 @@
                       />
                       Disbursement
                     </td>
-                    <td class="text-right">
-                      {{ project.disbursement_2016 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.disbursement_2017 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.disbursement_2018 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.disbursement_2019 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.disbursement_2020 | money }}
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      {{ disbursement_total | money }}
-                    </td>
+										<td-money :value="project.disbursement_2016" />
+										<td-money :value="project.disbursement_2017" />
+										<td-money :value="project.disbursement_2018" />
+										<td-money :value="project.disbursement_2019" />
+										<td-money :value="project.disbursement_2020" />
+										<td-money :value="project.disbursement_2021" />
+										<td-money :value="project.disbursement_2022" />
+										<td-money :value="project.disbursement_2023" />
+										<td-money :value="project.disbursement_2024" />
+										<td-money :value="project.disbursement_2025" />
+										<td-money :value="disbursement_total" />
                   </tr>
                 </tbody>
               </q-markup-table>
@@ -1345,9 +1234,11 @@ import TenPointAgenda from './dropdowns/TenPointAgenda';
 import SdGoals from './dropdowns/SdGoals';
 import ProjectDocument from './dropdowns/ProjectDocument';
 import ImplementationBases from './dropdowns/ImplementationBases';
+import TdMoney from '../../ui/components/TdMoney'
 
 export default {
   components: {
+	  TdMoney,
     BudgetTier,
     CipTypes,
     SpatialCoverage,

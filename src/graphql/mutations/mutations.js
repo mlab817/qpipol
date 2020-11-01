@@ -1485,17 +1485,6 @@ export const CREATE_REGION_FINANCIAL = gql`
     $investment_target_2024: Float
     $investment_target_2025: Float
     $investment_target_total: Float
-    $infrastructure_target_2016: Float
-    $infrastructure_target_2017: Float
-    $infrastructure_target_2018: Float
-    $infrastructure_target_2019: Float
-    $infrastructure_target_2020: Float
-    $infrastructure_target_2021: Float
-    $infrastructure_target_2022: Float
-    $infrastructure_target_2023: Float
-    $infrastructure_target_2024: Float
-    $infrastructure_target_2025: Float
-    $infrastructure_target_total: Float
   ) {
     createRegionFinancial(
       input: {
@@ -1512,17 +1501,6 @@ export const CREATE_REGION_FINANCIAL = gql`
         investment_target_2024: $investment_target_2024
         investment_target_2025: $investment_target_2025
         investment_target_total: $investment_target_total
-        infrastructure_target_2016: $infrastructure_target_2016
-        infrastructure_target_2017: $infrastructure_target_2017
-        infrastructure_target_2018: $infrastructure_target_2018
-        infrastructure_target_2019: $infrastructure_target_2019
-        infrastructure_target_2020: $infrastructure_target_2020
-        infrastructure_target_2021: $infrastructure_target_2021
-        infrastructure_target_2022: $infrastructure_target_2022
-        infrastructure_target_2023: $infrastructure_target_2023
-        infrastructure_target_2024: $infrastructure_target_2024
-        infrastructure_target_2025: $infrastructure_target_2025
-        infrastructure_target_total: $infrastructure_target_total
       }
     ) {
       id
@@ -1543,17 +1521,6 @@ export const CREATE_REGION_FINANCIAL = gql`
       investment_target_2024
       investment_target_2025
       investment_target_total
-      infrastructure_target_2016
-      infrastructure_target_2017
-      infrastructure_target_2018
-      infrastructure_target_2019
-      infrastructure_target_2020
-      infrastructure_target_2021
-      infrastructure_target_2022
-      infrastructure_target_2023
-      infrastructure_target_2024
-      infrastructure_target_2025
-      infrastructure_target_total
     }
   }
 `;
@@ -1574,19 +1541,8 @@ export const UPDATE_REGION_FINANCIAL = gql`
     $investment_target_2024: Float
     $investment_target_2025: Float
     $investment_target_total: Float
-    $infrastructure_target_2016: Float
-    $infrastructure_target_2017: Float
-    $infrastructure_target_2018: Float
-    $infrastructure_target_2019: Float
-    $infrastructure_target_2020: Float
-    $infrastructure_target_2021: Float
-    $infrastructure_target_2022: Float
-    $infrastructure_target_2023: Float
-    $infrastructure_target_2024: Float
-    $infrastructure_target_2025: Float
-    $infrastructure_target_total: Float
   ) {
-    createRegionFinancial(
+    updateRegionFinancial(
       input: {
         id: $id
         project_id: $project_id
@@ -1602,17 +1558,6 @@ export const UPDATE_REGION_FINANCIAL = gql`
         investment_target_2024: $investment_target_2024
         investment_target_2025: $investment_target_2025
         investment_target_total: $investment_target_total
-        infrastructure_target_2016: $infrastructure_target_2016
-        infrastructure_target_2017: $infrastructure_target_2017
-        infrastructure_target_2018: $infrastructure_target_2018
-        infrastructure_target_2019: $infrastructure_target_2019
-        infrastructure_target_2020: $infrastructure_target_2020
-        infrastructure_target_2021: $infrastructure_target_2021
-        infrastructure_target_2022: $infrastructure_target_2022
-        infrastructure_target_2023: $infrastructure_target_2023
-        infrastructure_target_2024: $infrastructure_target_2024
-        infrastructure_target_2025: $infrastructure_target_2025
-        infrastructure_target_total: $infrastructure_target_total
       }
     ) {
       id
@@ -1633,17 +1578,6 @@ export const UPDATE_REGION_FINANCIAL = gql`
       investment_target_2024
       investment_target_2025
       investment_target_total
-      infrastructure_target_2016
-      infrastructure_target_2017
-      infrastructure_target_2018
-      infrastructure_target_2019
-      infrastructure_target_2020
-      infrastructure_target_2021
-      infrastructure_target_2022
-      infrastructure_target_2023
-      infrastructure_target_2024
-      infrastructure_target_2025
-      infrastructure_target_total
     }
   }
 `;

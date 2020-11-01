@@ -8,83 +8,56 @@
           <q-btn flat round dense icon="close" v-close-popup />
         </q-bar>
         <q-form @submit="handleSubmit">
-          <q-card-section>
-            <q-select
-              label="Funding Source"
-              stack-label
-              v-model="investmentToSubmit.funding_source_id"
-              :options="filteredFs"
-              option-value="id"
-              option-label="name"
-              map-options
-              emit-value
-              :rules="[val => !!val || '* Required']"
-              :readonly="editMode"
-            ></q-select>
-            <q-input
-              input-class="text-right"
+          <q-card-section class="q-gutter-sm">
+						<single-select label="Funding Source" v-model="investmentToSubmit.funding_source_id" :options="filteredFs" :rules="[val => !!val || '* Required']"></single-select>
+            <money-input
               label="2016 &amp; Prior"
-              stack-label
               v-model="investmentToSubmit.investment_target_2016"
             />
-            <q-input
-              input-class="text-right"
+            <money-input
               label="2017"
-              stack-label
               v-model="investmentToSubmit.investment_target_2017"
             />
-            <q-input
-              input-class="text-right"
+            <money-input
               label="2018"
-              stack-label
               v-model="investmentToSubmit.investment_target_2018"
             />
-            <q-input
+            <money-input
               input-class="text-right"
               label="2019"
               stack-label
               v-model="investmentToSubmit.investment_target_2019"
             />
-            <q-input
+            <money-input
               input-class="text-right"
               label="2020"
               stack-label
               v-model="investmentToSubmit.investment_target_2020"
             />
-            <q-input
-              input-class="text-right"
+            <money-input
               label="2021"
-              stack-label
               v-model="investmentToSubmit.investment_target_2021"
             />
-            <q-input
+            <money-input
               input-class="text-right"
               label="2022"
               stack-label
               v-model="investmentToSubmit.investment_target_2022"
             />
-            <q-input
-              input-class="text-right"
+            <money-input
               label="2023"
-              stack-label
               v-model="investmentToSubmit.investment_target_2023"
             />
-            <q-input
-              input-class="text-right"
+            <money-input
               label="2024"
-              stack-label
               v-model="investmentToSubmit.investment_target_2024"
             />
-            <q-input
-              input-class="text-right"
+            <money-input
               label="2025 &amp; Beyond"
-              stack-label
               v-model="investmentToSubmit.investment_target_2025"
             />
-            <q-input
-              input-class="text-right"
+            <money-input
               label="Total"
-              stack-label
               :value="investment_target_total"
               readonly
             />
@@ -110,7 +83,7 @@
       hide-bottom
     >
       <template v-slot:top-right>
-        <add-button @click="addRow"></add-button>
+        <plus-button @click="addRow"></plus-button>
       </template>
 
       <template v-slot:body-cell-actions="props">
@@ -153,11 +126,13 @@
 <script>
 import { FETCH_FUNDING_SOURCES } from 'src/graphql';
 import { projectService } from 'src/services';
-import AddButton from '@/ui/buttons/AddButton';
+import { PlusButton, SingleSelect, MoneyInput } from '@/ui'
 
 export default {
   components: {
-    AddButton
+	  MoneyInput,
+	  SingleSelect,
+	  PlusButton
   },
   name: 'FsFinancials',
   props: ['data', 'projectId'],
@@ -402,9 +377,6 @@ export default {
           .finally(() => this.$q.loading.hide());
       }
     }
-  },
-  mounted() {
-    console.log(this.projectId);
   }
 };
 </script>

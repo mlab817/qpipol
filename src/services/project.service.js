@@ -468,7 +468,7 @@ export const projectService = {
           const index = data.project.funding_source_financials.findIndex(
             x => x.id === updateFundingSourceFinancial.id
           );
-          data.project.funding_source_financials = data.project.funding_source_financials.splice(
+          data.project.funding_source_financials.splice(
             index,
             1,
             updateFundingSourceFinancial
@@ -565,7 +565,7 @@ export const projectService = {
           const index = data.project.region_financials.findIndex(
             x => x.id === updateRegionFinancial.id
           );
-          data.project.region_financials = data.project.region_financials.splice(
+          data.project.region_financials.splice(
             index,
             1,
             updateRegionFinancial
