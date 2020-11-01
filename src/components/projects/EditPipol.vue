@@ -1167,7 +1167,7 @@
           <q-btn
             label="Validate"
             color="negative"
-            @click="handleValidateProject"
+            @click="$emit('validate')"
             v-if="canValidate"
           >
           </q-btn>
@@ -1279,7 +1279,7 @@ export default {
     ImplementationBases
   },
 
-  name: 'EditProject',
+  name: 'EditPipol',
 
   props: ['project'],
 
@@ -1828,52 +1828,6 @@ export default {
 
     saved() {
       this.$emit('saved');
-    },
-    handleValidateProject() {
-      this.$q
-        .dialog({
-          title: 'Confirm Validation',
-          message:
-            "Be sure to save your changes before clicking the <strong>validate</strong>  project.validated ||or you'll lose them. Done saving? Type <strong>YES</strong> to confirm.",
-          html: true,
-          cancel: true,
-          prompt: {
-            model: '',
-            isValid: val => val.toLowerCase() === 'yes'
-          }
-        })
-        .onOk(() => this.validateProject());
-    },
-    validateProject() {
-      const id = this.$route.params.id;
-
-      this.$q
-        .dialog({
-          component: ValidateProject,
-          title: 'Validate Project'
-        })
-        .onOk(data => {
-          const payload = {
-            id: id,
-            validation_data: data.validation_data,
-            validation_signed: data.validation_signed,
-            remarks: data.remarks
-          };
-
-          this.$q.loading.show();
-          this.$store
-            .dispatch('projects/validateProject', payload)
-            .then(() => {
-              this.$q.notify({
-                type: 'positive',
-                message: 'Successfully validated project.',
-                position: 'bottom-right'
-              });
-
-              this.validated = true;
-            })
-            .finally(() => this.$q.loading.hide());
-        });
     }
   },
   filters: {

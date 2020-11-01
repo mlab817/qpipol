@@ -8,42 +8,36 @@
             color="green"
             label="Validate"
             @click="handleValidateProject"
-          >
-          </q-btn>
-          <q-btn
-            icon="edit"
-            color="red"
-            label="Update"
-            :to="`/projects/${project.id}/edit`"
-          >
-          </q-btn>
+          />
         </div>
       </page-title>
     </template>
 
     <div class="col">
-      <q-scroll-area style="height: calc(100vh - 250px);">
-        <project-profile :project="project"></project-profile>
-      </q-scroll-area>
+			<key-facts :project="project"></key-facts>
+
+			<edit-pipol :project="project" @validate="handleValidateProject" />
     </div>
   </page-container>
 </template>
 
 <script>
+import EditPipol from '../components/projects/EditPipol'
 const PageTitle = () =>
   import(/* webpackChunkName: 'PageTitle' */ '@/ui/page/PageTitle');
 const PageContainer = () =>
-  import(/* webpackChunkName: 'PageTitle' */ '@/ui/page/PageContainer');
-const ProjectProfile = () => import('../components/projects/ProjectProfile');
+  import(/* webpackChunkName: 'PageContainer' */ '@/ui/page/PageContainer');
 
 import { FETCH_PROJECT_QUERY } from '@/graphql/queries';
 import ValidateProject from '../components/projects/dialogs/ValidateProject';
+import KeyFacts from '../components/projects/shared/KeyFacts'
 
 export default {
   components: {
+	  KeyFacts,
+	  EditPipol,
     PageTitle,
-    PageContainer,
-    ProjectProfile
+    PageContainer
   },
 
   name: 'PageReviewProject',
@@ -113,37 +107,54 @@ export default {
         });
     },
 
-    handleValidateProject() {
-      const id = this.$route.params.id;
+	  handleValidateProject() {
+		  this.$q
+			  .dialog({
+				  title: 'Confirm Validation',
+				  message:
+					  "Be sure to save your changes before clicking the <strong>validate</strong>  project or you'll lose them. Done saving? Type <strong>YES</strong> to confirm.",
+				  html: true,
+				  cancel: true,
+				  prompt: {
+					  model: '',
+					  isValid: val => val.toLowerCase() === 'yes'
+				  }
+			  })
+			  .onOk(() => this.validateProject());
+	  },
 
-      this.$q
-        .dialog({
-          component: ValidateProject,
-          title: 'Validate Project'
-        })
-        .onOk(data => {
-          const payload = {
-            id: id,
-            validation_data: data.validation_data,
-            validation_signed: data.validation_signed,
-            remarks: data.remarks
-          };
+	  validateProject() {
+		  const id = this.$route.params.id;
 
-          this.$q.loading.show();
-          this.$store
-            .dispatch('projects/validateProject', payload)
-            .then(() => {
-              this.$q.notify({
-                type: 'positive',
-                message: 'Successfully validated project.',
-                position: 'bottom-right'
-              });
+		  this.$q
+			  .dialog({
+				  component: ValidateProject,
+				  title: 'Validate Project'
+			  })
+			  .onOk(data => {
+				  const payload = {
+					  id: id,
+					  validation_data: data.validation_data,
+					  validation_signed: data.validation_signed,
+					  remarks: data.remarks
+				  };
 
-              this.validated = true;
-            })
-            .finally(() => this.$q.loading.hide());
-        });
-    }
+				  this.$q.loading.show();
+
+				  this.$store
+					  .dispatch('projects/validateProject', payload)
+					  .then(() => {
+						  this.$q.notify({
+							  type: 'positive',
+							  message: 'Successfully validated project.',
+							  position: 'bottom-right'
+						  });
+
+						  this.validated = true;
+					  })
+					  .finally(() => this.$q.loading.hide());
+			  });
+	  }
   }
 };
 </script>

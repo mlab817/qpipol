@@ -461,20 +461,21 @@ export const VALIDATE_PROJECT_MUTATION = gql`
     $id: ID!
     $validation_data: Boolean
     $validation_signed: Boolean
-    $validation_endorsed: Boolean
     $remarks: String
   ) {
     validateProject(
       id: $id
       validation_data: $validation_data
       validation_signed: $validation_signed
-      validation_endorsed: $validation_endorsed
       remarks: $remarks
     ) {
       id
       validation_data
       validation_signed
-      validation_endorsed
+	    submission_status {
+		    id
+		    name
+	    }
     }
   }
 `;

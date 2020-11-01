@@ -14,7 +14,7 @@
       @click="validateProject"
       label="Validate"
       icon="fact_check"
-      v-if="isReviewer && status === 'endorsed'"
+      v-if="isReviewer && status === 'Endorsed'"
     ></menu-item>
 
     <q-separator />
@@ -24,7 +24,7 @@
       label="Transfer"
       icon="subdirectory_arrow_right"
       tooltip="Restricted to owner only"
-      :disable="!showTransferItem"
+      :disable="!isOwner && !isDraft"
     ></menu-item>
 
     <q-separator />
@@ -34,7 +34,7 @@
       label="Delete"
       icon="delete"
       tooltip="Restricted to owner only"
-      :disable="!isOwner"
+      :disable="!isOwner || !isDraft"
     ></menu-item>
 
     <q-separator />
@@ -105,7 +105,7 @@ export default {
       return isOwner;
     },
     isDraft() {
-      return this.status === 'draft'
+      return this.status === 'Draft'
     },
 	  showValidateItem() {
 		  const status = this.status;
@@ -222,7 +222,7 @@ export default {
               responseType: 'arraybuffer',
               headers: {
                 'content-type': 'application/json',
-                accept: 'application/pdf'
+                accept: 'application/octet-stream'
               }
             })
             .then(res => {
@@ -233,7 +233,7 @@ export default {
               });
               const link = document.createElement('a');
               link.href = window.URL.createObjectURL(blob);
-              link.download = 'export.pdf';
+              link.download = 'export.docx';
               link.click();
             })
             .catch(err => console.log(err.message));
