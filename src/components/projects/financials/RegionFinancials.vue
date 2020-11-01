@@ -62,16 +62,13 @@
 </template>
 
 <script>
-import { FETCH_REGIONS } from 'src/graphql';
 import { projectService } from 'src/services';
 import PlusButton from '../../../ui/buttons/PlusButton'
-import SingleSelect from '../../../ui/form-inputs/SingleSelect'
-import MoneyInput from '../../../ui/form-inputs/MoneyInput'
 import AddRegion from './AddRegion'
 
 export default {
-  name: 'FsFinancials',
-	components: {AddRegion, PlusButton },
+  name: 'RegionFinancials',
+	components: { AddRegion, PlusButton },
 	props: ['data', 'projectId'],
 
   computed: {

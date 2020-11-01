@@ -1,115 +1,193 @@
 <template>
-  <q-card :style="$q.screen.gt.xs ? 'min-width:400px' : ''">
-    <card-header title="Add Funding Source Financial Data"></card-header>
-    <q-form @submit.prevent="handleSubmit" ref="myForm">
-      <q-card-section class="q-pa-sm">
-        <funding-source
-          v-model="fsToAdd.id"
-          label="Funding Source"
-          :rules="[val => !!val || '* Field is required']"
-        ></funding-source>
+	<q-card style="max-width: 80wh; min-width: 400px;">
+		<q-bar class="bg-accent text-white">
+			<div>Add/Edit Funding Source</div>
+			<q-space />
+			<q-btn flat round dense icon="close" v-close-popup />
+		</q-bar>
 
-        <annual-target class="q-mt-md" v-model="fsToAdd.pivot"></annual-target>
+		<q-form @submit="handleSubmit">
+			<q-card-section class="q-gutter-sm">
+				<single-select
+						label="Funding Source"
+						v-model="investmentToSubmit.funding_source_id"
+						:options="filteredItems"
+						:rules="[val => !!val || '* Required']"
+						:readonly="editMode"
+				></single-select>
 
-        <q-input
-          label="Total"
-          outlined
-          class="col q-mt-md"
-          input-class="text-right"
-          readonly
-          :value="fs_total"
-        ></q-input>
-      </q-card-section>
-      <q-card-actions align="right">
-        <q-btn
-          outline
-          type="button"
-          label="Cancel"
-          color="negative"
-          v-close-popup
-        ></q-btn>
-        <q-btn label="Submit" color="primary" type="submit"></q-btn>
-      </q-card-actions>
-    </q-form>
-  </q-card>
+				<money-input
+						label="2016 &amp; Prior"
+						v-model="investmentToSubmit.investment_target_2016"
+				/>
+				<money-input
+						label="2017"
+						v-model="investmentToSubmit.investment_target_2017"
+				/>
+				<money-input
+						label="2018"
+						v-model="investmentToSubmit.investment_target_2018"
+				/>
+				<money-input
+						label="2019"
+						v-model="investmentToSubmit.investment_target_2019"
+				/>
+				<money-input
+						label="2020"
+						v-model="investmentToSubmit.investment_target_2020"
+				/>
+				<money-input
+						label="2021"
+						v-model="investmentToSubmit.investment_target_2021"
+				/>
+				<money-input
+						label="2022"
+						v-model="investmentToSubmit.investment_target_2022"
+				/>
+				<money-input
+						label="2023"
+						v-model="investmentToSubmit.investment_target_2023"
+				/>
+				<money-input
+						label="2024"
+						v-model="investmentToSubmit.investment_target_2024"
+				/>
+				<money-input
+						label="2025 &amp; Beyond"
+						v-model="investmentToSubmit.investment_target_2025"
+				/>
+				<money-input
+						label="Total"
+						:value="investment_target_total"
+						readonly
+				/>
+
+			</q-card-section>
+			<q-card-actions align="right">
+				<q-btn label="Cancel" flat v-close-popup color="primary"></q-btn>
+				<q-btn label="Ok" flat type="submit" color="primary"></q-btn>
+			</q-card-actions>
+		</q-form>
+	</q-card>
 </template>
 
 <script>
-import CardHeader from '@/ui/cards/CardHeader';
-import AnnualTarget from './AnnualTarget';
-import FundingSource from '../dropdowns/FundingSource';
+	import {
+		MoneyInput,
+		SingleSelect
+	} from '@/ui'
+	import { FETCH_FUNDING_SOURCES } from '../../../graphql/queries'
+	import { projectService } from '../../../services'
+	import { Notify } from 'quasar'
 
-export default {
-  components: {
-    CardHeader,
-    AnnualTarget,
-    FundingSource
-  },
+	export default {
+		components: { MoneyInput, SingleSelect },
+		props: ['investmentToEdit','taken','projectId','editMode'],
+		name: 'AddFs',
+		apollo: {
+			funding_sources: {
+				query: FETCH_FUNDING_SOURCES
+			}
+		},
+		computed: {
+			filteredItems() {
+				let items = this.funding_sources,
+					taken = this.taken;
 
-  name: 'AddFs',
+				// if in edit mode, show all
+				if (this.investmentToSubmit.id) {
+					return items;
+				}
 
-  props: ['fs'],
+				// if in add mode, filter
+				return items.filter(x => !taken.includes(x.id));
+			},
+			investment_target_total() {
+				const investmentToSubmit = this.investmentToSubmit
 
-  computed: {
-    fs_total() {
-      const {
-        target_2016,
-        target_2017,
-        target_2018,
-        target_2019,
-        target_2020,
-        target_2021,
-        target_2022,
-        target_2023
-      } = this.fsToAdd.pivot;
+				console.log(investmentToSubmit)
 
-      return (
-        target_2016 +
-        target_2017 +
-        target_2018 +
-        target_2019 +
-        target_2020 +
-        target_2021 +
-        target_2022 +
-        target_2023
-      );
-    }
-  },
+				const remove = ['id','funding_source_id','project_id']
 
-  data() {
-    return {
-      fsToAdd: {
-        id: '',
-        pivot: {
-          target_2016: 0,
-          target_2017: 0,
-          target_2018: 0,
-          target_2019: 0,
-          target_2020: 0,
-          target_2021: 0,
-          target_2022: 0,
-          target_2023: 0
-        }
-      }
-    };
-  },
+				return Object.keys(investmentToSubmit).filter(k => (remove.indexOf(k) === -1))
+					.reduce((acc, value) => {
+						console.log(acc, investmentToSubmit[value])
+						acc += investmentToSubmit[value]
+						return acc
+					}, 0)
+			}
+		},
+		data() {
+			return {
+				investmentToSubmit: {
+					funding_source_id: null,
+					project_id: null,
+					investment_target_2016: 0,
+					investment_target_2017: 0,
+					investment_target_2018: 0,
+					investment_target_2019: 0,
+					investment_target_2020: 0,
+					investment_target_2021: 0,
+					investment_target_2022: 0,
+					investment_target_2023: 0,
+					investment_target_2024: 0,
+					investment_target_2025: 0
+				},
+				funding_sources: []
+			}
+		},
+		methods: {
+			handleSubmit() {
+				const investmentToSubmit = this.investmentToSubmit,
+					project_id = this.projectId;
+				console.log(investmentToSubmit)
 
-  methods: {
-    handleSubmit() {
-      this.$refs.myForm.validate().then(success => {
-        if (success) {
-          this.$emit('input', this.fsToAdd);
-        } else {
-          alert('Please check input');
-        }
-      });
-    }
-  },
+				this.$q.loading.show();
 
-  mounted() {
-    if (typeof this.fs !== 'undefined') {
-      this.fsToAdd = JSON.parse(JSON.stringify(this.fs));
-    }
-  }
-};
+				if (investmentToSubmit.id) {
+					// update
+					projectService
+						.updateFundingSourceFinancial(investmentToSubmit)
+						.then(() => {
+							this.$emit('close');
+						})
+						.catch(err => Notify.create({
+							message: err.message
+						}))
+						.finally(() => this.$q.loading.hide());
+				} else {
+					// assign project id here
+					const investmentToCreate = {
+						funding_source_id: investmentToSubmit.funding_source_id,
+						project_id: project_id,
+						investment_target_2016: investmentToSubmit.investment_target_2016,
+						investment_target_2017: investmentToSubmit.investment_target_2017,
+						investment_target_2018: investmentToSubmit.investment_target_2018,
+						investment_target_2019: investmentToSubmit.investment_target_2019,
+						investment_target_2020: investmentToSubmit.investment_target_2020,
+						investment_target_2021: investmentToSubmit.investment_target_2021,
+						investment_target_2022: investmentToSubmit.investment_target_2022,
+						investment_target_2023: investmentToSubmit.investment_target_2023,
+						investment_target_2024: investmentToSubmit.investment_target_2024,
+						investment_target_2025: investmentToSubmit.investment_target_2025,
+						investment_target_total: this.investment_target_total
+					}
+					// create
+					projectService
+						.createFundingSourceFinancial(investmentToCreate)
+						.then(() => {
+							this.$emit('close');
+						})
+						.catch(err => Notify.create({
+							message: err.message
+						}))
+						.finally(() => this.$q.loading.hide());
+				}
+			}
+		},
+		mounted() {
+			this.investmentToSubmit = Object.assign({}, this.investmentToEdit)
+			console.log(this.investmentToSubmit)
+		}
+	}
 </script>
