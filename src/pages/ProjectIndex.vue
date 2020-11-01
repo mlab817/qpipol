@@ -28,18 +28,6 @@
         </div>
       </template>
 
-			<template v-slot:header="props">
-				<q-tr :props="props" class="bg-black text-white">
-					<q-th
-							v-for="col in props.cols"
-							:key="col.name"
-							:props="props"
-					>
-						{{ col.label }}
-					</q-th>
-				</q-tr>
-			</template>
-
       <template v-slot:top-right="props">
         <div class="row q-gutter-sm">
           <search v-model="filter"></search>
@@ -319,7 +307,8 @@ export default {
         {
           name: 'cost',
           label: 'Total Project Cost',
-          field: row => row.total_project_cost.toLocaleString()
+          field: row => row.investment_target_total,
+					format: (val) => val.toLocaleString()
         },
         {
           name: 'updated_by',
@@ -330,14 +319,6 @@ export default {
           name: 'last_updated',
           label: 'Last Updated',
           field: row => row.updatedAt,
-          sortable: true,
-          align: 'center'
-        },
-        {
-          name: 'processing_status',
-          label: 'Processing Status',
-          field: row =>
-            row.processing_status ? row.processing_status.name : '',
           sortable: true,
           align: 'center'
         },

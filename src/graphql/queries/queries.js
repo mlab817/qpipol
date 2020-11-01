@@ -315,35 +315,6 @@ export const FETCH_ENCODERS_QUERY = gql`
 
 /* Projects */
 
-// This query fetches all projects at once, not ideal esp if you have a long list
-export const GET_PROJECTS = gql`
-  query projects {
-    projects {
-      id
-      title
-      operating_unit {
-        id
-        name
-        image
-        acronym
-      }
-      description
-      main_funding_source_id
-      main_funding_source {
-        id
-        name
-      }
-      total_project_cost
-      can_update
-      creator {
-        name
-      }
-      created_at
-      updated_at
-    }
-  }
-`;
-
 export const ALL_PROJECTS = gql`
   query {
     allProjects {
@@ -359,16 +330,12 @@ export const ALL_PROJECTS = gql`
         image
       }
       updated_at
-      processing_status {
-        id
-        name
-      }
       creator {
         id
         nickname
       }
       finalized
-      total_project_cost
+      investment_target_total
       main_funding_source {
         id
         name

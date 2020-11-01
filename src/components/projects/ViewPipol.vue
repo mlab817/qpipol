@@ -1,19 +1,8 @@
 <template>
 	<div v-if="project" style="margin-bottom: 70px;">
-			<!-- hide if project is finalized or endorsed and if the user is not a reviewer -->
-			<q-banner
-					class="bg-green-5 text-white col-xl-6 col-lg-6 col-md-8 col-sm-9 col-xs-12 q-mb-md"
-					v-if="(project.finalized || project.endorsed) && !isReviewer"
-			>
-				<template v-slot:avatar>
-					<q-icon name="info" color="white" />
-				</template>
-				This project has been finalized/endorsed. It cannot be edited.
-				<template v-slot:action>
-					<q-btn flat color="white" label="PROJECTS" to="/projects" />
-				</template>
-			</q-banner>
+			<key-facts :project="project" />
 
+			<!-- hide if project is finalized or endorsed and if the user is not a reviewer -->
 			<template v-if="error">
 				<q-banner class="bg-grey-2">
 					<template v-slot:avatar>
@@ -555,9 +544,11 @@
 	import VfsFinancials from './financials/VfsFinancials'
 	import VrFinancials from './financials/VrFinancials'
 	import VfsInfrastructures from './financials/VfsInfrastructures'
+	import KeyFacts from './shared/KeyFacts'
 
 	export default {
 		components: {
+			KeyFacts,
 			VfsInfrastructures,
 			VrFinancials,
 			VfsFinancials,

@@ -105,6 +105,7 @@ export const PROJECT_FRAGMENT = gql`
         id
         name
       }
+	    project_id
       infrastructure_target_2016
       infrastructure_target_2017
       infrastructure_target_2018

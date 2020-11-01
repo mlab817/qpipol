@@ -663,7 +663,6 @@
             <text-input
               v-model="project.employment_generated"
               label="No. of persons to be employed"
-              :rules="rules.required"
               hint="Please indicate the no. of persons to be employed by the project outside of the implementing agency"
             />
           </q-card-section>
@@ -679,6 +678,7 @@
                 <funding-source
                   label="Main Funding Source"
                   v-model="project.main_funding_source_id"
+									:rules="rules.required"
                   class="q-mb-sm"
                 />
                 <q-item-label class="text-weight-bold text-caption"
@@ -817,10 +817,10 @@
 										<td-money :value="project.nep_2019" />
 										<td-money :value="project.nep_2020" />
 										<td-money :value="project.nep_2021" />
-										<td-money :value="project.nep_2022" />
-										<td-money :value="project.nep_2023" />
-										<td-money :value="project.nep_2024" />
-										<td-money :value="project.nep_2025" />
+										<td class="bg-red-1"></td>
+										<td class="bg-red-1"></td>
+										<td class="bg-red-1"></td>
+										<td class="bg-red-1"></td>
 										<td-money :value="nep_total" />
                   </tr>
                   <tr @click="editGaaDialog = true" class="cursor-pointer">
@@ -842,10 +842,10 @@
 										<td-money :value="project.gaa_2019" />
 										<td-money :value="project.gaa_2020" />
 										<td-money :value="project.gaa_2021" />
-										<td-money :value="project.gaa_2022" />
-										<td-money :value="project.gaa_2023" />
-										<td-money :value="project.gaa_2024" />
-										<td-money :value="project.gaa_2025" />
+										<td class="bg-red-1"></td>
+										<td class="bg-red-1"></td>
+										<td class="bg-red-1"></td>
+										<td class="bg-red-1"></td>
 										<td-money :value="gaa_total" />
                   </tr>
                   <tr
@@ -869,11 +869,11 @@
 										<td-money :value="project.disbursement_2018" />
 										<td-money :value="project.disbursement_2019" />
 										<td-money :value="project.disbursement_2020" />
-										<td-money :value="project.disbursement_2021" />
-										<td-money :value="project.disbursement_2022" />
-										<td-money :value="project.disbursement_2023" />
-										<td-money :value="project.disbursement_2024" />
-										<td-money :value="project.disbursement_2025" />
+										<td class="bg-red-1"></td>
+										<td class="bg-red-1"></td>
+										<td class="bg-red-1"></td>
+										<td class="bg-red-1"></td>
+										<td class="bg-red-1"></td>
 										<td-money :value="disbursement_total" />
                   </tr>
                 </tbody>
@@ -904,6 +904,7 @@
                     <money-input v-model="project.nep_2019" label="2019" />
                     <money-input v-model="project.nep_2020" label="2020" />
                     <money-input v-model="project.nep_2021" label="2021" />
+										<money-input :value="nep_total" label="Total" readonly />
                   </div>
                   <q-card-actions align="right">
                     <q-btn
@@ -939,6 +940,7 @@
                     <money-input v-model="project.gaa_2018" label="2018" />
                     <money-input v-model="project.gaa_2019" label="2019" />
                     <money-input v-model="project.gaa_2020" label="2020" />
+										<money-input :value="gaa_total" label="Total" readonly />
                   </div>
                   <q-card-actions align="right">
                     <q-btn
@@ -984,6 +986,7 @@
                       v-model="project.disbursement_2020"
                       label="2020"
                     />
+										<money-input :value="disbursement_total" label="Total" readonly />
                   </div>
                   <q-card-actions align="right">
                     <q-btn
@@ -1556,7 +1559,8 @@ export default {
         project.gaa_2017 +
         project.gaa_2018 +
         project.gaa_2019 +
-        project.gaa_2020
+        project.gaa_2020 +
+        project.gaa_2021
       );
     },
 

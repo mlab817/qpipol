@@ -1631,6 +1631,7 @@ export const CREATE_FUNDING_SOURCE_INFRASTRUCTURE = gql`
         id
         name
       }
+			project_id
       infrastructure_target_2016
       infrastructure_target_2017
       infrastructure_target_2018
@@ -1663,7 +1664,7 @@ export const UPDATE_FUNDING_SOURCE_INFRASTRUCTURE = gql`
     $infrastructure_target_2025: Float
     $infrastructure_target_total: Float
   ) {
-    createFundingSourceInfrastructure(
+    updateFundingSourceInfrastructure(
       input: {
         id: $id
         project_id: $project_id
@@ -1688,6 +1689,7 @@ export const UPDATE_FUNDING_SOURCE_INFRASTRUCTURE = gql`
         id
         name
       }
+	    project_id
       infrastructure_target_2016
       infrastructure_target_2017
       infrastructure_target_2018
