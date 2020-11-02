@@ -20,6 +20,7 @@
       map-options
       emit-value
       clearable
+      :loading="loading"
     >
     </q-select>
   </div>
@@ -41,7 +42,11 @@ export default {
     value: [String, Number, Boolean],
     hint: { type: String },
     rules: Array,
-    readonly: Boolean
+    readonly: Boolean,
+    loading: {
+      type: Boolean,
+      default: false
+    }
   },
   computed: {
     ...mapState('settings', ['dense']),

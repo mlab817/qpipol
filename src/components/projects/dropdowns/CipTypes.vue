@@ -3,6 +3,7 @@
     label="CIP Type"
     v-model="selected"
     :options="cip_types"
+    :rules="rules"
   ></single-select>
 </template>
 
@@ -13,7 +14,7 @@ import SingleSelect from '@/ui/form-inputs/SingleSelect';
 export default {
   components: { SingleSelect },
   name: 'CipType',
-  props: ['value'],
+  props: ['value','rules'],
   apollo: {
     cip_types: {
       query: CIP_TYPES_QUERY

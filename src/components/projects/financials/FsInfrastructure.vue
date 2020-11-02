@@ -1,5 +1,5 @@
 <template>
-	<div class="col q-pa-md">
+	<div class="col">
 		<q-dialog v-model="addDialog">
 			<add-infra :taken="taken" :edit-mode="false" :infrastructure-to-edit="infrastructureToSubmit" :project-id="projectId" @close="addDialog = false" />
 		</q-dialog>
@@ -13,7 +13,7 @@
 				bordered
 				separator="cell"
 				wrap-cells
-				title="Total infrastructure Requirement by Funding Source (in absolute PhP)"
+				title="Total Infrastructure Requirement by Funding Source (in absolute PhP)"
 				class="col"
 				:data="data"
 				:columns="columns"
@@ -160,7 +160,7 @@
 				columns: [
 					{
 						name: 'funding_source',
-						label: 'funding_source',
+						label: 'Funding Source',
 						field: row => row.funding_source && row.funding_source.name,
 						align: 'left'
 					},

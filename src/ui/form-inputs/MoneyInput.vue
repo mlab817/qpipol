@@ -3,7 +3,6 @@
     outlined
     v-model="money"
     :label="label"
-    :hint="`value: ${money}`"
     :rules="rules"
 		:dense="$q.screen.lt.md"
 		:readonly="readonly"

@@ -3,7 +3,7 @@
     <!-- hide if project is finalized or endorsed and if the user is not a reviewer -->
     <q-banner
       class="bg-green-5 text-white col-xl-6 col-lg-6 col-md-8 col-sm-9 col-xs-12 q-mb-md"
-      v-if="(project.finalized || project.endorsed) && !isReviewer"
+      v-if="(submission_status === 'Finalized' || submission_status === 'Endorsed') && !isReviewer"
     >
       <template v-slot:avatar>
         <q-icon name="info" color="white" />
@@ -32,6 +32,7 @@
     </template>
 
     <template v-else>
+
       <q-form
         ref="editForm"
         @submit="updateProject"
@@ -83,7 +84,7 @@
           <q-card-section>
             <implementing-agency
               v-model="project.operating_unit_id"
-              :rules="rules.selectOne"
+              :rules="rules.required"
               :readonly="true"
             ></implementing-agency>
           </q-card-section>
@@ -144,7 +145,7 @@
                   v-model="project.pip"
                 />
                 <div class="q-pa-sm">
-                  <typology v-model="project.typology_id" v-if="project.pip" />
+                  <typology v-model="project.typology_id" v-if="project.pip" :rules="rules.required" />
                 </div>
               </div>
               <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -153,7 +154,7 @@
                   v-model="project.cip"
                 />
                 <div class="q-pa-sm">
-                  <cip-types v-model="project.cip_type_id" v-if="project.cip" />
+                  <cip-types v-model="project.cip_type_id" v-if="project.cip" :rules="rules.required" />
                 </div>
               </div>
             </div>
@@ -362,6 +363,7 @@
             <text-input
               label="UACS Code"
               v-model="project.uacs_code"
+              with-na
             ></text-input>
 
             <text-input
@@ -384,7 +386,7 @@
         ></section-header>
         <q-card square>
           <q-card-section class="q-gutter-sm">
-            <pdp-chapter v-model="project.pdp_chapter_id"></pdp-chapter>
+            <pdp-chapter v-model="project.pdp_chapter_id" :rules="rules.required"></pdp-chapter>
 
             <!-- Skip this if there is no chapter or the PAP is an admin building -->
             <template
@@ -493,6 +495,7 @@
           <q-card-section class="q-gutter-sm">
             <project-document
               v-model="project.project_preparation_document_id"
+              :rules="rules.required"
             ></project-document>
 
             <template v-if="project.project_preparation_document_id === '1'">
@@ -807,7 +810,7 @@
                   </tr>
                   <tr>
                     <td colspan="12">
-                      Actual Investments (Click edit button to edit)
+                      Actual Investments (Click edit button (<q-icon name="edit" color="blue" />) to edit)
                     </td>
                   </tr>
                   <tr @click="editNepDialog = true" class="cursor-pointer">
@@ -1312,24 +1315,27 @@ export default {
   },
 
   computed: {
-    canUpdate() {
-      const finalized = this.project.finalized || false,
-        endorsed = this.project.endorsed || false,
-        isReviewer = this.isReviewer,
-        isEncoder = this.isEncoder;
-      console.log(
-        `endorsed: ${endorsed}, finalized: ${finalized}, isReviewer: ${isReviewer}, isEncoder: ${isEncoder}`
-      );
-      let res;
+    submission_status() {
+      const name = this.project.submission_status ? this.project.submission_status.name : ''
 
-      if (isReviewer && endorsed) {
+      return name
+    },
+    canUpdate() {
+      const submissionStatus = this.submission_status
+      const isReviewer = this.isReviewer,
+        isEncoder = this.isEncoder;
+        console.log(
+          `submissionStatus: ${submissionStatus}, isReviewer: ${isReviewer}, isEncoder: ${isEncoder}`
+        );
+      let res = false;
+
+      if (isReviewer && submissionStatus === 'Endorsed') {
         res = true;
-      } else if (!finalized && isEncoder) {
+      } else if (submissionStatus === 'Draft' && isEncoder) {
         res = true;
       } else {
         res = false;
       }
-      console.log(res);
       return res;
     },
     canFinalize() {
