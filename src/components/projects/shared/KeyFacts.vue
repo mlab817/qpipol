@@ -117,7 +117,7 @@
         <q-item>
           <q-item-section>
             <q-item-label caption>
-              Processing Status
+              Submission Status
               <q-icon
                 name="help_outline"
                 class="cursor-pointer"
@@ -127,8 +127,8 @@
             <q-item-label class="text-body2">
               <q-badge>
                 {{
-                  project.processing_status
-                    ? project.processing_status.name
+                  project.submission_status
+                    ? project.submission_status.name
                     : ''
                 }}
               </q-badge>

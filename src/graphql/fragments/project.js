@@ -212,6 +212,14 @@ export const PROJECT_FRAGMENT = gql`
 			name
 		}
     pip
+    prexc_program {
+      id
+      name
+    }
+    prexc_subprogram {
+      id
+      name
+    }
     priority_ranking
     processing_status {
       id
@@ -386,5 +394,10 @@ export const PROJECT_FRAGMENT = gql`
     project_preparation_document_id
     project_preparation_document_others
     version
+    submission_status {
+      id
+      name
+    }
+    created_by
   }
 `;

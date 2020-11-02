@@ -701,7 +701,9 @@
 				uploadAttachment: false,
 				rules: {
 					required: true
-				}
+				},
+				error: false,
+				errorMessage: null
 			};
 		},
 		methods: {

@@ -160,7 +160,7 @@
 				columns: [
 					{
 						name: 'funding_source',
-						label: 'funding_source',
+						label: 'Funding Source',
 						field: row => row.funding_source && row.funding_source.name,
 						align: 'left'
 					},

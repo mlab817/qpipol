@@ -765,13 +765,15 @@
                 <tbody>
                   <tr>
                     <td colspan="12">
-                      Target Investment Requirements (auto-computed from
-                      breakdown)
+                      Target Investment Requirements <span class="text-negative"> (Auto-computed from
+                      breakdown by Funding Source) </span>
                     </td>
                   </tr>
                   <tr>
                     <td>
-                      Total
+                      Total <q-icon name="help" color="primary">
+                        <q-tooltip>Computed from Project Cost Breakdown by Funding Source</q-tooltip>
+                      </q-icon>
                     </td>
 										<td-money :value="investTotal.investment_target_2016" />
 										<td-money :value="investTotal.investment_target_2017" />
@@ -787,7 +789,9 @@
                   </tr>
                   <tr>
                     <td>
-                      Infrastructure
+                      Infrastructure <q-icon name="help" color="primary">
+                        <q-tooltip>Computed from TRIP Breakdown by Funding Source</q-tooltip>
+                      </q-icon>
                     </td>
 										<td-money :value="infraTotal.infrastructure_target_2016" />
 										<td-money :value="infraTotal.infrastructure_target_2017" />
@@ -862,7 +866,7 @@
                         size="sm"
                         @click="editDisbursementDialog = true"
                       />
-                      Disbursement
+                      Disbursement *
                     </td>
 										<td-money :value="project.disbursement_2016" />
 										<td-money :value="project.disbursement_2017" />
@@ -997,6 +1001,10 @@
                   </q-card-actions>
                 </q-card>
               </q-dialog>
+            </div>
+
+            <div class="row justify-end">
+              <span class="text-caption">* Note: Actual Disbursement data must be as of September 30, 2020.</span>
             </div>
           </q-card-section>
         </q-card>

@@ -549,16 +549,10 @@ export const UPLOAD_SIGNED_COPY = gql`
       id
       signed_copy
       signed_copy_link
-    }
-  }
-`;
-
-export const ENDORSE_PROJECT = gql`
-  mutation($id: ID!, $signed_copy: Upload, $remarks: String) {
-    endorseProject(id: $id, signed_copy: $signed_copy, remarks: $remarks) {
-      id
-      signed_copy
-      signed_copy_link
+      submission_status {
+        id
+        name
+      }
     }
   }
 `;
