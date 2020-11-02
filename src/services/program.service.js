@@ -6,7 +6,8 @@ import {
   DELETE_PREXC_ACTIVITY,
   UPDATE_PREXC_ACTIVITY,
   FINALIZE_PREXC_ACTIVITY,
-  FINALIZE_PREXC_ACTIVITIES
+  FINALIZE_PREXC_ACTIVITIES,
+  EXPORT_EXCEL
 } from 'src/graphql';
 
 export const programService = {
@@ -103,5 +104,13 @@ export const programService = {
       })
       .then(handleResponse)
       .catch(handleError);
+  },
+  exportExcel() {
+    return client
+      .query({
+        query: EXPORT_EXCEL
+      })
+      .then(handleResponse)
+      .catch(handleError)
   }
 };

@@ -1167,3 +1167,11 @@ export const SUBMISSION_STATUSES = gql`
     }
   }
 `;
+
+export const EXPORT_EXCEL = gql`
+  query {
+    exportExcel {
+      link
+    }
+  }
+`

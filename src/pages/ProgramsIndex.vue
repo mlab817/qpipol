@@ -110,6 +110,10 @@
 
 				<refresh-button @click="refetch" />
 
+        <q-btn flat round icon="get_app" @click="exportExcel">
+          <q-tooltip>Download with annual data</q-tooltip>
+        </q-btn>
+
 				<download-button @click="download" />
 
 				<fullscreen-button @click="props.toggleFullscreen" :in-fullscreen="props.inFullscreen"></fullscreen-button>
@@ -208,7 +212,7 @@ import PageTitle from '@/ui/page/PageTitle.vue';
 import PrexcActivity from '@/components/programs/PrexcActivity.vue';
 import ViewActivity from '@/components/programs/ViewActivity.vue';
 import { wrapCsvValue } from 'src/utils';
-import { exportFile } from 'quasar';
+import { exportFile, openURL } from 'quasar';
 import { programService } from 'src/services';
 
 import {
@@ -458,6 +462,28 @@ export default {
             .finalizePrexcActivities({ id: id })
             .then(() => this.$q.loading.hide());
         });
+    },
+    exportExcel() {
+      this.$q.loading.show()
+      programService
+        .exportExcel()
+        .then(({ exportExcel }) => {
+          this.$q.dialog({
+            title: 'File Generate',
+            message: `Click OK or this <a href="${exportExcel.link}" target="_blank">link</a> to download the file.`,
+            html: true,
+            cancel: true
+          }).onOk(() => openURL(exportExcel.link, {
+            target: '_blank'
+          }))
+        })
+        .catch(err => {
+          this.$q.notify({
+            type: 'negative',
+            message: err.message
+          })
+        })
+        .finally(() => this.$q.loading.hide())
     }
   },
 	filters: {
