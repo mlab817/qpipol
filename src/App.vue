@@ -11,10 +11,6 @@ import { LocalStorage } from 'quasar';
 export default {
   name: 'App',
 
-  computed: {
-    ...mapState('settings', ['dark'])
-  },
-
   created() {
     const token = LocalStorage.getItem('token');
     if (token && (token !== null || token !== '')) {
