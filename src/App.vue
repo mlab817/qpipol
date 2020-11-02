@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
 import { LocalStorage } from 'quasar';
 
 export default {
