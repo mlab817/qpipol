@@ -12,6 +12,7 @@ module.exports = function(ctx) {
       'loading-defaults',
       'router-auth',
       'v-money',
+      'papaparse',
       'error-handler'
     ],
 
