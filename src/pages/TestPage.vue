@@ -59,6 +59,8 @@
 			</ul>
 		</div>
 
+    <pre>{{dataToSubmit}}</pre>
+
 	</page-container>
 </template>
 
@@ -76,6 +78,7 @@
 	import {
 		programService
 	} from '@/services'
+  import {openURL} from "quasar";
 
 	export default {
 		components: {
@@ -91,7 +94,8 @@
 				selected: [],
 				prexc_programs: [],
 				prexc_subprograms: [],
-				filter: ''
+				filter: '',
+        dataToSubmit: null
 			}
 		},
 		apollo: {
@@ -121,12 +125,13 @@
 				if (this.values.length) {
 
 					const sample = this.values[0]
+          const headers = this.$store.state.upload.headers
 
 					const columns = Object.keys(sample).map((x, index) => {
-						const headers = this.$store.state.upload.headers
+
 						return {
 							name: headers[index],
-							label: headers[index].toUpperCase().replace(/_/g," "),
+							label: headers[index] ? headers[index].toUpperCase().replace(/_/g," ") : index,
 							field: row => row[x],
 							align: 'left'
 						}
@@ -152,6 +157,7 @@
 			deleteSelected() {
 				const selected = this.selected
 				this.$store.dispatch('upload/deleteSelected', selected)
+        this.selected = []
 			},
 			saveSelected() {
 				const selected = this.selected
@@ -187,24 +193,23 @@
 				// show help
 			},
 			updatePrexcActivities() {
-				const selected = [...this.selected].map(s => {
-					delete s.program
-					delete s.subprogram
-					return {
-						...s,
-						name: s.activity
-					}
-				}).map(t => {
-					delete t.activity
-				})
+			  // remove unacceptable fields (subprogram, program and rename activity as name)
+        const selected = this.selected.map(sel => {
+          const { subprogram, program, saved, activity, ...otherFields } = sel
+          return {
+            ...otherFields,
+            name: activity
+          }
+        })
 
+        // prepare payload
 				const payload = {
 					operating_unit_id: this.$store.state.auth.user.operating_unit.id,
 					update: selected
 				}
 
-				console.log(payload)
-
+				this.dataToSubmit = payload
+        // run update
 				// programService.updatePrexcActivities(payload)
 				// 	.then(res => console.log(res))
 				// 	.catch(err => console.log(err.message))
