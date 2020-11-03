@@ -14,64 +14,53 @@
 
     <q-form @submit.prevent="handleSubmit" class="q-pa-md" v-else>
 			<q-item-label class="text-weight-bold text-negative">Note: This form is for Tier 1 PAPs only. For Tier 2 PAPs, use the Add Project Module.</q-item-label>
-      <q-list>
-        <q-item>
-          <q-item-section>
-            <q-item-label>Program</q-item-label>
-						<q-item-label caption>Type to filter...</q-item-label>
-          </q-item-section>
-          <q-item-section class="col-10">
-            <single-select
-              v-model="investmentToSubmit.prexc_program_id"
-              :options="prexc_programs"
-              :rules="[val => !!val || '* Required']"
-              :disable="editMode"
-            ></single-select>
-          </q-item-section>
-        </q-item>
-        <q-item>
-          <q-item-section>
-            <q-item-label>Subprogram</q-item-label>
-						<q-item-label caption>Type to filter...</q-item-label>
-          </q-item-section>
-          <q-item-section class="col-10">
-            <single-select
-              v-model="investmentToSubmit.prexc_subprogram_id"
-              :options="filterSubprograms"
-              :rules="[val => !!val || '* Required']"
-              :disable="editMode"
-            ></single-select>
-          </q-item-section>
-        </q-item>
-        <q-item>
-          <q-item-section>
-            <q-item-label>Activity</q-item-label>
-          </q-item-section>
-          <q-item-section class="col-10">
-            <text-input
-              v-model="investmentToSubmit.name"
-              stack-label
-              :rules="[val => !!val || '* Required']"
-              :disable="editMode"
-            ></text-input>
-          </q-item-section>
-        </q-item>
-        <q-item>
-          <q-item-section>
-            <q-item-label>UACS Code</q-item-label>
-						<q-item-label caption>Type N/A if this activity has no UACS code yet...</q-item-label>
-          </q-item-section>
-          <q-item-section class="col-10">
-            <text-input
-              v-model="investmentToSubmit.uacs_code"
-              stack-label
-              :rules="[val => !!val || '* Required']"
-              :disable="editMode"
-							with-na
-            ></text-input>
-          </q-item-section>
-        </q-item>
-      </q-list>
+      <div class="row q-col-gutter-sm q-my-sm">
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+          <single-select
+            label="Program"
+            v-model="investmentToSubmit.prexc_program_id"
+            :options="prexc_programs"
+            :rules="[val => !!val || '* Required']"
+            :disable="editMode"
+          ></single-select>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+          <single-select
+            label="Subprogram"
+            v-model="investmentToSubmit.prexc_subprogram_id"
+            :options="filterSubprograms"
+            :rules="[val => !!val || '* Required']"
+            :disable="editMode"
+          ></single-select>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+          <single-select
+            label="Banner Program"
+            v-model="investmentToSubmit.banner_program_id"
+            :options="banner_programs"
+            :disable="editMode"
+          ></single-select>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+          <text-input
+            label="Activity"
+            v-model="investmentToSubmit.name"
+            stack-label
+            :rules="[val => !!val || '* Required']"
+            :disable="editMode"
+          ></text-input>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+          <text-input
+            label="UACS Code"
+            v-model="investmentToSubmit.uacs_code"
+            stack-label
+            :rules="[val => !!val || '* Required']"
+            :disable="editMode"
+            with-na
+          ></text-input>
+        </div>
+      </div>
 
       <q-markup-table wrap-cells separator="cell">
         <thead class="bg-accent text-white">
@@ -388,13 +377,13 @@
         <q-btn
 					color="primary"
 					type="submit"
-					label="Submit"
+					label="Save"
 					v-if="editMode" />
         <q-btn
           color="primary"
           label="Validate"
           @click="confirmValidation"
-          v-if="isEncoder"
+          v-if="isReviewer"
         />
       </div>
     </q-form>
@@ -402,7 +391,7 @@
 </template>
 
 <script>
-import { PREXC_ACTIVITY } from '@/graphql';
+import { PREXC_ACTIVITY, BANNER_PROGRAMS } from '@/graphql';
 import { programService } from '@/services';
 import MoneyInput from '@/ui/form-inputs/MoneyInput'
 import TextInput from '@/ui/form-inputs/TextInput'
@@ -426,7 +415,8 @@ export default {
 				return ['add','edit','validate'].indexOf(value) !== -1
 			},
 			default: 'add'
-		}
+		},
+    editMode: Boolean
 	},
   apollo: {
     prexc_activity: {
@@ -446,11 +436,17 @@ export default {
           this.editMode = true;
         }
       }
+    },
+    banner_programs: {
+      query: BANNER_PROGRAMS
     }
   },
   computed: {
     isEncoder() {
       return this.$store.getters['auth/isEncoder'];
+    },
+    isReviewer() {
+      return this.$store.getters['auth/isReviewer'];
     },
     filterSubprograms() {
       const subprograms = this.prexc_subprograms;
@@ -599,7 +595,7 @@ export default {
   },
   data() {
     return {
-      editMode: false,
+      banner_programs: [],
       prexc_activity: {},
       investmentToSubmit: {
         id: null,

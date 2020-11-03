@@ -163,7 +163,7 @@ const routes = [
     ]
   },
   {
-    path: '/test',
+    path: '/upload',
     component: () => import('@/layouts/AppLayout.vue'),
     children: [
       {
