@@ -8,8 +8,9 @@
           <div class="row q-gutter-sm items-center">
             <img src="~assets/app-logo-128x128.png" style="height: 40px;" />
 
-            <div class="gt-xs">
-              Investment Programming &amp; Management System
+            <div>
+              <span class="gt-md">{{appName}}</span>
+              <span class="lt-lg">{{appShortname}}</span>
             </div>
 
             <q-space />
@@ -65,6 +66,12 @@ export default {
   name: 'LandingLayout',
   computed: {
     ...mapGetters('auth', ['isLoggedIn'])
+  },
+  data() {
+    return {
+      appName: process.env.APP_NAME,
+      appShortname: process.env.APP_SHORTNAME
+    }
   }
 };
 </script>

@@ -247,6 +247,18 @@ const getters = {
       return state.user.setting.dark;
     }
     return false;
+  },
+  isAa(state) {
+    if (state.user.operating_unit && state.user.operating_unit.operating_unit_type) {
+      return state.user.operating_unit.operating_unit_type.name === 'attached-agency'
+    }
+    return false
+  },
+  isAc(state) {
+    if (state.user.operating_unit && state.user.operating_unit.operating_unit_type) {
+      return state.user.operating_unit.operating_unit_type.name === 'attached-corporation'
+    }
+    return false
   }
 };
 
