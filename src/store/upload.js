@@ -93,6 +93,12 @@ const actions = {
 			const merged = keys.reduce((obj, key, index) => ({ ...obj, [key]: v[index] }), {});
 			return merged
 		})
+		.map(x => {
+			return {
+				...x,
+				saved: false
+			}
+		})
 
 		commit('SET_DATA', niceData)
 	},
