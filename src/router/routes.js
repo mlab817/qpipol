@@ -163,6 +163,16 @@ const routes = [
     ]
   },
   {
+    path: '/upload',
+    component: () => import('@/layouts/AppLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('../pages/TestPage.vue'),
+      }
+    ]
+  },
+  {
     path: '/error',
     name: 'error',
     component: () =>

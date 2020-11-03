@@ -7,7 +7,8 @@ import {
   UPDATE_PREXC_ACTIVITY,
   FINALIZE_PREXC_ACTIVITY,
   FINALIZE_PREXC_ACTIVITIES,
-  EXPORT_EXCEL
+  EXPORT_EXCEL,
+  UPDATE_OPERATING_UNIT_PREXC_ACTIVITIES
 } from 'src/graphql';
 
 export const programService = {
@@ -15,7 +16,19 @@ export const programService = {
     return client
       .mutate({
         mutation: CREATE_PREXC_ACTIVITY,
-        variables: payload
+        variables: payload,
+        update: (store, { data: { createPrexcActivity } }) => {
+          const data = store.readQuery({
+            query: PREXC_ACTIVITIES
+          })
+
+          data.prexc_activities.push(createPrexcActivity)
+
+          store.writeQuery({
+            query: PREXC_ACTIVITIES,
+            data
+          })
+        }
       })
       .then(handleResponse)
       .catch(handleError);
@@ -106,9 +119,23 @@ export const programService = {
       .catch(handleError);
   },
   exportExcel() {
+    // create a null payload
+    const payload = {
+      operating_unit_id: null
+    }
     return client
-      .query({
-        query: EXPORT_EXCEL
+      .mutate({
+        mutation: EXPORT_EXCEL,
+        variables: payload
+      })
+      .then(handleResponse)
+      .catch(handleError)
+  },
+  updatePrexcActivities(payload) {
+    return client
+      .mutate({
+        mutation: UPDATE_OPERATING_UNIT_PREXC_ACTIVITIES,
+        variables: payload
       })
       .then(handleResponse)
       .catch(handleError)

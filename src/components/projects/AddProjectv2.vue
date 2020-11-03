@@ -4,68 +4,70 @@
 
     <q-form
       ref="addProject"
-      class="column q-gutter-sm"
-      @submit="submitForm"
+      @submit="confirmSubmit"
       @reset="resetForm"
       greedy
-      v-else
     >
-      <single-select
-        label="Program"
-        v-model="prexc_program_id"
-        :options="prexc_programs"
-        :rules="rules.required"
-      ></single-select>
-      <single-select
-        label="Subprogram"
-        v-model="prexc_subprogram_id"
-        :options="filtered_prexc_subprograms"
-        :rules="rules.required"
-      ></single-select>
+			<q-card flat square>
+				<q-card-section class="q-gutter-sm">
+					<single-select
+						label="Program"
+						v-model="prexc_program_id"
+						:options="prexc_programs"
+						:rules="rules.required"
+					></single-select>
+					<single-select
+						label="Subprogram"
+						v-model="prexc_subprogram_id"
+						:options="filtered_prexc_subprograms"
+						:rules="rules.required"
+					></single-select>
 
-      <text-input
-        label="UACS Code"
-        v-model="uacs_code"
-        :rules="rules.required"
-        hint="Input N/A if the PAP does not have a UACS Code yet."
-        with-na
-      />
+					<text-input
+						label="UACS Code"
+						v-model="uacs_code"
+						:rules="rules.required"
+						hint="Input N/A if the PAP does not have a UACS Code yet."
+						with-na
+					/>
 
-      <div class="row">
-        <text-input
-          label="Title"
-          v-model="title"
-          :rules="rules.required"
-          hint="The PAP Title must match the title of the proposal to be submitted to NEDA/DBM."
-        />
-        <!--
-					if title is not empty,
-					if no matches were found
-				-->
-        <div class="row" v-if="matches.length > 0">
-          <q-list>
-            <q-item v-for="{ name, id } in matches" :key="id">
-              <q-item-section>
-                <q-item-label
-                  class="text-caption"
-                  v-html="$options.filters.searchHighlight(name, title)"
-                ></q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </div>
-      </div>
+					<div class="row">
+						<text-input
+							label="Title"
+							v-model="title"
+							:rules="rules.required"
+							hint="The PAP Title must match the title of the proposal to be submitted to NEDA/DBM."
+						/>
+						<!--
+							if title is not empty,
+							if no matches were found
+						-->
+						<div class="row" v-if="matches.length > 0">
+							<q-list>
+								<q-item v-for="{ name, id } in matches" :key="id">
+									<q-item-section>
+										<q-item-label
+											class="text-caption"
+											v-html="$options.filters.searchHighlight(name, title)"
+										></q-item-label>
+									</q-item-section>
+								</q-item>
+							</q-list>
+						</div>
+					</div>
+				</q-card-section>
 
-      <div class="row justify-end">
-        <q-btn
-          label="Reset"
-          @click="confirmReset"
-          outline
-          color="primary"
-          class="q-mr-sm"
-        ></q-btn>
-        <q-btn label="Submit" @click="confirmSubmit" color="primary"></q-btn>
-      </div>
+				<q-card-actions align="right">
+					<q-btn
+						label="Reset"
+						@click="confirmReset"
+						outline
+						color="primary"
+						class="q-mr-sm"
+					></q-btn>
+					<q-btn label="Submit" type="submit" color="primary"></q-btn>
+				</q-card-actions>
+			</q-card>
     </q-form>
   </div>
 </template>
@@ -164,7 +166,7 @@ export default {
               cancel: true
             })
             .onOk(() => {
-              this.$refs.addProject.submit();
+              this.submitForm()
             });
         }
       });

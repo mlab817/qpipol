@@ -2,10 +2,22 @@
   <page-container>
     <template v-slot:title>
       <page-title title="Programs">
-        <q-btn label="Add Activity" @click="addPrexcActivity" color="primary" />
+        <q-btn v-if="!isAc && !isAa" label="Add Activity" @click="addPrexcActivity" color="primary" class="q-mr-sm" />
+        <q-btn v-if="!isAc && !isAa" label="Upload" to="/upload" color="primary" class="q-mr-sm" />
         <q-btn icon="help" flat round @click="helpDialog = true" />
       </page-title>
     </template>
+
+    <q-banner v-if="isAc || isAa" class="bg-grey-3 text-accent q-my-md">
+      <template v-slot:avatar>
+        <q-icon name="priority_high" />
+      </template>
+      For attached agencies and attached corporations, please use the Add Project and Projects Module to add your PAPs.
+      <template v-slot:action>
+        <q-btn flat to="/projects/add" label="Add Project" />
+        <q-btn flat to="/projects" label="Projects" />
+      </template>
+    </q-banner>
 
     <q-dialog v-model="helpDialog">
       <q-card>
@@ -15,39 +27,7 @@
           <q-btn flat round icon="close" v-close-popup />
         </q-bar>
         <q-card-section>
-          <p>
-            <strong
-              >Note: This is for Tier 1 (ongoing
-              programs/subprograms/activities) only. Use the Add Project module
-              for Tier 2 proposals. Projects added via Add Project Module will
-              appear here as an activity under the identified
-              program/subprogram.</strong
-            >
-          </p>
-
-          <p>
-            This is the substitute for Form 4 of the Public Investment Program
-            utilized in the FY 2019 updating of the Public Investment Program.
-            It provides the summary of investment requirements and actual budget
-            allocated and utilized per Program.
-          </p>
-
-          <p>
-            This is patterned after the PREXC programs of the operating units
-            with some modifications particularly on General Management and
-            Supervision and Locally Funded and Foreign Assisted Program.
-          </p>
-
-          <p>
-            For General Management and Supervision, only PAPs that fit the
-            Three-Year Rolling Infrastructure Program should be reported.
-          </p>
-
-          <p>
-            For locally-funded and foreign-assisted projects (excluding
-            individual FMR projects), they should be submitted using the
-            <a href="/projects">project profile</a> form.
-          </p>
+          <p v-for="(help, index) in helps" :key="index">{{help}}</p>
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -63,6 +43,7 @@
         :prexc_programs="prexc_programs"
         :prexc_subprograms="prexc_subprograms"
         :id="prexc_activity_id"
+        :edit-mode="true"
         @close="addEditPrexcActivityDialog = false"
       ></prexc-activity>
     </q-dialog>
@@ -78,6 +59,7 @@
         :prexc_programs="prexc_programs"
         :prexc_subprograms="prexc_subprograms"
         :id="prexc_activity_id"
+        :edit-mode="false"
         @close="addEditPrexcActivityDialog = false"
       ></view-activity>
     </q-dialog>
@@ -94,6 +76,7 @@
       :selected.sync="selected"
       selection="multiple"
       style="margin-bottom: 70px;"
+       v-if="!isAc && !isAa"
     >
       <template v-slot:top-right="props">
 				<search v-model="filter" />
@@ -190,7 +173,7 @@
 
       <template v-slot:bottom-row>
         <q-tr class="text-weight-bold">
-          <q-td colspan="4">TOTAL</q-td>
+          <q-td colspan="5">TOTAL</q-td>
           <q-td class="text-right">{{
             totalRow.infrastructure_target_total | money
           }}</q-td>
@@ -260,6 +243,12 @@ export default {
       }, arraySum);
 
       return arraySum;
+    },
+    isAc() {
+      return this.$store.getters['auth/isAc']
+    },
+    isAa() {
+      return this.$store.getters['auth/isAa']
     }
   },
   data() {
@@ -297,6 +286,13 @@ export default {
           name: 'prexc_activity',
           label: 'Activity',
           field: row => row.name,
+          align: 'left',
+          sortable: true
+        },
+        {
+          name: 'banner_program',
+          label: 'Banner Program',
+          field: row => row.banner_program && row.banner_program.name,
           align: 'left',
           sortable: true
         },
@@ -343,7 +339,14 @@ export default {
       prexc_activity_id: null,
       operating_unit_id: null,
       selected: [],
-      viewPrexcActivityDialog: false
+      viewPrexcActivityDialog: false,
+      helps: [
+        'This is for Tier 1 (ongoing programs/subprograms/activities) only. Use the Add Project module for Tier 2 proposals. Projects added via Add Project Module will appear here as an activity under the identified program/subprogram.',
+        'This is the substitute for Form 4 of the Public Investment Program utilized in the FY 2019 updating of the Public Investment Program. It provides the summary of investment requirements and actual budget allocated and utilized per Program.',
+        'This is patterned after the PREXC programs of the operating units with some modifications particularly on General Management and Supervision and Locally Funded and Foreign Assisted Program.',
+        'For General Management and Supervision, only PAPs that fit the Three-Year Rolling Infrastructure Program should be reported.',
+        'For locally-funded and foreign-assisted projects (excluding individual FMR projects), they should be submitted using the project profile form.'
+      ]
     };
   },
   methods: {
@@ -469,8 +472,8 @@ export default {
         .exportExcel()
         .then(({ exportExcel }) => {
           this.$q.dialog({
-            title: 'File Generate',
-            message: `Click OK or this <a href="${exportExcel.link}" target="_blank">link</a> to download the file.`,
+            title: 'File Generated',
+            message: `Click OK to download the file.`,
             html: true,
             cancel: true
           }).onOk(() => openURL(exportExcel.link, {

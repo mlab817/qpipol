@@ -13,6 +13,10 @@ export const USER_FRAGMENT = gql`
       id
       image
       name
+      operating_unit_type {
+        id
+        name
+      }
     }
     user_avatar
     contact_number

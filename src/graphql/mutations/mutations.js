@@ -912,8 +912,14 @@ export const CREATE_PREXC_ACTIVITY = gql`
         id
         name
       }
+      banner_program_id
+      banner_program {
+        id
+        name
+      }
       project_id
       uacs_code
+      trip
       infrastructure_target_2016
       infrastructure_target_2017
       infrastructure_target_2018
@@ -1119,6 +1125,12 @@ export const UPDATE_PREXC_ACTIVITY = gql`
         id
         name
       }
+      banner_program_id
+      banner_program {
+        id
+        name
+      }
+      trip
       project_id
       uacs_code
       infrastructure_target_2016
@@ -1779,3 +1791,51 @@ export const REVIEW_PREXC_ACTIVITY = gql`
   }
   ${PREXC_ACTIVITY_FRAGMENT}
 `;
+
+export const EXPORT_EXCEL = gql`
+  mutation ($operating_unit_id: ID) {
+    exportExcel (operating_unit_id: $operating_unit_id) {
+      link
+    }
+  }
+`
+
+export const UPDATE_OPERATING_UNIT_PREXC_ACTIVITIES = gql`
+  mutation updateOperatingUnit(
+    $id: ID!
+    $prexc_activities: UpdatePrexcActivitiesHasMany
+  ) {
+    updateOperatingUnit(input: {
+      id: $id
+      prexc_activities: $prexc_activities
+    }) {
+      id
+      prexc_activities {
+        id
+        name
+        operating_unit_id
+        operating_unit {
+          id
+          name
+        }
+        prexc_program {
+          id
+          name
+        }
+        prexc_subprogram {
+          id
+          name
+        }
+        project_id
+        uacs_code
+        infrastructure_target_total
+        investment_target_total
+        gaa_total
+        nep_total
+        disbursement_total
+        finalized
+        reviewed
+      }
+    }
+  }
+`

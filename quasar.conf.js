@@ -11,7 +11,9 @@ module.exports = function(ctx) {
       'copy',
       'loading-defaults',
       'router-auth',
-      'v-money'
+      'v-money',
+      'papaparse',
+      'error-handler'
     ],
 
     css: ['app.styl'],
