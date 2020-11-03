@@ -2,10 +2,21 @@
   <page-container>
     <template v-slot:title>
       <page-title title="Programs">
-        <q-btn label="Add Activity" @click="addPrexcActivity" color="primary" />
+        <q-btn v-if="!isAc && !isAa" label="Add Activity" @click="addPrexcActivity" color="primary" />
         <q-btn icon="help" flat round @click="helpDialog = true" />
       </page-title>
     </template>
+
+    <q-banner v-if="isAc || isAa" class="bg-grey-3 text-accent q-my-md">
+      <template v-slot:avatar>
+        <q-icon name="priority_high" />
+      </template>
+      For attached agencies and attached corporations, please use the Add Project and Projects Module to add your PAPs.
+      <template v-slot:action>
+        <q-btn flat to="/projects/add" label="Add Project" />
+        <q-btn flat to="/projects" label="Projects" />
+      </template>
+    </q-banner>
 
     <q-dialog v-model="helpDialog">
       <q-card>
@@ -94,6 +105,7 @@
       :selected.sync="selected"
       selection="multiple"
       style="margin-bottom: 70px;"
+       v-if="!isAc && !isAa"
     >
       <template v-slot:top-right="props">
 				<search v-model="filter" />
@@ -260,6 +272,12 @@ export default {
       }, arraySum);
 
       return arraySum;
+    },
+    isAc() {
+      return this.$store.getters['auth/isAc']
+    },
+    isAa() {
+      return this.$store.getters['auth/isAa']
     }
   },
   data() {
