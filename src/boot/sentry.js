@@ -2,13 +2,18 @@ import * as Sentry from "@sentry/browser";
 import { Vue as VueIntegration } from "@sentry/integrations";
 import { Integrations } from "@sentry/tracing";
 
-export default async ({ Vue }) => {
+export default ({ Vue }) => {
   Sentry.init({
     dsn: "https://fc003153de46451289324a41c72fa111@o471234.ingest.sentry.io/5503004",
     integrations: [
       new VueIntegration({
         Vue,
         tracing: true,
+        attachProps: true,
+        logErrors: true,
+        tracingOptions: {
+          trackComponents: true,
+        },
       }),
       new Integrations.BrowserTracing(),
     ],
@@ -17,4 +22,5 @@ export default async ({ Vue }) => {
     // for finer control
     tracesSampleRate: 1.0,
   });
+  console.log('sentry init')
 }
