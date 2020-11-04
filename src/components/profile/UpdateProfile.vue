@@ -35,14 +35,6 @@
         ></text-input>
 
         <text-input
-          label="Nickname"
-          v-model="nickname"
-          :rules="[val => !!val || '* Required']"
-          :readonly="true"
-          hint="This is assigned by the System."
-        ></text-input>
-
-        <text-input
           v-model="position"
           label="Position/Designation"
           :rules="[val => !!val || '* Required']"
@@ -78,47 +70,6 @@
       <choose-avatar @close="uploadAvatar = false"></choose-avatar>
     </q-dialog>
 
-    <!-- <q-dialog v-model="chooseAvatar" full-height position="right">
-      <q-card class="column full-height">
-        <q-card-section class="row justify-between q-pa-md">
-          <div class="text-h6">Upload/Select Avatar</div>
-          <q-btn flat round icon="close" v-close-popup />
-        </q-card-section>
-
-        <q-card-section class="col q-pa-none">
-          <q-list>
-            <q-item
-              v-for="image in images"
-              :key="image.id"
-              :class="selectedAvatar === image.id ? 'bg-grey-2' : ''"
-              clickable
-              @click="selectImage(image)"
-            >
-              <q-item-section avatar>
-                <q-avatar>
-                  <img :src="image.dropbox_link" />
-                </q-avatar>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>{{ image.name }}</q-item-label>
-                <q-item-label caption>{{
-                  Math.ceil(image.size / 1000) + ' KB'
-                }}</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn icon="publish" label="Upload" @click="handleUpload"></q-btn>
-          <q-btn
-            label="Save"
-            color="primary"
-            @click="handleChooseAvatar"
-          ></q-btn>
-        </q-card-actions>
-      </q-card>
-    </q-dialog> -->
   </div>
 </template>
 
@@ -159,13 +110,11 @@ export default {
       result({ data }) {
         const {
           name,
-          nickname,
           position,
           contact_number,
           user_avatar
         } = data.getCurrentUser;
         this.name = name;
-        this.nickname = nickname;
         this.position = position;
         this.contact_number = contact_number;
         this.user_avatar = user_avatar;

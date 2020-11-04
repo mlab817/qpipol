@@ -30,8 +30,6 @@ export const profileService = {
             query: GET_CURRENT_USER
           });
 
-          // console.log('data: ', data);
-
           data.getCurrentUser.avatar = uploadUserAvatar.avatar;
 
           cache.writeQuery({
@@ -49,13 +47,12 @@ export const profileService = {
       .catch(handleError);
   },
 
-  updateProfile({ name, nickname, position, contact_number }) {
+  updateProfile({ name, position, contact_number }) {
     return client
       .mutate({
         mutation: UPDATE_PROFILE_MUTATION,
         variables: {
           name: name,
-          nickname: nickname,
           position: position,
           contact_number: contact_number
         },
@@ -65,11 +62,8 @@ export const profileService = {
           });
 
           data.getCurrentUser.name = updateUser.name;
-          data.getCurrentUser.nickname = updateUser.nickname;
           data.getCurrentUser.position = updateUser.position;
           data.getCurrentUser.contact_number = updateUser.contact_number;
-
-          // console.log(data);
 
           store.writeQuery({
             query: GET_CURRENT_USER,
