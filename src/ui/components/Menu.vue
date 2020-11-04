@@ -1,23 +1,23 @@
 <template>
-  <q-list style="margin-top: 200px;" dense>
+  <q-list dense>
     <menu-item label="Dashboard" to="/dashboard" icon="dashboard" />
     <menu-item label="Programs" to="/programs" icon="view_module" />
     <menu-item label="Projects" to="/projects" icon="list" />
     <menu-item label="Trash" to="/projects/trash" icon="delete" />
     <menu-item label="Profile" to="/profile" icon="tune" />
     <q-separator />
-    <menu-item
+    <!-- <menu-item
       label="Activity"
       to="/activity"
       icon="work_outline"
-    ></menu-item>
+    ></menu-item> -->
     <menu-item label="Security" to="/security" icon="vpn_key" />
     <menu-item label="Settings" to="/settings" icon="settings" />
     <q-separator />
     <menu-item
-      label="Report Issues"
-      icon="open_in_new"
-      @click="openURL('https://github.com/mlab817/qpipol/issues')"
+      label="#AskHelp"
+      icon="help"
+      @click="openURL('https://bit.ly/IPMSSlack')"
       type="a"
       target="_blank"
     />

@@ -82,15 +82,12 @@ import {
   PREXC_ACTIVITIES
 } from 'src/graphql/queries';
 import { showError } from '@/utils';
-
 export default {
   name: 'AddProject',
-
   components: {
     SingleSelect,
     TextInput
   },
-
   apollo: {
     prexc_programs: {
       query: PREXC_PROGRAMS
@@ -102,7 +99,6 @@ export default {
       query: PREXC_ACTIVITIES
     }
   },
-
   data() {
     return {
       prexc_programs: [],
@@ -124,36 +120,27 @@ export default {
       prexc_subprogram_id: null
     };
   },
-
   computed: {
     ...mapGetters('auth', ['user']),
-
     filtered_prexc_subprograms() {
       const subprograms = this.prexc_subprograms;
-
       if (!this.prexc_program_id) {
         return [{ id: null, name: 'Select program first' }];
       }
-
       return subprograms.filter(
         x => x.prexc_program_id === this.prexc_program_id
       );
     },
-
     matches() {
       const title = this.title && this.title.toLowerCase();
-
       if (title && title.length > 3) {
         const activities = this.prexc_activities;
-
         const matches = activities.filter(x => x.name.includes(title));
-
         return matches;
       }
       return [];
     }
   },
-
   methods: {
     confirmSubmit() {
       // prepare data
@@ -171,7 +158,6 @@ export default {
         }
       });
     },
-
     submitForm() {
       const payload = {
         prexc_program_id: this.prexc_program_id,
@@ -195,7 +181,6 @@ export default {
         .catch(showError)
         .finally(() => this.$q.loading.hide());
     },
-
     confirmReset() {
       this.$q
         .dialog({
@@ -207,18 +192,15 @@ export default {
           this.$refs.addProject.reset();
         });
     },
-
     resetForm() {
       this.prexc_program_id = null;
       this.prexc_subprogram_id = null;
       this.title = null;
     },
-
     handleSaved(id) {
       this.saved();
       this.confirmNextStep(id);
     },
-
     confirmNextStep(id) {
       this.$q
         .dialog({
@@ -235,11 +217,9 @@ export default {
           this.$refs.addProject.reset();
         });
     },
-
     goTo(id) {
       this.$router.push('/projects/' + id);
     },
-
     saved() {
       this.$emit('saved');
     }
@@ -255,7 +235,6 @@ export default {
       return value;
     }
   },
-
   mounted() {
     this.operating_unit_id = this.user.operating_unit.id;
   }

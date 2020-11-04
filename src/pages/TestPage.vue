@@ -33,8 +33,10 @@
 				<template v-slot:top-right>
 					<div class="row q-gutter-sm">
 						<search v-model="filter" />
-						<q-btn icon="delete" label="Delete" color="negative" :disable="!selected.length" @click="deleteSelected" />
-						<q-btn icon="save" label="Save" color="primary" :disable="!selected.length" @click="updatePrexcActivities" />
+						<q-btn icon="delete" label="Delete" color="negative" :disable="!selected.length" @click="deleteSelected">
+							<q-tooltip>This will only delete items in the preview and exclude them from submission.</q-tooltip>
+						</q-btn>
+						<q-btn icon="save" label="Save" color="primary" :disable="!selected.length" @click="confirmUpdate" />
 					</div>
 				</template>
 
@@ -189,12 +191,20 @@
 	        })
 	        .finally(() => this.$q.loading.hide())
 	    },
-			showHelp() {
-				// show help
+			confirmUpdate() {
+				this.$q.dialog({
+					title: 'Confirm Update',
+					message: 'Are you sure you want to update the selected activities? Type <strong>YES</strong> to confirm. <br/><br/> Note: Changes in the Program and Subprogram will not be saved. Use the edit activity feature to update these information.',
+					html: true,
+					cancel: true,
+					prompt: {
+						model: '',
+						isValid: val => val && val.toLowerCase() === 'yes'
+					}
+				}).onOk(() => this.updatePrexcActivities())
 			},
 			updatePrexcActivities() {
-			  // remove unacceptable fields (subprogram, program and rename activity as name)
-        const selected = this.selected.map(sel => {
+				const selected = this.selected.map(sel => {
           const { subprogram, program, saved, activity, ...otherFields } = sel
           return {
             ...otherFields,
@@ -202,17 +212,24 @@
           }
         })
 
-        // prepare payload
-				const payload = {
-					operating_unit_id: this.$store.state.auth.user.operating_unit.id,
-					update: selected
-				}
-
-				this.dataToSubmit = payload
+				this.$q.loading.show({
+					message: 'This may take a while as we update multiple activities'
+				})
         // run update
-				// programService.updatePrexcActivities(payload)
-				// 	.then(res => console.log(res))
-				// 	.catch(err => console.log(err.message))
+				programService.updatePrexcActivities(payload)
+					.then(res => {
+						console.log(res)
+						this.$store.dispatch('upload/deleteSelected', this.selected)
+							.then(() => (this.selected = []))
+					})
+					.catch(err => console.log(err.message))
+					.finally(() => {
+						this.$q.notify({
+							type: 'positive',
+							message: 'Success'
+						})
+						this.$q.loading.hide()
+					})
 			}
 		}
 	}

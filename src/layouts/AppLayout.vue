@@ -17,7 +17,9 @@
         content-class="bg-grey-1"
       >
 
-      <app-drawer :user="getCurrentUser"></app-drawer>
+      <q-scroll-area style="height: calc(100% - 200px); margin-top: 200px; border-right: 1px solid #ddd">
+        <app-menu :user="getCurrentUser" />
+      </q-scroll-area>
 
       <user-info :user="getCurrentUser" v-if="!miniState"></user-info>
 
@@ -31,6 +33,7 @@
           @click="miniState = true"
         />
       </div>
+      
     </q-drawer>
 
     <q-footer
@@ -50,7 +53,7 @@
 import { mapState } from 'vuex';
 import AppHeader from '../ui/components/Header';
 import AppFooter from '../ui/components/Footer';
-import AppDrawer from '../ui/components/Drawer';
+import AppMenu from '../ui/components/Menu'
 import UserInfo from '../ui/components/UserInfo'
 import { GET_CURRENT_USER } from '@/graphql/queries';
 
@@ -58,7 +61,8 @@ export default {
   components: {
     AppFooter,
     AppHeader,
-    AppDrawer,
+
+    AppMenu,
     UserInfo
   },
 

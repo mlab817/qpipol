@@ -4,7 +4,7 @@
 
     <q-separator />
 
-    <app-menu style="min-width: 280px;"></app-menu>
+    <app-menu style="min-width: 280px; margin-top: 200px;"></app-menu>
   </q-menu>
 </template>
 

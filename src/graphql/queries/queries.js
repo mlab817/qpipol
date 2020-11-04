@@ -362,10 +362,10 @@ export const DELETED_PROJECTS_QUERY = gql`
       operating_unit {
         id
         acronym
-        image
+        image_url
       }
-      updated_at
-      processing_status {
+      deleted_at
+      submission_status {
         id
         name
       }
@@ -373,8 +373,7 @@ export const DELETED_PROJECTS_QUERY = gql`
         id
         nickname
       }
-      finalized
-      total_project_cost
+      investment_target_total
       main_funding_source {
         id
         name
