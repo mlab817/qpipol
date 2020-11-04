@@ -17,7 +17,7 @@
     <menu-item
       label="Report Issues"
       icon="open_in_new"
-      @click="openURL('https://github.com/mlab817/qpipol/issues')"
+      @click="openURL('https://bit.ly/IPMSSlack')"
       type="a"
       target="_blank"
     />
