@@ -12,7 +12,7 @@
     </div>
     <q-card-section>
       <div class="row">
-        <q-img src="statics/icons/icon-128x128.png" style="width: 30px;" />
+        <q-img src="~assets/app-logo-128x128.png" style="width: 30px;" />
       </div>
       <div class="row q-pt-sm text-weight-bold">
         {{ appName }}

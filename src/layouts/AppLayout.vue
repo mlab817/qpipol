@@ -33,7 +33,7 @@
           @click="miniState = true"
         />
       </div>
-      
+
     </q-drawer>
 
     <q-footer
@@ -85,7 +85,6 @@ export default {
       appTitleFooter: 'Investment Programming & Management System',
       copyright: 'Made by Mark Lester A. Bolotaolo',
       showAbout: false,
-      processing_statuses: [],
       tabs: [
         {
           label: 'Dashboard',

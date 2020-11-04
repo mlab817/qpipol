@@ -7,7 +7,7 @@
 					label="Template"
 					color="primary"
 					@click="exportExcel"></q-btn>
-				<help-button @click="showHelp" />
+				<help-button />
 			</page-title>
 		</template>
 
@@ -168,8 +168,8 @@
 				console.log('ou_id', this.$store.state.auth.user.operating_unit.id)
 			},
 			exportExcel() {
-	      // this.$q.loading.show()
-				console.log('export excel triggered')
+	      this.$q.loading.show('This may take a while as we retrieve the data and generate the file.')
+				// console.log('export excel triggered')
 
 	      programService
 	        .exportExcel()
@@ -204,13 +204,20 @@
 				}).onOk(() => this.updatePrexcActivities())
 			},
 			updatePrexcActivities() {
-				const selected = this.selected.map(sel => {
+				const selected = [...this.selected].map(sel => {
           const { subprogram, program, saved, activity, ...otherFields } = sel
           return {
             ...otherFields,
             name: activity
           }
         })
+
+				const payload = {
+					id: this.$store.state.auth.user.operating_unit.id,
+					prexc_activities: {
+						update: selected
+					}
+				}
 
 				this.$q.loading.show({
 					message: 'This may take a while as we update multiple activities'
