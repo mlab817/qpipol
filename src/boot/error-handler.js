@@ -1,4 +1,5 @@
 import Rollbar from 'rollbar';
+import { Notify } from 'quasar'
 
 export default async ({ Vue }) => {
   Vue.prototype.$rollbar = new Rollbar({
@@ -11,7 +12,12 @@ export default async ({ Vue }) => {
 
   Vue.config.errorHandler = (err, vm, info) => {
     vm.$rollbar.error(err);
+    Notify.create({
+      type: 'warning',
+      message: err.message
+    })
     throw err; // rethrow
+
     // err: error trace
     // vm: component in which error occured
     // info: Vue specific error information such as lifecycle hooks, events etc.
