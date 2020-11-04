@@ -37,7 +37,7 @@
       <template v-slot:body-cell-type="props">
         <q-td :props="props">
           <q-badge
-            :color="props.row.type && props.row.type.name === 'Program' ? 'blue' : 'negative'"
+            :color="props.row.type && props.row.type.name === '1' ? 'blue' : 'negative'"
             >{{ props.row.type && props.row.type.name }}</q-badge
           >
         </q-td>
@@ -51,7 +51,7 @@
 
       <template v-slot:body-cell-processing_status="props">
         <q-td :props="props">
-          {{ props.row.processing_status && props.row.processing_status .name }}
+          {{ props.row.submission_status && props.row.submission_status .name }}
         </q-td>
       </template>
 
@@ -80,7 +80,7 @@
               <q-item class="q-pa-sm">
                 <q-item-section avatar>
                   <q-avatar color="grey-3">
-                    <img :src="props.row.operating_unit.image" />
+                    <img :src="props.row.operating_unit.image_url" />
                   </q-avatar>
                 </q-item-section>
                 <q-item-section>
@@ -88,12 +88,12 @@
                   <q-item-label>
                     <q-badge
                       :color="
-                        props.row.type.name === 'Program' ? 'blue' : 'negative'
+                        props.row.type && props.row.type.id === '1' ? 'blue' : 'negative'
                       "
-                      >{{ props.row.type.name }}</q-badge
+                      >{{ props.row.type && props.row.type.name }}</q-badge
                     >
                     |
-                    {{ props.row.main_funding_source.name }}
+                    {{ props.row.main_funding_source && props.row.main_funding_source.name }}
                   </q-item-label>
                 </q-item-section>
                 <q-item-section side>
@@ -109,7 +109,7 @@
               <q-item>
                 <q-item-section>
                   <q-item-label caption class="text-capitalize"
-                    >{{ props.row.processing_status.name }}:</q-item-label
+                    >{{ props.row.submission_status && props.row.submission_status.name }}:</q-item-label
                   >
                   <q-item-label>{{
                     props.row.deleted_at | formatDate
@@ -117,7 +117,7 @@
                 </q-item-section>
                 <q-item-section side>
                   <q-item-label class="text-h6">
-                    PhP {{ props.row.total_project_cost.toLocaleString() }}
+                    PhP {{ props.row.investment_target_total }}
                   </q-item-label>
                 </q-item-section>
               </q-item>
