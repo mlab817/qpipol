@@ -180,33 +180,7 @@
 			},
 			meta() {
 				return this.$store.state.upload.meta
-			},
-			// columns() {
-			// 	const actionColumn = {
-			// 		name: 'actions',
-			// 		label: 'Actions'
-			// 	}
-			//
-			// 	if (this.values.length) {
-			//
-			// 		const sample = this.values[0]
-      //     const headers = this.$store.state.upload.headers
-			//
-			// 		const columns = Object.keys(sample).map((x, index) => {
-			//
-			// 			return {
-			// 				name: headers[index],
-			// 				label: headers[index] ? headers[index].toUpperCase().replace(/_/g," ") : index,
-			// 				field: row => row[x],
-			// 				align: 'left'
-			// 			}
-			// 		})
-			//
-			// 		return [...columns,actionColumn]
-			// 	}
-			//
-			// 	return []
-			// }
+			}
 		},
 		methods: {
 			parse() {
@@ -286,6 +260,7 @@
 					message: 'This may take a while as we update multiple activities'
 				})
         // run update
+
 				programService.updatePrexcActivities(payload)
 					.then(res => {
 						console.log(res)
