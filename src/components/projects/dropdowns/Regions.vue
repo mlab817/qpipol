@@ -13,11 +13,13 @@
     </template>
     <q-card>
       <q-card-section>
+        <div v-if="$apollo.loading">Loading options...</div>
         <list-option-group
           v-model="model"
           :options="filteredRegions"
           :recode="true"
           :rules="rules"
+          v-else
         />
       </q-card-section>
     </q-card>
@@ -42,7 +44,7 @@ export default {
       }
     },
     filteredRegions() {
-      return this.regions.filter(x => x.id !== '99');
+      return this.regions.length ? this.regions.filter(x => x.id !== '99') : [];
     }
   },
   apollo: {

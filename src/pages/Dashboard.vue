@@ -4,6 +4,13 @@
       <page-title title="Dashboard" icon="dashboard"></page-title>
     </template>
 
+    <q-banner class="bg-red-1" v-if="env === 'STAGING'">
+      This is the staging version of the System. For the live production version, please click the link below.
+      <template v-slot:action>
+        <q-btn flat color="negative" label="GO" @click="openURL('https://da-ipms2020.web.app')" />
+      </template>
+    </q-banner>
+
     <div class="row q-pa-md q-gutter-y-md q-col-gutter-md">
       <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-sm-12">
         <short-cuts></short-cuts>
@@ -26,6 +33,7 @@ import ActivityComponent from '../components/dashboard/ActivityComponent';
 import ShortCuts from '../components/dashboard/ShortCuts.vue';
 import ReleasesComponent from '../components/dashboard/Releases'
 import UsefulLinks from '../components/dashboard/UsefulLinks'
+import { openURL } from 'quasar'
 
 export default {
   name: 'PageIndex',
@@ -48,6 +56,16 @@ export default {
     isEncoder() {
       return this.$store.getters['auth/isEncoder'];
     }
+  },
+
+  data() {
+    return {
+      env: process.env.APP_ENV
+    }
+  },
+
+  methods: {
+    openURL
   }
 };
 </script>

@@ -46,7 +46,12 @@ export default {
   },
 
   methods: {
-    showHelp() {}
+    showHelp() {
+      this.$q.dialog({
+        title: 'Help',
+        message: 'Add Programs, Projects and Activities here. Complete the details needed to qualify for inclusion in the Public Investment Program and the Three-Year Rolling Infrastructure Program.'
+      })
+    }
   }
 };
 </script>

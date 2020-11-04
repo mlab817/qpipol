@@ -29,7 +29,7 @@
       <template v-slot:body-cell-avatar="props">
         <q-td :props="props">
           <q-avatar color="grey-3">
-            <q-img :src="props.row.operating_unit.image" />
+            <q-img :src="props.row.submission_status ? props.row.submission_status.name: '' " />
           </q-avatar>
         </q-td>
       </template>
@@ -37,21 +37,21 @@
       <template v-slot:body-cell-type="props">
         <q-td :props="props">
           <q-badge
-            :color="props.row.type.name === 'Program' ? 'blue' : 'negative'"
-            >{{ props.row.type.name }}</q-badge
+            :color="props.row.type && props.row.type.name === 'Program' ? 'blue' : 'negative'"
+            >{{ props.row.type && props.row.type.name }}</q-badge
           >
         </q-td>
       </template>
 
       <template v-slot:body-cell-last_updated="props">
         <q-td :props="props">
-          {{ props.row.updatedAt | formatDate }}
+          {{ props.row.deleted_at | formatDate }}
         </q-td>
       </template>
 
       <template v-slot:body-cell-processing_status="props">
         <q-td :props="props">
-          {{ props.row.processing_status.name }}
+          {{ props.row.processing_status && props.row.processing_status .name }}
         </q-td>
       </template>
 
@@ -112,7 +112,7 @@
                     >{{ props.row.processing_status.name }}:</q-item-label
                   >
                   <q-item-label>{{
-                    props.row.updatedAt | formatDate
+                    props.row.deleted_at | formatDate
                   }}</q-item-label>
                 </q-item-section>
                 <q-item-section side>
@@ -182,14 +182,14 @@ export default {
         {
           name: 'funding_source',
           label: 'Main Funding Source',
-          field: row => row.main_funding_source.name,
+          field: row => row.main_funding_source && row.main_funding_source.name,
           sortable: true,
           align: 'center'
         },
         {
           name: 'cost',
           label: 'Total Project Cost',
-          field: row => row.total_project_cost.toLocaleString()
+          field: row => row.investment_target_total && row.investment_target_total.toLocaleString()
         },
         {
           name: 'updated_by',
@@ -197,17 +197,17 @@ export default {
           field: row => (row.creator ? row.creator.nickname : '')
         },
         {
-          name: 'last_updated',
-          label: 'Last Updated',
-          field: row => row.updatedAt,
+          name: 'deleted_at',
+          label: 'Delete on',
+          field: row => row.deleted_at,
           sortable: true,
           align: 'center'
         },
         {
-          name: 'processing_status',
+          name: 'submission_status',
           label: 'Processing Status',
           field: row =>
-            row.processing_status ? row.processing_status.name : '',
+            row.submission_status ? row.submission_status.name : '',
           sortable: true,
           align: 'center'
         },

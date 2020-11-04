@@ -108,6 +108,17 @@ export const projectService = {
             query: ALL_PROJECTS,
             data
           });
+
+          const data2 = store.readQuery({
+            query: DELETED_PROJECTS_QUERY
+          })
+
+          data2.allProjects.push(deleteProject)
+
+          store.writeQuery({
+            query: DELETED_PROJECTS_QUERY,
+            data2
+          })
         }
       })
       .then(handleResponse)
@@ -128,7 +139,7 @@ export const projectService = {
 
           console.log(data);
 
-          data.push(restoreProject);
+          data.allProjects.push(restoreProject);
 
           store.writeQuery({
             query: ALL_PROJECTS,
@@ -141,7 +152,7 @@ export const projectService = {
 
           data2.filter(project => project.id !== id);
 
-          data2.writeQuery({
+          data2.allProjects.writeQuery({
             query: DELETED_PROJECTS_QUERY,
             data2
           });

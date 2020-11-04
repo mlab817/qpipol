@@ -2,8 +2,8 @@
   <page-container>
     <template v-slot:title>
       <page-title title="Programs">
-        <q-btn v-if="!isAc && !isAa" label="Add Activity" @click="addPrexcActivity" color="primary" class="q-mr-sm" />
-        <q-btn v-if="!isAc && !isAa" label="Upload" to="/upload" color="primary" class="q-mr-sm" />
+        <q-btn v-if="!isAc && !isAa" icon="add" label="Add Activity" @click="addPrexcActivity" color="primary" class="q-mr-sm" />
+        <q-btn v-if="!isAc && !isAa" icon="publish" label="Upload" to="/upload" color="primary" class="q-mr-sm" />
         <q-btn icon="help" flat round @click="helpDialog = true" />
       </page-title>
     </template>

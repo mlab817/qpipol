@@ -38,7 +38,8 @@
           label="Nickname"
           v-model="nickname"
           :rules="[val => !!val || '* Required']"
-          :readonly="!edit"
+          :readonly="true"
+          hint="This is assigned by the System."
         ></text-input>
 
         <text-input

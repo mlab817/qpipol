@@ -3,14 +3,14 @@
     <div class="row justify-between items-center">
       <q-item-label header class="q-px-none">Latest Activity</q-item-label>
       <q-space />
-      <q-btn
+      <!-- <q-btn
         flat
         dense
         class="text-capitalize"
         @click="goToActivity"
         label="All Activities"
         icon-right="chevron_right"
-      />
+      /> -->
     </div>
 
     <q-card square bordered flat>

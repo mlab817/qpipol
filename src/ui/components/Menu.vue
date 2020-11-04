@@ -6,11 +6,11 @@
     <menu-item label="Trash" to="/projects/trash" icon="delete" />
     <menu-item label="Profile" to="/profile" icon="tune" />
     <q-separator />
-    <menu-item
+    <!-- <menu-item
       label="Activity"
       to="/activity"
       icon="work_outline"
-    ></menu-item>
+    ></menu-item> -->
     <menu-item label="Security" to="/security" icon="vpn_key" />
     <menu-item label="Settings" to="/settings" icon="settings" />
     <q-separator />
