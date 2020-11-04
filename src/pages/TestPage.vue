@@ -61,6 +61,8 @@
 			</ul>
 		</div>
 
+    <pre>{{dataToSubmit}}</pre>
+
 	</page-container>
 </template>
 
@@ -78,6 +80,7 @@
 	import {
 		programService
 	} from '@/services'
+  import {openURL} from "quasar";
 
 	export default {
 		components: {
@@ -93,7 +96,8 @@
 				selected: [],
 				prexc_programs: [],
 				prexc_subprograms: [],
-				filter: ''
+				filter: '',
+        dataToSubmit: null
 			}
 		},
 		apollo: {
@@ -123,12 +127,13 @@
 				if (this.values.length) {
 
 					const sample = this.values[0]
+          const headers = this.$store.state.upload.headers
 
 					const columns = Object.keys(sample).map((x, index) => {
-						const headers = this.$store.state.upload.headers
+
 						return {
 							name: headers[index],
-							label: headers[index].toUpperCase().replace(/_/g," "),
+							label: headers[index] ? headers[index].toUpperCase().replace(/_/g," ") : index,
 							field: row => row[x],
 							align: 'left'
 						}
@@ -154,6 +159,7 @@
 			deleteSelected() {
 				const selected = this.selected
 				this.$store.dispatch('upload/deleteSelected', selected)
+        this.selected = []
 			},
 			saveSelected() {
 				const selected = this.selected
@@ -205,11 +211,6 @@
             name: activity
           }
         })
-        // prepare payload
-				const payload = {
-					id: this.$store.state.auth.user.operating_unit.id,
-					update: selected
-				}
 
 				this.$q.loading.show({
 					message: 'This may take a while as we update multiple activities'
