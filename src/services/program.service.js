@@ -135,7 +135,12 @@ export const programService = {
     return client
       .mutate({
         mutation: UPDATE_OPERATING_UNIT_PREXC_ACTIVITIES,
-        variables: payload
+        variables: payload,
+        refetchQueries: [
+          {
+            query: PREXC_ACTIVITIES
+          }
+        ]
       })
       .then(handleResponse)
       .catch(handleError)
