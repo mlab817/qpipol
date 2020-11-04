@@ -532,7 +532,7 @@
 <script>
 import { date } from 'quasar';
 import TextareaCopy from './shared/TextareaCopy';
-import { SectionHeader } from '@/ui';
+import SectionHeader from './shared/SectionHeader';
 import InstructionMessage from './shared/InstructionMessage';
 import KeyFacts from './shared/KeyFacts';
 import ViewAttachments from './shared/ViewAttachments';

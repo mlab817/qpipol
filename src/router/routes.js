@@ -95,7 +95,7 @@ const routes = [
         name: 'programs',
         component: () =>
           import(
-            /* webpackChunkName: 'ProgramsIndex' */ '@/pages/ProgramsIndex.vue'
+            /* webpackChunkName: 'PrexcActivities' */ '@/pages/programs/PrexcActivities.vue'
           ),
         meta: {
           requiresAuth: true,
@@ -107,7 +107,7 @@ const routes = [
         name: 'review-activities',
         component: () =>
           import(
-            /* webpackChunkName: 'ProgramsValidate' */ '@/pages/ProgramsValidate.vue'
+            /* webpackChunkName: 'ReviewActivities' */ '@/pages/programs/ReviewActivities.vue'
           ),
         meta: {
           requiresAuth: true,
@@ -159,16 +159,6 @@ const routes = [
           import(
             /* webpackChunkName: 'ResetPassword' */ '../pages/ResetPassword.vue'
           )
-      }
-    ]
-  },
-  {
-    path: '/upload',
-    component: () => import('@/layouts/AppLayout.vue'),
-    children: [
-      {
-        path: '',
-        component: () => import('../pages/TestPage.vue'),
       }
     ]
   },

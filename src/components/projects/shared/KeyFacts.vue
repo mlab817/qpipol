@@ -1,6 +1,6 @@
 <template>
   <q-card
-    class="column q-mb-sm"
+    class="column q-ma-sm"
     :class="dark ? '' : 'bg-fao'"
     :dark="dark"
     tag="div"
@@ -11,9 +11,6 @@
     <q-item-label header class="text-uppercase text-subtitle1"
       >Key Facts</q-item-label
     >
-		<div class="row q-pa-md text-h6">
-			{{project.title}}
-		</div>
     <div class="row">
       <div class="col-4">
         <q-item>
@@ -36,13 +33,33 @@
         <q-item>
           <q-item-section>
             <q-item-label caption>
-              Fund Source
+              Fund Source/Institution
             </q-item-label>
             <q-item-label class="text-body2">
               {{
                 project.main_funding_source
                   ? project.main_funding_source.name
                   : 'Not specified'
+              }}
+              <span
+                v-if="
+                  project.main_funding_source_id === '2' ||
+                    project.main_funding_source_id === '3'
+                "
+              >
+                {{
+                  project.funding_institution
+                    ? `>> ${project.funding_institution.name}`
+                    : ''
+                }}
+              </span>
+            </q-item-label>
+            <q-item-label class="text-body2">
+              through
+              {{
+                project.implementation_mode
+                  ? project.implementation_mode.name
+                  : 'Not Specified'
               }}
             </q-item-label>
           </q-item-section>
@@ -56,7 +73,7 @@
               Total Project Cost (in PhP)
             </q-item-label>
             <q-item-label class="text-body2">
-              {{ project.investment_target_total | formatMoney }}
+              {{ project.total_project_cost | formatMoney }}
             </q-item-label>
           </q-item-section>
         </q-item>
@@ -117,7 +134,7 @@
         <q-item>
           <q-item-section>
             <q-item-label caption>
-              Submission Status
+              Processing Status
               <q-icon
                 name="help_outline"
                 class="cursor-pointer"
@@ -127,8 +144,8 @@
             <q-item-label class="text-body2">
               <q-badge>
                 {{
-                  project.submission_status
-                    ? project.submission_status.name
+                  project.processing_status
+                    ? project.processing_status.name
                     : ''
                 }}
               </q-badge>

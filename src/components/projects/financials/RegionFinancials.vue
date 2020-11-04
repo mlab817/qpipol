@@ -1,12 +1,101 @@
 <template>
   <div class="col q-pa-md">
-    <q-dialog v-model="addDialog">
-      <add-region :taken="taken" :edit-mode="false" :investment-to-edit="investmentToSubmit" :project-id="projectId" @close="addDialog = false" />
+    <q-dialog v-model="addFsDialog">
+      <q-card style="max-width: 80wh; min-width: 400px;">
+        <q-bar class="bg-accent text-white">
+          <div>Add/Edit Region</div>
+          <q-space />
+          <q-btn flat round dense icon="close" v-close-popup />
+        </q-bar>
+        <q-form @submit="handleSubmit">
+          <q-card-section>
+            <q-select
+              label="Region"
+              stack-label
+              v-model="investmentToSubmit.region_id"
+              :options="filteredFs"
+              option-value="id"
+              option-label="name"
+              map-options
+              emit-value
+              :rules="[val => !!val || '* Required']"
+              :readonly="editMode"
+            ></q-select>
+            <q-input
+              input-class="text-right"
+              label="2016 &amp; Prior"
+              stack-label
+              v-model="investmentToSubmit.investment_target_2016"
+            />
+            <q-input
+              input-class="text-right"
+              label="2017"
+              stack-label
+              v-model="investmentToSubmit.investment_target_2017"
+            />
+            <q-input
+              input-class="text-right"
+              label="2018"
+              stack-label
+              v-model="investmentToSubmit.investment_target_2018"
+            />
+            <q-input
+              input-class="text-right"
+              label="2019"
+              stack-label
+              v-model="investmentToSubmit.investment_target_2019"
+            />
+            <q-input
+              input-class="text-right"
+              label="2020"
+              stack-label
+              v-model="investmentToSubmit.investment_target_2020"
+            />
+            <q-input
+              input-class="text-right"
+              label="2021"
+              stack-label
+              v-model="investmentToSubmit.investment_target_2021"
+            />
+            <q-input
+              input-class="text-right"
+              label="2022"
+              stack-label
+              v-model="investmentToSubmit.investment_target_2022"
+            />
+            <q-input
+              input-class="text-right"
+              label="2023"
+              stack-label
+              v-model="investmentToSubmit.investment_target_2023"
+            />
+            <q-input
+              input-class="text-right"
+              label="2024"
+              stack-label
+              v-model="investmentToSubmit.investment_target_2024"
+            />
+            <q-input
+              input-class="text-right"
+              label="2025 &amp; Beyond"
+              stack-label
+              v-model="investmentToSubmit.investment_target_2025"
+            />
+            <q-input
+              input-class="text-right"
+              label="Total"
+              stack-label
+              :value="totalRow.investment_target_total"
+              readonly
+            />
+          </q-card-section>
+          <q-card-actions align="right">
+            <q-btn label="Cancel" flat v-close-popup color="primary"></q-btn>
+            <q-btn label="Ok" flat type="submit" color="primary"></q-btn>
+          </q-card-actions>
+        </q-form>
+      </q-card>
     </q-dialog>
-
-		<q-dialog v-model="editDialog">
-			<add-region :taken="taken" :edit-mode="true" :investment-to-edit="investmentToSubmit" @close="editDialog = false"/>
-		</q-dialog>
 
     <q-table
       flat
@@ -21,7 +110,7 @@
       hide-bottom
     >
       <template v-slot:top-right>
-				<plus-button @click="addRow" />
+        <q-btn icon="add" label="Add" color="primary" @click="addRow" />
       </template>
 
       <template v-slot:body-cell-actions="props">
@@ -49,7 +138,7 @@
         <q-tr class="text-weight-bold">
           <q-td>TOTAL</q-td>
           <q-td class="text-right" v-for="(item, key) in totalRow" :key="key">
-            {{ item && item.toLocaleString() }}
+            {{ item }}
           </q-td>
         </q-tr>
       </template>
@@ -62,15 +151,17 @@
 </template>
 
 <script>
+import { FETCH_REGIONS } from 'src/graphql';
 import { projectService } from 'src/services';
-import PlusButton from '../../../ui/buttons/PlusButton'
-import AddRegion from './AddRegion'
 
 export default {
-  name: 'RegionFinancials',
-	components: { AddRegion, PlusButton },
-	props: ['data', 'projectId'],
-
+  name: 'FsFinancials',
+  props: ['data', 'projectId'],
+  apollo: {
+    regions: {
+      query: FETCH_REGIONS
+    }
+  },
   computed: {
     editMode() {
       return !!this.investmentToSubmit.id;
@@ -81,6 +172,18 @@ export default {
       const taken = fs.map(x => x.region_id);
 
       return taken;
+    },
+    filteredFs() {
+      let fs = this.regions,
+        taken = this.taken;
+
+      // if in edit mode, show all
+      if (this.investmentToSubmit.id) {
+        return fs;
+      }
+
+      // if in add mode, filter
+      return fs.filter(x => !taken.includes(x.id));
     },
     totalRow() {
       const data = this.data;
@@ -125,27 +228,18 @@ export default {
       }, arraySum);
 
       return arraySum;
-    },
-		investment_target_total() {
-    	const investmentToSubmit = this.investmentToSubmit
-
-			const total = Object.keys(investmentToSubmit).filter(key => key !== 'region_id').reduce((acc, value) => (acc + investmentToSubmit[value]), 0);
-
-			return total
-		}
+    }
   },
   data() {
     return {
       funding_sources: [],
-      addDialog: false,
-			editDialog: false,
+      addFsDialog: false,
       pagination: {
         rowsPerPage: 0
       },
       investmentToSubmit: {
         id: null,
         region_id: null,
-				project_id: null,
         investment_target_2016: 0,
         investment_target_2017: 0,
         investment_target_2018: 0,
@@ -167,62 +261,52 @@ export default {
         {
           name: 'y1',
           label: '2016 & Prior',
-          field: row => row.investment_target_2016,
-					format: (val, row) => val && val.toLocaleString(),
+          field: row => row.investment_target_2016
         },
         {
           name: 'y2',
           label: '2017',
-          field: row => row.investment_target_2017,
-					format: (val, row) => val && val.toLocaleString(),
+          field: row => row.investment_target_2017
         },
         {
           name: 'y3',
           label: '2018',
-          field: row => row.investment_target_2018,
-					format: (val, row) => val && val.toLocaleString(),
+          field: row => row.investment_target_2018
         },
         {
           name: 'y4',
           label: '2019',
-          field: row => row.investment_target_2019,
-					format: (val, row) => val && val.toLocaleString(),
+          field: row => row.investment_target_2019
         },
         {
           name: 'y5',
           label: '2020',
-          field: row => row.investment_target_2020,
-					format: (val, row) => val && val.toLocaleString(),
+          field: row => row.investment_target_2020
         },
         {
           name: 'y6',
           label: '2021',
-          field: row => row.investment_target_2021,
-					format: (val, row) => val && val.toLocaleString(),
+          field: row => row.investment_target_2021
         },
         {
           name: 'y7',
           label: '2022',
-          field: row => row.investment_target_2022,
-					format: (val, row) => val && val.toLocaleString(),
+          field: row => row.investment_target_2022
         },
         {
           name: 'y8',
           label: '2023',
-          field: row => row.investment_target_2023,
-					format: (val, row) => val && val.toLocaleString(),
+          field: row => row.investment_target_2023
         },
         {
           name: 'y9',
           label: '2024',
-          field: row => row.investment_target_2024,
-					format: (val, row) => val && val.toLocaleString(),
+          field: row => row.investment_target_2024
         },
         {
           name: 'y10',
           label: '2025 & Beyond',
-          field: row => row.investment_target_2025,
-					format: (val, row) => val && val.toLocaleString(),
+          field: row => row.investment_target_2025
         },
         {
           name: 'total',
@@ -237,13 +321,11 @@ export default {
             row.investment_target_2022 +
             row.investment_target_2023 +
             row.investment_target_2024 +
-            row.investment_target_2025,
-	        format: (val, row) => val && val.toLocaleString(),
+            row.investment_target_2025
         },
         {
           name: 'actions',
-          label: 'Actions',
-					align: 'center'
+          label: 'Actions'
         }
       ]
     };
@@ -266,41 +348,12 @@ export default {
         investment_target_2025: 0
       };
 
-      this.addDialog = true;
+      this.addFsDialog = true;
     },
     editRow(row) {
-    		const {
-    			id,
-					region_id,
-					project_id,
-			    investment_target_2016,
-			    investment_target_2017,
-			    investment_target_2018,
-			    investment_target_2019,
-			    investment_target_2020,
-			    investment_target_2021,
-			    investment_target_2022,
-			    investment_target_2023,
-			    investment_target_2024,
-			    investment_target_2025
-				} = row
-    		this.investmentToSubmit = {
-			    id: id,
-			    region_id: region_id,
-					project_id: project_id,
-			    investment_target_2016: investment_target_2016,
-			    investment_target_2017: investment_target_2017,
-			    investment_target_2018: investment_target_2018,
-			    investment_target_2019: investment_target_2019,
-			    investment_target_2020: investment_target_2020,
-			    investment_target_2021: investment_target_2021,
-			    investment_target_2022: investment_target_2022,
-			    investment_target_2023: investment_target_2023,
-			    investment_target_2024: investment_target_2024,
-			    investment_target_2025: investment_target_2025
-		    }
+      this.investmentToSubmit = Object.assign({}, row);
 
-      	this.editDialog = true;
+      this.addFsDialog = true;
     },
     deleteRow(row) {
       this.$q
@@ -315,7 +368,36 @@ export default {
             .deleteRegionFinancial({ id: row.id })
             .then(() => this.$q.loading.hide());
         });
+    },
+    handleSubmit() {
+      const investmentToSubmit = this.investmentToSubmit,
+        project_id = this.projectId;
+
+      investmentToSubmit.project_id = project_id;
+
+      this.$q.loading.show();
+
+      if (investmentToSubmit.id) {
+        // update
+        projectService
+          .updateRegionFinancial(investmentToSubmit)
+          .then(() => {
+            this.addFsDialog = false;
+          })
+          .finally(() => this.$q.loading.hide());
+      } else {
+        // create
+        projectService
+          .createRegionFinancial(investmentToSubmit)
+          .then(() => {
+            this.addFsDialog = false;
+          })
+          .finally(() => this.$q.loading.hide());
+      }
     }
+  },
+  mounted() {
+    console.log(this.projectId);
   }
 };
 </script>

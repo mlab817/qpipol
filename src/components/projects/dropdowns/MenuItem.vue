@@ -4,9 +4,6 @@
     :disable="disable"
     clickable
     :class="disable ? 'text-red' : void 0"
-		:href="to ? to : void 0"
-		:tag="to ? 'a' : void 0"
-		:target="to ? '_blank' : 'a'"
   >
     <q-item-section avatar>
       <q-icon :name="icon" />
@@ -32,8 +29,7 @@ export default {
       type: Boolean,
       default: false
     },
-    tooltip: String,
-		to: String
+    tooltip: String
   }
 };
 </script>

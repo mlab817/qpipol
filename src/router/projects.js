@@ -7,7 +7,7 @@ const ProjectsRoutes = {
       name: 'index-project',
       component: () =>
         import(
-          /* webpackChunkName: 'ProjectsPage' */ 'pages/ProjectIndex.vue'
+          /* webpackChunkName: 'ProjectsPage' */ '../pages/projects/ProjectIndex.vue'
         ),
       meta: {
         requiresAuth: true
@@ -16,14 +16,14 @@ const ProjectsRoutes = {
     {
       path: 'trash',
       name: 'deleted-projects',
-      component: () => import('pages/ProjectsDeleted.vue')
+      component: () => import('../pages/projects/DeletedProjects.vue')
     },
     {
       path: 'add',
       name: 'add-project',
       component: () =>
         import(
-          /* webpackChunkName: 'AddProjectPage' */ 'pages/ProjectAdd.vue'
+          /* webpackChunkName: 'AddProjectPage' */ '../pages/projects/AddProjectPage.vue'
         ),
       meta: {
         requiresAuth: true,
@@ -35,7 +35,7 @@ const ProjectsRoutes = {
       name: 'validate-project',
       component: () =>
         import(
-          /* webpackChunkName: 'ValidateProjectPage' */ 'pages/ProjectValidate.vue'
+          /* webpackChunkName: 'ValidateProjectPage' */ '../pages/projects/ValidateProject.vue'
         ),
       meta: {
         requiresAuth: true,
@@ -47,18 +47,44 @@ const ProjectsRoutes = {
       name: 'edit-project',
       component: () =>
         import(
-          /* webpackChunkName: 'EditProjectPage' */ 'pages/ProjectEdit.vue'
+          /* webpackChunkName: 'EditProjectPage' */ '../pages/projects/EditProjectPage.vue'
         ),
       meta: {
         requiresAuth: true
       }
     },
     {
+      path: ':id/review',
+      name: 'review-project',
+      component: () =>
+        import(
+          /* webpackChunkName: 'ReviewProject' */ '../pages/projects/ReviewProject.vue'
+        ),
+      meta: {
+        requiresAuth: true,
+        isReviewer: true
+      }
+    },
+    {
+      path: ':id/returned',
+      name: 'returned-project',
+      component: () => import('../pages/projects/ReturnedProject.vue'),
+      meta: {
+        requiresAuth: true,
+        isEncoder: true
+      }
+    },
+    {
+      path: ':id/encode',
+      name: 'encode-project',
+      component: () => import('../pages/projects/EncodeProject.vue')
+    },
+    {
       path: ':id',
       name: 'view-project',
       component: () =>
         import(
-          /* webpackChunkName: 'ViewProject' */ 'pages/ProjectView.vue'
+          /* webpackChunkName: 'ViewProject' */ '../pages/projects/ViewProject.vue'
         ),
       meta: {
         requiresAuth: true

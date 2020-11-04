@@ -5,12 +5,13 @@
     :options="operating_units"
     :rules="rules"
     hint="Determined based on the user's indicated operating unit/office"
+    :readonly="readonly"
   />
 </template>
 
 <script>
-import { SingleSelect } from '@/ui';
-import {FETCH_OPERATING_UNITS} from '../../../graphql/queries'
+import gql from 'graphql-tag';
+import SingleSelect from '@/ui/form-inputs/SingleSelect';
 
 export default {
   components: { SingleSelect },
@@ -28,7 +29,14 @@ export default {
   },
   apollo: {
     operating_units: {
-      query: FETCH_OPERATING_UNITS
+      query: gql`
+        {
+          operating_units {
+            id
+            name
+          }
+        }
+      `
     }
   },
   data() {

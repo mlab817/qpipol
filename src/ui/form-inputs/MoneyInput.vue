@@ -3,9 +3,8 @@
     outlined
     v-model="money"
     :label="label"
+    :hint="`value: ${money}`"
     :rules="rules"
-		:dense="$q.screen.lt.md"
-		:readonly="readonly"
   >
     <template v-slot:control="{ id, floatingLabel, value, emitValue }">
       <money
@@ -23,7 +22,7 @@
 <script>
 export default {
   name: 'MoneyInput',
-  props: ['label', 'value', 'rules','readonly'],
+  props: ['label', 'value', 'rules'],
   data() {
     return {
       moneyFormatForComponent: {

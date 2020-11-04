@@ -1,5 +1,5 @@
 <template>
-  <q-item exact clickable v-close-popup :to="to" @click="$emit('click')" :type="type ? type : void 0" :target="target ? target : void 0">
+  <q-item clickable v-close-popup :to="to">
     <q-item-section avatar>
       <q-avatar>
         <q-icon :name="icon" />
@@ -12,6 +12,6 @@
 <script>
 export default {
   name: 'MenuItem',
-  props: ['icon', 'to', 'label', 'type', 'target']
+  props: ['icon', 'to', 'label']
 };
 </script>
