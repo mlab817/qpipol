@@ -4,7 +4,6 @@
     node-key="id"
     tick-strategy="leaf"
     :ticked.sync="selected"
-    default-expand-all
   />
 </template>
 

@@ -13,7 +13,29 @@
         target="_blank"
         icon-right="open_in_new"
         label="Docs"
-      />
+      >
+      </q-btn>
+      <!-- <q-btn
+        flat
+        dense
+        type="a"
+        class="text-capitalize"
+        @click="showAbout = true"
+      >
+        About
+      </q-btn> -->
+      <q-btn
+        flat
+        dense
+        dark
+        type="a"
+        class="text-capitalize"
+        href="https://github.com/mlab817/q-pipol"
+        target="_blank"
+        icon="img:statics/github.svg"
+        label="Github"
+      >
+      </q-btn>
       <q-space />
       <span> v. {{ version }} </span>
     </div>
@@ -26,6 +48,8 @@
 
 <script>
 import AboutComponent from './About';
+import { CONFIG } from '@/config';
+import github from '@/statics/github.svg';
 
 export default {
   name: 'AppFooter',
@@ -33,8 +57,12 @@ export default {
   data() {
     return {
       showAbout: false,
-      version: process.env.APP_VERSION
+      version: CONFIG.version,
+      github: null
     };
+  },
+  created() {
+    this.github = github;
   }
 };
 </script>

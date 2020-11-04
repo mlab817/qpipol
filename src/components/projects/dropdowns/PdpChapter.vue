@@ -3,20 +3,19 @@
     label="Main PDP Chapter"
     :options="pdp_chapters"
     v-model="selected"
-    :rules="rules"
   ></single-select>
 </template>
 
 <script>
-import { PDP_CHAPTERS_QUERY } from '@/graphql';
-import { SingleSelect } from '@/ui';
+import { PDP_CHAPTERS_QUERY } from 'src/graphql';
+import SingleSelect from '@/ui/form-inputs/SingleSelect';
 
 export default {
   components: { SingleSelect },
   name: 'PdpChapter',
   props: {
-    value: [String, Number],
-    rules: Array
+    value: String,
+    Number
   },
   apollo: {
     pdp_chapters: {

@@ -22,8 +22,7 @@
     "build": "cross-env QENV=production quasar build -m pwa",
     "dev": "cross-env QENV=development quasar dev",
     "staging": "cross-env QENV=staging quasar dev",
-    "build:staging": "cross-env QENV=staging quasar build -m pwa",
-    "dev:local": "cross-env QENV=local quasar dev"
+    "build:staging": "cross-env QENV=staging quasar build -m pwa"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
@@ -36,7 +35,6 @@
     "apollo-upload-client": "^14.1.2",
     "axios": "^0.18.1",
     "core-js": "^3.6.5",
-    "cross-env": "^7.0.2",
     "firebase": "^8.0.0",
     "graphql": "^15.4.0",
     "graphql-tag": "^2.11.0",
@@ -44,8 +42,7 @@
     "quasar": "^1.0.0",
     "v-money": "^0.8.1",
     "vcopy": "^0.0.1",
-    "vue-apollo": "^3.0.5",
-    "vue-papa-parse": "^2.0.0"
+    "vue-apollo": "^3.0.5"
   },
   "devDependencies": {
     "@quasar/app": "^2.0.0",
