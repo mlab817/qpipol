@@ -87,16 +87,15 @@ const actions = {
 	cleanUpAndFormatData({ commit, state }, data) {
 		const data2 = data.filter(d => (d[0] !== 'Total' && d[0] !== '' && d[0] !== 'ID'))
 
-		const keys = state.headers
+		const headers = state.headers
 
 		const niceData = data2.map(v => {
-			const merged = keys.reduce((obj, key, index) => ({ ...obj, [key]: v[index] }), {});
+			const merged = headers.reduce((obj, key, index) => ({ ...obj, [key]: v[index] }), {});
 			return merged
 		})
 		.map(x => {
 			return {
-				...x,
-				saved: false
+				...x
 			}
 		})
 

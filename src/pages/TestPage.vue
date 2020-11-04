@@ -97,7 +97,70 @@
 				prexc_programs: [],
 				prexc_subprograms: [],
 				filter: '',
-        dataToSubmit: null
+        dataToSubmit: null,
+				columns: [
+					{ name: 'id' , label: 'ID' , field: 'id' },
+					{ name: 			'program' , label: 			'PROGRAM' , field: 			'program' },
+					{ name: 			'subprogram' , label: 			'SUBPROGRAM' , field: 			'subprogram' },
+					{ name: 			'activity' , label: 			'ACTIVITY' , field: 			'activity' },
+					{ name: 			'uacs_code' , label: 			'UACS CODE' , field: 			'uacs_code' },
+					{ name: 			'infrastructure_target_2016' , label: 			'INFRASTRUCTURE TARGET 2016' , field: 			'infrastructure_target_2016' },
+					{ name: 			'infrastructure_target_2017' , label: 			'INFRASTRUCTURE TARGET 2017' , field: 			'infrastructure_target_2017' },
+					{ name: 			'infrastructure_target_2018' , label: 			'INFRASTRUCTURE TARGET 2018' , field: 			'infrastructure_target_2018' },
+					{ name: 			'infrastructure_target_2019' , label: 			'INFRASTRUCTURE TARGET 2019' , field: 			'infrastructure_target_2019' },
+					{ name: 			'infrastructure_target_2020' , label: 			'INFRASTRUCTURE TARGET 2020' , field: 			'infrastructure_target_2020' },
+					{ name: 			'infrastructure_target_2021' , label: 			'INFRASTRUCTURE TARGET 2021' , field: 			'infrastructure_target_2021' },
+					{ name: 			'infrastructure_target_2022' , label: 			'INFRASTRUCTURE TARGET 2022' , field: 			'infrastructure_target_2022' },
+					{ name: 			'infrastructure_target_2023' , label: 			'INFRASTRUCTURE TARGET 2023' , field: 			'infrastructure_target_2023' },
+					{ name: 			'infrastructure_target_2024' , label: 			'INFRASTRUCTURE TARGET 2024' , field: 			'infrastructure_target_2024' },
+					{ name: 			'infrastructure_target_2025' , label: 			'INFRASTRUCTURE TARGET 2025' , field: 			'infrastructure_target_2025' },
+					{ name: 			'infrastructure_target_total' , label: 			'INFRASTRUCTURE TARGET TOTAL' , field: 			'infrastructure_target_total' },
+					{ name: 			'investment_target_2016' , label: 			'INVESTMENT TARGET 2016' , field: 			'investment_target_2016' },
+					{ name: 			'investment_target_2017' , label: 			'INVESTMENT TARGET 2017' , field: 			'investment_target_2017' },
+					{ name: 			'investment_target_2018' , label: 			'INVESTMENT TARGET 2018' , field: 			'investment_target_2018' },
+					{ name: 			'investment_target_2019' , label: 			'INVESTMENT TARGET 2019' , field: 			'investment_target_2019' },
+					{ name: 			'investment_target_2020' , label: 			'INVESTMENT TARGET 2020' , field: 			'investment_target_2020' },
+					{ name: 			'investment_target_2021' , label: 			'INVESTMENT TARGET 2021' , field: 			'investment_target_2021' },
+					{ name: 			'investment_target_2022' , label: 			'INVESTMENT TARGET 2022' , field: 			'investment_target_2022' },
+					{ name: 			'investment_target_2023' , label: 			'INVESTMENT TARGET 2023' , field: 			'investment_target_2023' },
+					{ name: 			'investment_target_2024' , label: 			'INVESTMENT TARGET 2024' , field: 			'investment_target_2024' },
+					{ name: 			'investment_target_2025' , label: 			'INVESTMENT TARGET 2025' , field: 			'investment_target_2025' },
+					{ name: 			'investment_target_total' , label: 			'INVESTMENT TARGET TOTAL' , field: 			'investment_target_total' },
+					{ name: 			'nep_2016' , label: 			'NEP 2016' , field: 			'nep_2016' },
+					{ name: 			'nep_2017' , label: 			'NEP 2017' , field: 			'nep_2017' },
+					{ name: 			'nep_2018' , label: 			'NEP 2018' , field: 			'nep_2018' },
+					{ name: 			'nep_2019' , label: 			'NEP 2019' , field: 			'nep_2019' },
+					{ name: 			'nep_2020' , label: 			'NEP 2020' , field: 			'nep_2020' },
+					{ name: 			'nep_2021' , label: 			'NEP 2021' , field: 			'nep_2021' },
+					{ name: 			'nep_2022' , label: 			'NEP 2022' , field: 			'nep_2022' },
+					{ name: 			'nep_2023' , label: 			'NEP 2023' , field: 			'nep_2023' },
+					{ name: 			'nep_2024' , label: 			'NEP 2024' , field: 			'nep_2024' },
+					{ name: 			'nep_2025' , label: 			'NEP 2025' , field: 			'nep_2025' },
+					{ name: 			'nep_total' , label: 			'NEP TOTAL' , field: 			'nep_total' },
+					{ name: 			'gaa_2016' , label: 			'GAA 2016' , field: 			'gaa_2016' },
+					{ name: 			'gaa_2017' , label: 			'GAA 2017' , field: 			'gaa_2017' },
+					{ name: 			'gaa_2018' , label: 			'GAA 2018' , field: 			'gaa_2018' },
+					{ name: 			'gaa_2019' , label: 			'GAA 2019' , field: 			'gaa_2019' },
+					{ name: 			'gaa_2020' , label: 			'GAA 2020' , field: 			'gaa_2020' },
+					{ name: 			'gaa_2021' , label: 			'GAA 2021' , field: 			'gaa_2021' },
+					{ name: 			'gaa_2022' , label: 			'GAA 2022' , field: 			'gaa_2022' },
+					{ name: 			'gaa_2023' , label: 			'GAA 2023' , field: 			'gaa_2023' },
+					{ name: 			'gaa_2024' , label: 			'GAA 2024' , field: 			'gaa_2024' },
+					{ name: 			'gaa_2025' , label: 			'GAA 2025' , field: 			'gaa_2025' },
+					{ name: 			'gaa_total' , label: 			'GAA TOTAL' , field: 			'gaa_total' },
+					{ name: 			'disbursement_2016' , label: 			'DISBURSEMENT 2016' , field: 			'disbursement_2016' },
+					{ name: 			'disbursement_2017' , label: 			'DISBURSEMENT 2017' , field: 			'disbursement_2017' },
+					{ name: 			'disbursement_2018' , label: 			'DISBURSEMENT 2018' , field: 			'disbursement_2018' },
+					{ name: 			'disbursement_2019' , label: 			'DISBURSEMENT 2019' , field: 			'disbursement_2019' },
+					{ name: 			'disbursement_2020' , label: 			'DISBURSEMENT 2020' , field: 			'disbursement_2020' },
+					{ name: 			'disbursement_2021' , label: 			'DISBURSEMENT 2021' , field: 			'disbursement_2021' },
+					{ name: 			'disbursement_2022' , label: 			'DISBURSEMENT 2022' , field: 			'disbursement_2022' },
+					{ name: 			'disbursement_2023' , label: 			'DISBURSEMENT 2023' , field: 			'disbursement_2023' },
+					{ name: 			'disbursement_2024' , label: 			'DISBURSEMENT 2024' , field: 			'disbursement_2024' },
+					{ name: 			'disbursement_2025' , label: 			'DISBURSEMENT 2025' , field: 			'disbursement_2025' },
+					{ name: 			'disbursement_total', label: 			'DISBURSEMENT TOTAL', field: 			'disbursement_total'},
+
+				]
 			}
 		},
 		apollo: {
@@ -118,32 +181,32 @@
 			meta() {
 				return this.$store.state.upload.meta
 			},
-			columns() {
-				const actionColumn = {
-					name: 'actions',
-					label: 'Actions'
-				}
-
-				if (this.values.length) {
-
-					const sample = this.values[0]
-          const headers = this.$store.state.upload.headers
-
-					const columns = Object.keys(sample).map((x, index) => {
-
-						return {
-							name: headers[index],
-							label: headers[index] ? headers[index].toUpperCase().replace(/_/g," ") : index,
-							field: row => row[x],
-							align: 'left'
-						}
-					})
-
-					return [...columns,actionColumn]
-				}
-
-				return []
-			}
+			// columns() {
+			// 	const actionColumn = {
+			// 		name: 'actions',
+			// 		label: 'Actions'
+			// 	}
+			//
+			// 	if (this.values.length) {
+			//
+			// 		const sample = this.values[0]
+      //     const headers = this.$store.state.upload.headers
+			//
+			// 		const columns = Object.keys(sample).map((x, index) => {
+			//
+			// 			return {
+			// 				name: headers[index],
+			// 				label: headers[index] ? headers[index].toUpperCase().replace(/_/g," ") : index,
+			// 				field: row => row[x],
+			// 				align: 'left'
+			// 			}
+			// 		})
+			//
+			// 		return [...columns,actionColumn]
+			// 	}
+			//
+			// 	return []
+			// }
 		},
 		methods: {
 			parse() {
