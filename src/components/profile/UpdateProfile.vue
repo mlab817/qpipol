@@ -53,7 +53,7 @@
           <q-btn
             type="submit"
             v-show="edit"
-            label="Save Changes"
+            label="Save"
             color="primary"
           />
           <q-btn
