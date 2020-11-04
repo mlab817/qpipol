@@ -5,15 +5,10 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
 import { LocalStorage } from 'quasar';
 
 export default {
   name: 'App',
-
-  computed: {
-    ...mapState('settings', ['dark'])
-  },
 
   created() {
     const token = LocalStorage.getItem('token');

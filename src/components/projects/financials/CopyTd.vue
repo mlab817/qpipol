@@ -1,25 +1,26 @@
 <template>
-  <q-input
-    v-model="internalValue"
-    input-class="text-right"
-    dense
-    readonly
-    disable
-    filled
-  >
-    <template v-slot:after>
-      <q-btn
-        flat
-        round
-        icon="content_copy"
-        v-copy="value"
-        color="blue"
-        size="xs"
-      >
-        <q-tooltip>Copy to clipboard</q-tooltip>
-      </q-btn>
-    </template>
-  </q-input>
+	<q-td>
+		<q-input
+                        standout
+			v-model="internalValue"
+			input-class="text-right"
+			dense
+			readonly
+		>
+			<template v-slot:append>
+				<q-btn
+					flat
+					round
+					icon="content_copy"
+					v-copy="value"
+					color="blue"
+					size="xs"
+				>
+					<q-tooltip>Copy to clipboard</q-tooltip>
+				</q-btn>
+			</template>
+		</q-input>
+	</q-td>
 </template>
 
 <script>

@@ -14,10 +14,8 @@
       <div class="row">
         <q-img src="statics/icons/icon-128x128.png" style="width: 30px;" />
       </div>
-      <div class="row q-pt-sm">
-        <span class="text-weight-bold">
-          Investment Programming &amp; Management System</span
-        >
+      <div class="row q-pt-sm text-weight-bold">
+        {{ appName }}
       </div>
       <div class="row text-caption">
         <a
@@ -35,13 +33,12 @@
 </template>
 
 <script>
-import { CONFIG } from '@/config';
-
 export default {
   name: 'AboutComponent',
   data() {
     return {
-      version: CONFIG.version
+      version: process.env.APP_VERSION,
+			appName: process.env.APP_NAME
     };
   }
 };

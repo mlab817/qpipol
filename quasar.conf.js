@@ -11,7 +11,9 @@ module.exports = function(ctx) {
       'copy',
       'loading-defaults',
       'router-auth',
-      'v-money'
+      'v-money',
+      'papaparse',
+      'error-handler'
     ],
 
     css: ['app.styl'],
@@ -70,11 +72,10 @@ module.exports = function(ctx) {
 
     build: {
       scopeHoisting: true,
-      // vueRouterMode: 'history',
       vueRouterMode: 'history',
       // vueCompiler: true,
       gzip: true,
-      analyze: true, // analyze after build
+      analyze: false, // analyze after build
       // extractCSS: false,
       extendWebpack(cfg) {
         cfg.resolve.alias = {

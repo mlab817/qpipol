@@ -1,13 +1,13 @@
 <template>
   <q-input
-    filled
     readonly
-    :type="type"
+standout
+    type="textarea"
+		autogrow
     v-model="value"
     placeholder="No data"
-    disable
   >
-    <template v-slot:after>
+    <template v-slot:append>
       <q-btn
         flat
         round
@@ -39,4 +39,11 @@ export default {
 .q-textarea .q-field__native {
   resize: none !important;
 }
+
+.q-field--standout.q-field--readonly .q-field__control::before {
+    opacity: 1;
+    background: transparent;
+    border: 0px solid;
+}
+
 </style>

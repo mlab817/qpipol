@@ -5,37 +5,39 @@
     </template>
 
     <div class="row q-pa-md q-gutter-y-md q-col-gutter-md">
-      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-sm-12">
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-sm-12">
         <short-cuts></short-cuts>
 
-        <!-- <processing-statuses></processing-statuses> -->
+				<activity-component></activity-component>
       </div>
 
-      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-        <!-- Shortcuts -->
-        <activity-component></activity-component>
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+				<releases-component />
+
+				<useful-links></useful-links>
       </div>
     </div>
   </page-container>
 </template>
 
 <script>
-import PageTitle from '@/ui/page/PageTitle';
-import PageContainer from '@/ui/page/PageContainer';
+import { PageTitle, PageContainer } from '@/ui'
 import ActivityComponent from '../components/dashboard/ActivityComponent';
 import ShortCuts from '../components/dashboard/ShortCuts.vue';
-// import ProcessingStatuses from '../components/dashboard/ProcessingStatuses';
+import ReleasesComponent from '../components/dashboard/Releases'
+import UsefulLinks from '../components/dashboard/UsefulLinks'
 
 export default {
   name: 'PageIndex',
 
   components: {
+	  UsefulLinks,
+	  ReleasesComponent,
     ActivityComponent,
     PageContainer,
     PageTitle,
 
     ShortCuts
-    // ProcessingStatuses
   },
 
   computed: {

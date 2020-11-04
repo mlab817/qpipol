@@ -4,7 +4,7 @@
       <div class="row justify-center q-my-lg">
         <div class="column text-center">
           <div>
-            <q-img src="statics/app-logo-128x128.png" width="128px" />
+            <q-img src="~assets/app-logo-128x128.png" width="128px" />
           </div>
         </div>
       </div>
@@ -64,7 +64,6 @@ import LoginForm from '../components/auth/LoginForm';
 
 import RequestAccount from '../components/auth/RequestAccount';
 import { validateEmail, showError } from '@/utils';
-import { CONFIG } from '@/config';
 
 import {
   showErrorNotification,
@@ -80,7 +79,7 @@ export default {
 
   data() {
     return {
-      appTitle: CONFIG.appName,
+      appTitle: process.env.APP_NAME,
       requestAccountDialog: false
     };
   },
@@ -128,9 +127,5 @@ export default {
 .my-card {
   width: 100%;
   max-width: 400px;
-}
-
-.fab.fa-google {
-  color: #f44336;
 }
 </style>
