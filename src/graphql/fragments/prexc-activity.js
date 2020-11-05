@@ -4,6 +4,11 @@ export const PREXC_ACTIVITY_FRAGMENT = gql`
   fragment prexcActivityFragment on PrexcActivity {
     id
     name
+banner_program_id
+banner_program {
+  id
+  name
+}
     operating_unit_id
     operating_unit {
       id
