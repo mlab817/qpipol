@@ -1070,6 +1070,11 @@ export const PREXC_ACTIVITIES = gql`
     prexc_activities {
       id
       name
+      banner_program_id
+      banner_program {
+        id
+        name
+      }
       operating_unit_id
       operating_unit {
         id
