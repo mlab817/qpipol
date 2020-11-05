@@ -440,7 +440,15 @@ export default {
           this.$q.loading.show();
           programService
             .finalizePrexcActivity({ id: id })
-            .then(() => this.$q.loading.hide());
+            .then(() => this.$q.notify({
+              type: 'positive',
+              message: 'Success!'
+            }))
+            .catch(err => this.$q.notify({
+              type: 'negative',
+              message: err.message
+            }))
+            .finally(() => this.$q.loading.hide());
         });
     },
     finalizePrexcActivities() {
