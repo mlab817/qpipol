@@ -51,7 +51,7 @@
 
       <div class="row justify-center q-gutter-sm">
         <q-btn
-          label="Update"
+          label="Edit"
           color="primary"
           @click="$router.push(`/projects/${$route.params.id}/edit`)"
           v-if="owner && !project.finalized"
