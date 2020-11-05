@@ -514,7 +514,7 @@ export const projectService = {
           const index = data.project.funding_source_financials.findIndex(
             x => x.id === deleteFundingSourceFinancial.id
           );
-          data.project.funding_source_financials = data.project.funding_source_financials.splice(
+          data.project.funding_source_financials.splice(
             index,
             1
           );
