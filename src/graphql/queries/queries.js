@@ -327,7 +327,7 @@ export const ALL_PROJECTS = gql`
       operating_unit {
         id
         acronym
-        image
+        image_url
       }
       updated_at
 	    created_by

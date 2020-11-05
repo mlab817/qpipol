@@ -55,7 +55,7 @@
           <q-avatar color="grey-3">
             <img
               :src="
-                props.row.operating_unit ? props.row.operating_unit.image : ''
+                props.row.operating_unit && props.row.operating_unit.image_url
               "
             />
           </q-avatar>
@@ -84,7 +84,7 @@
       <template v-slot:body-cell-processing_status="props">
         <q-td :props="props">
           {{
-            props.row.processing_status ? props.row.processing_status.name : ''
+            props.row.submission_status ? props.row.submission_status.name : ''
           }}
         </q-td>
       </template>
@@ -115,7 +115,7 @@
           <q-card
             class="fit q-pa-none"
             :class="
-              props.row.processing_status.name === 'finalized' ? 'bg-green' : ''
+              props.row.submission_status && props.row.submission_status.name === 'Finalized' ? 'bg-green' : ''
             "
           >
             <q-list>
@@ -123,8 +123,8 @@
                 <q-item-section avatar>
                   <q-avatar color="grey-3">
                     <img
-                      :src="props.row.operating_unit.image"
-                      :alt="props.row.operating_unit.acronym"
+                      :src="props.row.operating_unit && props.row.operating_unit.image_url"
+                      :alt="props.row.operating_unit && props.row.operating_unit.acronym"
                     />
                   </q-avatar>
                 </q-item-section>
@@ -133,7 +133,7 @@
                   <q-item-label>
                     <q-badge
                       :color="
-                        props.row.type && props.row.type.name === 'Program'
+                        props.row.type && props.row.type.id === '1'
                           ? 'blue'
                           : 'negative'
                       "
@@ -160,8 +160,8 @@
                         :owner-id="props.row.creator ? props.row.creator.id : 0"
                         :id="props.row.id"
                         :status="
-                          props.row.processing_status
-                            ? props.row.processing_status.name
+                          props.row.submission_status
+                            ? props.row.submission_status.name
                             : 'draft'
                         "
                         :finalized="!!props.row.finalized"
@@ -241,7 +241,7 @@ export default {
       } else {
         // if something is selected, return projects that match the status
         filteredProjects = this.allProjects.filter(proj => {
-          return selected.includes(proj.submission_status.id);
+          return proj.submission_status && selected.includes(proj.submission_status.id);
         });
       }
 
@@ -257,7 +257,6 @@ export default {
         const dateNow = date.formatDate(now, 'MMM D YYYY / HH:mm:ss A');
         LocalStorage.set('lastUpdated', dateNow);
         this.lastUpdated = dateNow;
-        // this.$data.lastUpdated = now
       }
     },
     submission_statuses: {
