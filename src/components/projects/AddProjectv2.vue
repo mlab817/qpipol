@@ -14,19 +14,17 @@
 						label="Program"
 						v-model="prexc_program_id"
 						:options="prexc_programs"
-						:rules="rules.required"
 					></single-select>
+          
 					<single-select
 						label="Subprogram"
 						v-model="prexc_subprogram_id"
 						:options="filtered_prexc_subprograms"
-						:rules="rules.required"
 					></single-select>
 
 					<text-input
 						label="UACS Code"
 						v-model="uacs_code"
-						:rules="rules.required"
 						hint="Input N/A if the PAP does not have a UACS Code yet."
 						with-na
 					/>
