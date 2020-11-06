@@ -134,7 +134,8 @@ export default {
       return this.$store.getters['auth/user'];
     },
     owner() {
-      return this.project.creator.id === this.user.id;
+      // fixed error #50
+      return this.project.creator && this.project.creator.id === this.user.id;
     }
   },
   data() {
