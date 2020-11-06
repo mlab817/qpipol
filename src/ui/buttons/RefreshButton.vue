@@ -1,11 +1,17 @@
 <template>
-  <q-btn flat round icon="refresh" @click="$emit('click')">
-    <q-tooltip>Refetch projects</q-tooltip>
+  <q-btn icon="refresh" :label="$q.screen.lt.md ? void 0: 'Refresh'" outline class="q-ml-sm" @click="$emit('click')">
+    <q-tooltip v-if="tooltip">{{tooltip}}</q-tooltip>
   </q-btn>
 </template>
 
 <script>
 export default {
-  name: 'RefreshButton'
+  name: 'RefreshButton',
+	props: {
+  	tooltip: {
+  		type: String,
+			default: 'Refresh'
+		}
+	}
 };
 </script>

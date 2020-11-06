@@ -1,7 +1,7 @@
 <template>
   <page-container>
     <template v-slot:title>
-      <page-title title="Programs">
+      <page-title title="Programs" icon="view_module">
         <q-btn v-if="!isAc && !isAa" icon="add" label="Add Activity" @click="addPrexcActivity" color="primary" class="q-mr-sm" />
         <q-btn v-if="!isAc && !isAa" icon="publish" label="Upload" to="/upload" color="primary" class="q-mr-sm" />
         <q-btn icon="help" flat round @click="helpDialog = true" />

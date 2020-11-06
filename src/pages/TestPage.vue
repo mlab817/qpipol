@@ -61,8 +61,6 @@
 			</ul>
 		</div>
 
-    <pre>{{dataToSubmit}}</pre>
-
 	</page-container>
 </template>
 

@@ -1,5 +1,9 @@
 <template>
   <div>
+    <pre>
+      {{project}}
+    </pre>
+
     <template v-if="error">
       <q-banner class="bg-grey-2">
         <template v-slot:avatar>

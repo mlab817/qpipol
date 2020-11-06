@@ -545,6 +545,8 @@ export const projectService = {
             }
           });
 
+          console.log('before save: ', data)
+
           data.project.region_financials.push(createRegionFinancial);
 
           store.writeQuery({
@@ -554,6 +556,8 @@ export const projectService = {
             },
             data
           });
+
+          console.log('after save: ', data)
         }
       })
       .then(handleResponse)
@@ -639,6 +643,8 @@ export const projectService = {
             }
           });
 
+          console.log('before save: ', data)
+
           data.project.funding_source_infrastructures.push(
             createFundingSourceInfrastructure
           );
@@ -650,6 +656,8 @@ export const projectService = {
             },
             data
           });
+
+          console.log('after save: ', data)
         }
       })
       .then(handleResponse)
