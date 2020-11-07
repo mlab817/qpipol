@@ -1,9 +1,12 @@
 <template>
 	<q-icon
+			color="primary"
 			name="refresh"
 			class="cursor-pointer"
 			@click="$emit('click')"
-	></q-icon>
+	>
+		<q-tooltip>Refresh data</q-tooltip>
+	</q-icon>
 </template>
 
 <script>

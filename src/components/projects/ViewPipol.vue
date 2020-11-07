@@ -20,6 +20,7 @@
 				</q-banner>
 			</template>
 
+
 					<div class="row justify-end q-mb-md">
 						<q-badge color="blue"> v. {{ project.version }} </q-badge>
 					</div>

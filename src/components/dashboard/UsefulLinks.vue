@@ -1,10 +1,8 @@
 <template>
 	<div class="column">
-		<div class="row">
-			<q-item-label header class="q-px-none">
-				Useful Links
-			</q-item-label>
-		</div>
+		<q-item-label header class="q-px-none">
+			Useful Links <mini-refresh @click="refetch"/>
+		</q-item-label>
 		<q-card flat bordered square>
 			<q-card-section>
 				<q-list>
@@ -52,9 +50,11 @@
 
 <script>
 	import gql from 'graphql-tag'
+	import MiniRefresh from '../../ui/buttons/MiniRefresh'
 
 	export default {
 		name: 'UsefulLinks',
+		components: {MiniRefresh},
 		apollo: {
 			useful_links: {
 				query: gql`
@@ -88,6 +88,11 @@
 						to: ''
 					}
 				]
+			}
+		},
+		methods: {
+			refetch() {
+				this.$apollo.queries.useful_links.refetch()
 			}
 		}
 	}

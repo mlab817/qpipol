@@ -1,10 +1,6 @@
 <template>
 	<div class="column">
-		<div class="row">
-			<q-item-label header class="q-px-none">Releases</q-item-label>
-			<q-space/>
-			<refresh-button @click="refetch" />
-		</div>
+		<q-item-label header class="q-px-none">Releases <mini-refresh @click="refetch" /></q-item-label>
 		<q-card flat bordered square>
 			<q-card-section>
 				<q-list>
@@ -58,11 +54,11 @@
 <script>
 	import gql from 'graphql-tag'
 	import { date } from 'quasar'
-	import RefreshButton from '../../ui/buttons/RefreshButton'
+	import MiniRefresh from '../../ui/buttons/MiniRefresh'
 
 	export default {
 		components: {
-			RefreshButton
+			MiniRefresh
 		},
 		name: 'ReleasesComponent',
 		apollo: {

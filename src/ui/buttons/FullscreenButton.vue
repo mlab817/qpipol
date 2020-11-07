@@ -2,7 +2,6 @@
 	<q-btn
 			flat
 			round
-			dense
 			:icon="inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
 			@click="$emit('click')"
 	>

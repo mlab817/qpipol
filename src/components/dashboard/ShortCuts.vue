@@ -94,7 +94,7 @@ export default {
           hasAccess: ['reviewer']
         },
         {
-          label: 'Trash',
+          label: 'Deleted Projects',
           icon: 'delete',
           url: '/projects/trash',
           color: 'red',

@@ -18,9 +18,9 @@
         <div class="row q-gutter-sm">
 					<search v-model="filter" />
 
-					<refresh-button @click="refetch" />
+					<icon-button icon="refresh" tooltip="Re-download Data from server" @click="refetch" />
 
-					<download-button @click="exportTable" />
+					<icon-button icon="archive" tooltip="Download this table" @click="exportTable" />
 
 					<fullscreen-button @click="props.toggleFullscreen" :in-fullscreen="props.inFullscreen"></fullscreen-button>
         </div>
@@ -57,19 +57,8 @@
 
       <template v-slot:body-cell-actions="props">
         <q-td :props="props" class="text-center">
-          <q-btn
-            flat
-            round
-            icon="restore"
-            @click.stop="promptRestore(props.row)"
-          ></q-btn>
-          <q-btn
-            flat
-            round
-            icon="delete"
-            color="negative"
-            @click.stop="promptDelete(props.row)"
-          ></q-btn>
+					<restore-button @click="promptRestore(props.row)" />
+					<delete-button @click="promptDelete(props.row)" />
         </q-td>
       </template>
 
@@ -97,13 +86,8 @@
                   </q-item-label>
                 </q-item-section>
                 <q-item-section side>
-                  <q-btn
-                    flat
-                    round
-                    icon="restore"
-                    @click="promptRestore(props.row)"
-                  >
-                  </q-btn>
+									<restore-button @click="promptRestore(props.row)" />
+									<delete-button @click="promptDelete(props.row)" />
                 </q-item-section>
               </q-item>
               <q-item>
@@ -139,12 +123,16 @@ import Search from '../ui/form-inputs/Search'
 import RefreshButton from '../ui/buttons/RefreshButton'
 import DownloadButton from '../ui/buttons/DownloadButton'
 import FullscreenButton from '../ui/buttons/FullscreenButton'
+import RestoreButton from '../ui/buttons/RestoreButton'
+import DeleteButton from '../ui/buttons/DeleteButton'
+import IconButton from '../ui/buttons/IconButton'
 
 export default {
   components: {
+	  IconButton,
+	  DeleteButton,
+	  RestoreButton,
 	  FullscreenButton,
-	  DownloadButton,
-	  RefreshButton,
 	  Search,
     PageContainer,
     PageTitle

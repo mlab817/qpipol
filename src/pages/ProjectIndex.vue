@@ -3,11 +3,13 @@
     <template v-slot:title>
       <page-title title="Projects" icon="apps">
         <q-btn
-          label="Add New"
-          color="primary"
+					outline
+          :label="$q.screen.lt.md ? void 0 : 'Add Project'"
+					icon="add"
           to="/projects/add"
           v-if="isEncoder"
         ></q-btn>
+				<help-button @click="showHelp" />
       </page-title>
     </template>
 
@@ -24,7 +26,7 @@
     >
       <template v-slot:top-left>
         <div class="row text-caption">
-          {{ lastUpdated ? `Last updated on ${lastUpdated}` : null }}
+          {{ lastUpdated ? `Last downloaded on ${lastUpdated}` : null }}
         </div>
       </template>
 
@@ -32,19 +34,16 @@
         <div class="row q-gutter-sm">
           <search v-model="filter"></search>
 
-          <q-btn
-            flat
-            round
+          <icon-button
+						tooltip="Filter by Submission Status"
             icon="filter_alt"
             @click="filterProjects"
             :color="selected.length ? 'primary' : void 0"
-          >
-            <q-tooltip>Filter</q-tooltip>
-          </q-btn>
+          />
 
-          <refresh-button @click="refetch"></refresh-button>
+          <icon-button icon="refresh" tooltip="Re-download data from server" @click="refetch" />
 
-          <download-button @click="exportTable"></download-button>
+					<icon-button icon="table_chart" tooltip="Download table" @click="exportTable" />
 
 					<fullscreen-button @click="props.toggleFullscreen" :in-fullscreen="props.inFullscreen"></fullscreen-button>
         </div>
@@ -59,19 +58,6 @@
               "
             />
           </q-avatar>
-        </q-td>
-      </template>
-
-      <template v-slot:body-cell-type="props">
-        <q-td :props="props">
-          <q-badge
-            :color="
-              props.row.type && props.row.type.name === 'Program'
-                ? 'blue'
-                : 'negative'
-            "
-            >{{ props.row.type ? props.row.type.name : '' }}</q-badge
-          >
         </q-td>
       </template>
 
@@ -209,18 +195,18 @@ import { timeAgo, wrapCsvValue } from 'src/utils';
 
 import {
 	FullscreenButton,
-	RefreshButton,
-	DownloadButton,
 	Search
 } from '@/ui'
+import IconButton from '../ui/buttons/IconButton'
+import HelpButton from '../ui/buttons/HelpButton'
 
 export default {
   components: {
+	  HelpButton,
+	  IconButton,
     ProjectMenu,
     PageContainer,
     PageTitle,
-    DownloadButton,
-    RefreshButton,
     Search,
 	  FullscreenButton
   },
@@ -287,7 +273,7 @@ export default {
         {
           name: 'type',
           label: 'PAP Type',
-          field: row => (row.type ? row.type.name : ''),
+          field: row => (row.type ? row.type.name : 'N.S.'),
           sortable: true,
           align: 'center'
         },
@@ -295,7 +281,7 @@ export default {
           name: 'funding_source',
           label: 'Main Funding Source',
           field: row =>
-            row.main_funding_source ? row.main_funding_source.name : '',
+            row.main_funding_source ? row.main_funding_source.name : 'N.S.',
           sortable: true,
           align: 'center'
         },
@@ -306,8 +292,8 @@ export default {
 					format: (val) => val.toLocaleString()
         },
         {
-          name: 'updated_by',
-          label: 'Updated By',
+          name: 'created_by',
+          label: 'Added By',
           field: row => (row.creator ? row.creator.nickname : '')
         },
         {
@@ -322,12 +308,6 @@ export default {
           label: 'Submission Status',
           field: row => row.submission_status && row.submission_status.name,
           sortable: true,
-          align: 'center'
-        },
-        {
-          name: 'version',
-          label: 'Version',
-          field: row => row.version,
           align: 'center'
         },
         {
@@ -403,7 +383,16 @@ export default {
         .onOk(selected => {
           this.selected = selected;
         });
-    }
+    },
+		showHelp() {
+    	const content = 'This list contains all projects added by users associated to your operating unit.'
+    	this.$q.dialog({
+				title: 'Projects',
+				message: content,
+				html: true,
+				cancel: true
+			})
+		}
   },
   filters: {
     formatMoney(val) {

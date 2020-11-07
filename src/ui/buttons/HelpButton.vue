@@ -11,6 +11,7 @@
 
 <script>
 export default {
-  name: 'HelpButton'
+  name: 'HelpButton',
+	props: ['tooltip']
 }
 </script>

@@ -7,13 +7,13 @@
 			:columns="columns"
 			bordered
 			flat>
+		<template v-slot:top>
+			{{data}}
+		</template>
 		<template v-slot:body="props">
 			<q-tr :props="props">
 				<q-td>
-					{{props.row.funding_source.name}}
-				</q-td>
-				<q-td :props="props">
-					{{props.cols}}
+					{{props.row.funding_source && props.row.funding_source.name}}
 				</q-td>
 				<copy-td v-for="(col, index) in props.cols.filter(c => c.name !== 'funding_source')" :key="index" />
 			</q-tr>
