@@ -1181,3 +1181,15 @@ export const BANNER_PROGRAMS = gql`
     }
   }
 `
+
+export const FETCH_ANNOUNCEMENTS = gql`
+	query {
+		announcements {
+			id
+			subject
+			message
+			created_at
+			created_by
+		}
+	}
+`

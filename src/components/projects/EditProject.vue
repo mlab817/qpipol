@@ -1319,8 +1319,6 @@ import Province from './dropdowns/Province';
 import FundingSource from './dropdowns/FundingSource';
 import FundingInstitution from './dropdowns/FundingInstitution';
 import ImplementationMode from './dropdowns/ImplementationMode';
-import CityMunicipality from './dropdowns/CityMunicipality';
-import District from './dropdowns/District';
 import SpatialCoverage from './dropdowns/SpatialCoverage';
 import TextInput from '@/ui/form-inputs/TextInput';
 import RadioInput from '@/ui/form-inputs/RadioInput';
@@ -1347,8 +1345,6 @@ export default {
     BudgetTier,
     SpatialCoverage,
     Gad,
-    District,
-    CityMunicipality,
     ImplementationMode,
     FundingInstitution,
     FundingSource,

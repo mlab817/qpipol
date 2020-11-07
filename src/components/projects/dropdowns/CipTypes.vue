@@ -4,6 +4,9 @@
     v-model="selected"
     :options="cip_types"
     :rules="rules"
+		with-refresh
+		@refetch="refetch"
+		:loading="$apollo.loading"
   ></single-select>
 </template>
 
@@ -34,6 +37,11 @@ export default {
         this.$emit('input', val);
       }
     }
-  }
+  },
+	methods: {
+  	refetch() {
+  		this.$apollo.queries.cip_types.refetch()
+		}
+	}
 };
 </script>

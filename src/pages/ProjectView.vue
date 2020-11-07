@@ -39,7 +39,8 @@
       <div class="row justify-center q-gutter-sm q-mb-md">
         <q-btn
           label="Edit"
-          color="primary"
+					icon="edit"
+					color="blue"
           @click="$router.push(`/projects/${$route.params.id}/edit`)"
           v-if="owner && !project.finalized"
         />
@@ -50,7 +51,8 @@
       <div class="row justify-center q-gutter-sm">
         <q-btn
           label="Edit"
-          color="primary"
+					icon="edit"
+          color="blue"
           @click="$router.push(`/projects/${$route.params.id}/edit`)"
           v-if="owner && !project.finalized"
         />
@@ -75,7 +77,7 @@ import ViewPipol from '@/components/projects/ViewPipol';
 import { FETCH_PROJECT_QUERY } from '@/graphql/queries';
 import axios from 'axios';
 import { showError } from '@/utils';
-import { openURL } from 'quasar'
+import { openURL, exportFile } from 'quasar'
 import UploadSigned from '../components/projects/shared/UploadSigned';
 import RefreshButton from '../ui/buttons/RefreshButton'
 import ArchiveButton from '../ui/buttons/ArchiveButton'
@@ -150,14 +152,70 @@ export default {
 		},
 
     downloadFile() {
-	    if (this.project.signed_copy_link) {
-	    	openURL(project.signed_copy_link)
-	    } else {
-		    this.$q.loading.show({
+    	const options = [{
+					value: 'docx',
+					label: 'Microsoft Word'
+				},
+				{
+					value: 'signed',
+					label: 'Signed Copy (if uploaded)'
+				},
+				{
+					value: 'json',
+					label: 'JSON'
+				}]
+
+				this.$q.dialog({
+					title: 'Download',
+					message: 'Choose what file to download',
+					cancel: true,
+					options: {
+						items: options,
+						isValid: val => !!val,
+						model: 'docx'
+					}
+				}).onOk(data => {
+					if (data === 'docx') {
+						this.downloadDocx()
+					} else if (data === 'signed') {
+						this.downloadSignedCopy()
+					} else if (data === 'json') {
+						this.downloadJson()
+					}
+				})
+    },
+
+		downloadSignedCopy() {
+    	if (this.project.signed_copy_link) {
+		    openURL(project.signed_copy_link)
+			} else {
+    		alert('Signed copy has not been uploaded yet')
+			}
+		},
+
+		downloadJson() {
+			const project = this.project
+
+			const status = exportFile(`project_${project.id}.json`, JSON.stringify(project), 'text/json')
+
+			if (status === true) {
+				this.$q.notify({
+					type: 'positive',
+					message: 'File downloaded'
+				})
+			} else {
+				this.$q.notify({
+					type: 'negative',
+					message: `Error ${status}`
+				})
+			}
+		},
+
+		downloadDocx() {
+			  this.$q.loading.show({
 			    message: 'This may take a while as the file is being generated.'
-		    });
-		    // console.log(process.env)
-		    axios
+			  });
+			  axios
 			    .post(process.env.REPORT_ENDPOINT, this.project, {
 				    responseType: 'arraybuffer',
 				    headers: {
@@ -182,8 +240,7 @@ export default {
 			    })
 			    .catch(err => showError(err))
 			    .finally(() => this.$q.loading.hide());
-	    }
-    }
+		}
   }
 };
 </script>

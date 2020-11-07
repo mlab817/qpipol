@@ -2,9 +2,9 @@
   <page-container>
     <template v-slot:title>
       <page-title title="Programs" icon="view_module">
-        <q-btn v-if="!isAc && !isAa" icon="add" label="Add Activity" @click="addPrexcActivity" color="primary" class="q-mr-sm" />
-        <q-btn v-if="!isAc && !isAa" icon="publish" label="Upload" to="/upload" color="primary" class="q-mr-sm" />
-        <q-btn icon="help" flat round @click="helpDialog = true" />
+        <q-btn outline v-if="!isAc && !isAa" icon="add" label="Add Activity" @click="addPrexcActivity" class="q-mr-sm" />
+        <q-btn outline v-if="!isAc && !isAa" icon="publish" label="Upload" to="/upload" class="q-mr-sm" />
+				<help-button @click="helpDialog = true" />
       </page-title>
     </template>
 
@@ -91,7 +91,7 @@
 
 				<icon-button icon="refresh" tooltip="Re-download from server" @click="refetch" />
 
-				<icon-button icon="get_app" tooltip="Download with annual data" @click="exportExcel" />
+				<icon-button icon="cloud_download" tooltip="Download with annual data" @click="exportExcel" />
 
 				<icon-button icon="table_chart" tooltip="Download this table" @click="download" />
 
@@ -120,14 +120,14 @@
           <icon-button
             icon="preview"
             size="sm"
-						tooltip="View Activity"
+						tooltip="View activity"
             @click="viewPrexcActivity(props.row.id)"
           ></icon-button>
 
 					<icon-button
 							icon="edit"
 							size="sm"
-							tooltip="Edit Activity"
+							tooltip="Edit activity"
 							color="blue"
 							@click="editPrexcActivity(props.row.id)"
 							:disabled="props.row.finalized"
@@ -137,6 +137,7 @@
             icon="delete"
             size="sm"
             color="negative"
+						tooltip="Delete activity"
             :disabled="props.row.finalized"
             @click="deletePrexcActivity(props.row.id)"
           ></icon-button>
@@ -176,7 +177,7 @@ import PageTitle from '@/ui/page/PageTitle.vue';
 import PrexcActivity from '@/components/programs/PrexcActivity.vue';
 import ViewActivity from '@/components/programs/ViewActivity.vue';
 import { wrapCsvValue } from 'src/utils';
-import { exportFile, openURL, date } from 'quasar';
+import { exportFile, openURL, date, LocalStorage } from 'quasar';
 import { programService } from 'src/services';
 
 import {
@@ -184,9 +185,10 @@ import {
 	FullscreenButton
 } from '@/ui'
 import IconButton from '../ui/buttons/IconButton'
+import HelpButton from '../ui/buttons/HelpButton'
 
 export default {
-  components: {IconButton, Search, PageContainer, PageTitle, PrexcActivity, ViewActivity, FullscreenButton },
+  components: {HelpButton, IconButton, Search, PageContainer, PageTitle, PrexcActivity, ViewActivity, FullscreenButton },
   name: 'PrexcActivities',
   apollo: {
     prexc_programs: {
@@ -239,7 +241,7 @@ export default {
   },
   data() {
     return {
-	    lastUpdatedPrograms: null,
+	    lastUpdatedPrograms: LocalStorage.getItem('lastUpdatedPrograms') || null,
       helpDialog: false,
       filter: '',
       getCurrentUser: {},

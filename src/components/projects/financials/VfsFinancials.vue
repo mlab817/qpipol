@@ -1,37 +1,37 @@
 <template>
 	<q-table
-			class="col"
-			:data="data"
-			hide-bottom
-			:pagination="pagination"
-			:columns="columns"
-			bordered
-			flat>
-		<template v-slot:top>
-			{{data}}
+		class="col"
+		:data="data"
+		hide-bottom
+		:pagination="pagination"
+		:columns="columns"
+		bordered
+		flat>
+		<template v-slot:top-right>
+			<q-toggle label="Toggle Copy" @input="copyMode = !copyMode" :value="copyMode" color="secondary" />
 		</template>
 		<template v-slot:body="props">
 			<q-tr :props="props">
 				<q-td>
 					{{props.row.funding_source && props.row.funding_source.name}}
 				</q-td>
-				<copy-td v-for="(col, index) in props.cols.filter(c => c.name !== 'funding_source')" :key="index" />
+				<copy-td :value="col.value" v-for="(col, index) in props.cols.filter(c => c.name !== 'funding_source')" :key="index" :copy-mode="copyMode" />
 			</q-tr>
 		</template>
 		<template v-slot:bottom-row>
 			<q-tr>
 				<q-td>Total</q-td>
-				<copy-td :value="totalRow.investment_target_2016"></copy-td>
-				<copy-td :value="totalRow.investment_target_2017"></copy-td>
-				<copy-td :value="totalRow.investment_target_2018"></copy-td>
-				<copy-td :value="totalRow.investment_target_2019"></copy-td>
-				<copy-td :value="totalRow.investment_target_2020"></copy-td>
-				<copy-td :value="totalRow.investment_target_2021"></copy-td>
-				<copy-td :value="totalRow.investment_target_2022"></copy-td>
-				<copy-td :value="totalRow.investment_target_2023"></copy-td>
-				<copy-td :value="totalRow.investment_target_2024"></copy-td>
-				<copy-td :value="totalRow.investment_target_2025"></copy-td>
-				<copy-td :value="totalRow.investment_target_total"></copy-td>
+				<copy-td :value="totalRow.investment_target_2016" :copy-mode="copyMode" />
+				<copy-td :value="totalRow.investment_target_2017" :copy-mode="copyMode" />
+				<copy-td :value="totalRow.investment_target_2018" :copy-mode="copyMode" />
+				<copy-td :value="totalRow.investment_target_2019" :copy-mode="copyMode" />
+				<copy-td :value="totalRow.investment_target_2020" :copy-mode="copyMode" />
+				<copy-td :value="totalRow.investment_target_2021" :copy-mode="copyMode" />
+				<copy-td :value="totalRow.investment_target_2022" :copy-mode="copyMode" />
+				<copy-td :value="totalRow.investment_target_2023" :copy-mode="copyMode" />
+				<copy-td :value="totalRow.investment_target_2024" :copy-mode="copyMode" />
+				<copy-td :value="totalRow.investment_target_2025" :copy-mode="copyMode" />
+				<copy-td :value="totalRow.investment_target_total" :copy-mode="copyMode" />
 			</q-tr>
 		</template>
 	</q-table>
@@ -82,6 +82,7 @@
 		},
 		data() {
 			return {
+				copyMode: false,
 				pagination: {
 					rowsPerPage: 0
 				},

@@ -1,10 +1,8 @@
 <template>
-	<q-card style="max-width: 80wh; min-width: 400px;">
-		<q-bar class="bg-accent text-white">
-			<div>Add/Edit Funding Source</div>
-			<q-space />
-			<q-btn flat round dense icon="close" v-close-popup />
-		</q-bar>
+	<q-card :style="$q.screen.gt.xs ? 'min-width:400px' : ''">
+		<card-header
+				title="Add Funding Source"
+		></card-header>
 
 		<q-form @submit="handleSubmit">
 			<q-card-section class="q-gutter-sm">
@@ -79,9 +77,10 @@
 	import { FETCH_FUNDING_SOURCES } from '../../../graphql/queries'
 	import { projectService } from '../../../services'
 	import { Notify } from 'quasar'
+	import CardHeader from '../../../ui/cards/CardHeader'
 
 	export default {
-		components: { MoneyInput, SingleSelect },
+		components: {CardHeader, MoneyInput, SingleSelect },
 		props: ['infrastructureToEdit','taken','projectId','editMode'],
 		name: 'AddInfra',
 		apollo: {

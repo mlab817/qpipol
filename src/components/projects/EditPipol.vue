@@ -190,169 +190,153 @@
           </q-card-section>
         </q-card>
 
-        <template v-if="project.trip">
-          <section-header
-            sectionTitle="Three-Year Rolling Investment Program"
-          ></section-header>
-          <q-card square>
-            <q-card-section class="q-gutter-sm">
-              <div class="row q-col-gutter-sm">
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                  <q-item-label class="text-weight-bold text-caption"
-                    >Infrastructure Sector</q-item-label
-                  >
-                  <infrastructure-sectors
-                    v-model="project.selected_infrastructure_subsectors"
-                  />
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                  <q-item-label class="text-weight-bold text-caption"
-                    >Technical Readiness</q-item-label
-                  >
-                  <technical-readinesses
-                    v-model="project.selected_technical_readinesses"
-                  ></technical-readinesses>
-                </div>
-              </div>
+				<section-header
+					sectionTitle="Three-Year Rolling Investment Program (Required only for TRIP PAPs)"
+				></section-header>
+				<q-card square flat bordered>
+					<q-card-section class="q-gutter-sm">
+						<div class="row q-col-gutter-sm">
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+								<infrastructure-sectors
+									v-model="project.selected_infrastructure_subsectors"
+								/>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+								<technical-readinesses
+									v-model="project.selected_technical_readinesses"
+								></technical-readinesses>
+							</div>
+						</div>
 
-              <div class="row">
-                <text-input
-                  v-model="project.implementation_risk"
-                  label="Implementation Risk &amp; Mitigation Strategy"
-                  type="textarea"
-                  :rules="rules.required"
-                />
-              </div>
+						<div class="row">
+							<text-input
+								v-model="project.implementation_risk"
+								label="Implementation Risk &amp; Mitigation Strategy"
+								type="textarea"
+								:rules="rules.required"
+							/>
+						</div>
 
-              <div class="row">
-                <fs-infrastructure
-                  :data="project.funding_source_infrastructures"
-                  :project-id="project.id"
-                ></fs-infrastructure>
-              </div>
-            </q-card-section>
-          </q-card>
-        </template>
+						<div class="row">
+							<fs-infrastructure
+								:data="project.funding_source_infrastructures"
+								:project-id="project.id"
+							></fs-infrastructure>
+						</div>
+					</q-card-section>
+				</q-card>
 
         <section-header
           sectionTitle="Physical and Financial Status"
         ></section-header>
-        <q-card square>
+        <q-card square flat bordered>
           <q-card-section class="q-gutter-sm">
             <project-status
               v-model="project.project_status_id"
               :rules="rules.selectOne"
             ></project-status>
 
-            <div class="row">
-              <q-expansion-item bordered class="col">
-                <template v-slot:header>
-                  <q-item-section avatar>
-                    <checkbox-item v-model="project.iccable"></checkbox-item>
-                  </q-item-section>
-                  <q-item-section>
-                    Will require Investment Coordination Committee/NEDA Board
-                    Approval (ICC-able)?
-                  </q-item-section>
-                </template>
-                <q-card>
-                  <q-card-section class="q-gutter-y-md">
-                    <div class="row">
-                      <div class="col">
-                        <checkbox-input
-                          label="Approved by DA-wide Clearinghouse"
-                          v-model="project.clearinghouse"
-                        ></checkbox-input>
-                      </div>
-                      <div class="col">
-                        <date-input
-                          :disable="!project.clearinghouse"
-                          v-model="project.clearinghouse_date"
-                        ></date-input>
-                      </div>
-                    </div>
+            <div class="column">
+							<checkbox-item v-model="project.iccable" color="primary" label="Will require Investment Coordination Committee/NEDA Board Approval (ICC-able)?"></checkbox-item>
+							<q-card v-if="project.iccable" class="col" square flat bordered>
+								<q-card-section class="q-gutter-y-md">
+									<div class="row">
+										<div class="col">
+											<checkbox-input
+												label="Approved by DA-wide Clearinghouse"
+												v-model="project.clearinghouse"
+											></checkbox-input>
+										</div>
+										<div class="col">
+											<date-input
+													label="Date Approved by the DA-wide Clearinghouse"
+												:disable="!project.clearinghouse"
+												v-model="project.clearinghouse_date"
+											></date-input>
+										</div>
+									</div>
 
-                    <div class="row">
-                      <div class="col">
-                        <checkbox-input
-                          label="Yet to be submitted to the NEDA Secretariat"
-                          v-model="project.neda_submission"
-                        ></checkbox-input>
-                      </div>
-                      <div class="col">
-                        <date-input
-                          :disable="!project.neda_submission"
-                          v-model="project.neda_submission_date"
-                          label="Target Date of Submission"
-                        ></date-input>
-                      </div>
-                    </div>
+									<div class="row">
+										<div class="col">
+											<checkbox-input
+												label="Yet to be submitted to the NEDA Secretariat"
+												v-model="project.neda_submission"
+											></checkbox-input>
+										</div>
+										<div class="col">
+											<date-input
+												:disable="!project.neda_submission"
+												v-model="project.neda_submission_date"
+												label="Target Date of Submission"
+											></date-input>
+										</div>
+									</div>
 
-                    <div class="row">
-                      <div class="col">
-                        <checkbox-input
-                          label="Under the NEDA Secretariat Review"
-                          v-model="project.neda_secretariat_review"
-                        ></checkbox-input>
-                      </div>
-                      <div class="col">
-                        <date-input
-                          :disable="!project.neda_secretariat_review"
-                          v-model="project.neda_secretariat_review_date"
-                          label="Date of Submission to NEDA Secretariat"
-                        ></date-input>
-                      </div>
-                    </div>
+									<div class="row">
+										<div class="col">
+											<checkbox-input
+												label="Under the NEDA Secretariat Review"
+												v-model="project.neda_secretariat_review"
+											></checkbox-input>
+										</div>
+										<div class="col">
+											<date-input
+												:disable="!project.neda_secretariat_review"
+												v-model="project.neda_secretariat_review_date"
+												label="Date of Submission to NEDA Secretariat"
+											></date-input>
+										</div>
+									</div>
 
-                    <div class="row">
-                      <div class="col">
-                        <checkbox-input
-                          label="ICC-TB Endorsed"
-                          v-model="project.icc_endorsed"
-                        ></checkbox-input>
-                      </div>
-                      <div class="col">
-                        <date-input
-                          :disable="!project.icc_endorsed"
-                          v-model="project.icc_endorsed_date"
-                          label="Date of Approval"
-                        ></date-input>
-                      </div>
-                    </div>
+									<div class="row">
+										<div class="col">
+											<checkbox-input
+												label="ICC-TB Endorsed"
+												v-model="project.icc_endorsed"
+											></checkbox-input>
+										</div>
+										<div class="col">
+											<date-input
+												:disable="!project.icc_endorsed"
+												v-model="project.icc_endorsed_date"
+												label="Date of Approval"
+											></date-input>
+										</div>
+									</div>
 
-                    <div class="row">
-                      <div class="col">
-                        <checkbox-input
-                          label="ICC-CC Approved"
-                          v-model="project.icc_approved"
-                        ></checkbox-input>
-                      </div>
-                      <div class="col">
-                        <date-input
-                          :disable="!project.icc_approved"
-                          v-model="project.icc_approved_date"
-                          label="Date of Approval"
-                        ></date-input>
-                      </div>
-                    </div>
+									<div class="row">
+										<div class="col">
+											<checkbox-input
+												label="ICC-CC Approved"
+												v-model="project.icc_approved"
+											></checkbox-input>
+										</div>
+										<div class="col">
+											<date-input
+												:disable="!project.icc_approved"
+												v-model="project.icc_approved_date"
+												label="Date of Approval"
+											></date-input>
+										</div>
+									</div>
 
-                    <div class="row">
-                      <div class="col">
-                        <checkbox-input
-                          label="NEDA Board Confirmed"
-                          v-model="project.neda_board"
-                        ></checkbox-input>
-                      </div>
-                      <div class="col">
-                        <date-input
-                          :disable="!project.neda_board"
-                          v-model="project.neda_board_date"
-                        ></date-input>
-                      </div>
-                    </div>
-                  </q-card-section>
-                </q-card>
-              </q-expansion-item>
+									<div class="row">
+										<div class="col">
+											<checkbox-input
+												label="NEDA Board Confirmed"
+												v-model="project.neda_board"
+											></checkbox-input>
+										</div>
+										<div class="col">
+											<date-input
+													label="Date Confirmed"
+												:disable="!project.neda_board"
+												v-model="project.neda_board_date"
+											></date-input>
+										</div>
+									</div>
+								</q-card-section>
+							</q-card>
             </div>
 
             <budget-tier
@@ -371,6 +355,7 @@
               label="Updates"
               type="textarea"
               :rules="rules.required"
+							with-na
             />
 
             <date-input
@@ -384,7 +369,7 @@
         <section-header
           sectionTitle="Philippine Development (PDP) Chapter"
         ></section-header>
-        <q-card square>
+        <q-card square flat bordered>
           <q-card-section class="q-gutter-sm">
             <pdp-chapter v-model="project.pdp_chapter_id" :rules="rules.required"></pdp-chapter>
 
@@ -411,7 +396,7 @@
         <section-header
           sectionTitle="Philippine Development (PDP) Results Matrices"
         ></section-header>
-        <q-card square>
+        <q-card square flat bordered>
           <q-card-section class="q-gutter-sm">
             <pdp-indicators
               v-model="project.selected_pdp_indicators"
@@ -430,7 +415,7 @@
         />
 
         <section-header sectionTitle="Ten Point Agenda"></section-header>
-        <q-card square>
+        <q-card square flat bordered>
           <q-card-section class="q-gutter-sm">
             <ten-point-agenda
               v-model="project.selected_ten_point_agenda"
@@ -441,7 +426,7 @@
         <section-header
           sectionTitle="Sustainable Development Goals"
         ></section-header>
-        <q-card square>
+        <q-card square flat bordered>
           <q-card-section class="q-gutter-sm">
             <sd-goals
               v-model="project.selected_sustainable_development_goals"
@@ -453,7 +438,7 @@
           <section-header
             sectionTitle="Gender and Development Responsiveness"
           ></section-header>
-          <q-card square bordered>
+          <q-card square flat bordered>
             <q-card-section class="q-gutter-y-md">
               <q-item-label class="text-caption">Required if CIP</q-item-label>
               <gad
@@ -466,24 +451,21 @@
         </template>
 
         <section-header sectionTitle="Implementation Period"></section-header>
-        <q-card square>
+        <q-card square flat bordered>
           <q-card-section class="row q-col-gutter-sm">
             <div class="col">
-              <single-select
-                v-model="project.target_start_year"
-                label="Start of Project Implementation"
-                :options="years"
-                :rules="rules.required"
-              ></single-select>
+							<years
+								v-model="project.target_start_year"
+								label="Start of Project Implementation"
+								:rules="rules.required" />
             </div>
 
             <div class="col">
-              <single-select
-                v-model="project.target_end_year"
-                label="Year of Project Completion"
-                :options="filteredYears"
-                :rules="rules.required"
-              ></single-select>
+							<years
+								v-model="project.target_end_year"
+								label="Year of Project Completion"
+								:rules="rules.required"
+								:min-value="project.target_start_year" />
             </div>
           </q-card-section>
         </q-card>
@@ -491,7 +473,7 @@
         <section-header
           sectionTitle="Project Preparation Details"
         ></section-header>
-        <q-card square>
+        <q-card square flat bordered>
           <q-card-section class="q-gutter-sm">
             <project-document
               v-model="project.project_preparation_document_id"
@@ -555,7 +537,7 @@
         </q-card>
 
         <section-header sectionTitle="Pre-construction Costs"></section-header>
-        <q-card square>
+        <q-card square flat bordered>
           <q-card-section>
             <checkbox-item
               v-model="project.has_row"
@@ -661,12 +643,13 @@
         </q-card>
 
         <section-header sectionTitle="Employment Generation"></section-header>
-        <q-card square>
+        <q-card square flat bordered>
           <q-card-section>
             <text-input
               v-model="project.employment_generated"
               label="No. of persons to be employed"
               hint="Please indicate the no. of persons to be employed by the project outside of the implementing agency"
+							with-na
             />
           </q-card-section>
         </q-card>
@@ -674,7 +657,7 @@
         <section-header
           sectionTitle="Funding Source and Mode of Implementation"
         ></section-header>
-        <q-card square>
+        <q-card square flat bordered>
           <q-card-section>
             <div class="row q-col-gutter-sm">
               <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -715,7 +698,7 @@
 
         <section-header sectionTitle="Project Cost"></section-header>
 
-        <q-card square>
+        <q-card square flat bordered>
           <div class="row">
             <fs-financials
               :data="project.funding_source_financials"
@@ -734,7 +717,7 @@
         <section-header
           sectionTitle="Financial Accomplishments"
         ></section-header>
-        <q-card square bordered>
+        <q-card square bordered flat>
           <q-card-section class="q-gutter-y-md">
             <!-- Investment Requirements (Total, Infrastructure, GAA, NEP, Disbursement) -->
             <q-item-label class="text-h6 text-weight-lighter">
@@ -1206,10 +1189,8 @@
 </template>
 
 <script>
-import ValidateProject from '@/components/projects/dialogs/ValidateProject';
 import {
   FETCH_TYPES,
-  FETCH_YEARS,
   FETCH_FUNDING_SOURCES
 } from '@/graphql/queries';
 import BudgetTier from './dropdowns/BudgetTier';
@@ -1225,7 +1206,6 @@ import SpatialCoverage from './dropdowns/SpatialCoverage';
 import TextInput from '@/ui/form-inputs/TextInput';
 import Typology from './dropdowns/Typology';
 import RadioInput from '@/ui/form-inputs/RadioInput';
-import SingleSelect from '@/ui/form-inputs/SingleSelect';
 import MoneyInput from '@/ui/form-inputs/MoneyInput';
 import CheckboxInput from '@/ui/form-inputs/CheckboxInput';
 import DateInput from '@/ui/form-inputs/DateInput';
@@ -1249,9 +1229,11 @@ import SdGoals from './dropdowns/SdGoals';
 import ProjectDocument from './dropdowns/ProjectDocument';
 import ImplementationBases from './dropdowns/ImplementationBases';
 import TdMoney from '../../ui/components/TdMoney'
+import Years from './dropdowns/Years'
 
 export default {
   components: {
+	  Years,
 	  TdMoney,
     BudgetTier,
     CipTypes,
@@ -1267,7 +1249,6 @@ export default {
     ImplementingAgency,
     DateInput,
     MoneyInput,
-    SingleSelect,
     RadioInput,
     TextInput,
     CheckboxInput,
@@ -1297,9 +1278,6 @@ export default {
   apollo: {
     types: {
       query: FETCH_TYPES
-    },
-    years: {
-      query: FETCH_YEARS
     },
     funding_sources: {
       query: FETCH_FUNDING_SOURCES,

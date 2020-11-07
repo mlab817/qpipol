@@ -14,11 +14,11 @@
     <div class="row q-pa-md q-gutter-y-md q-col-gutter-md">
       <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-sm-12">
         <short-cuts></short-cuts>
-
-				<activity-component></activity-component>
       </div>
 
       <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+				<announcement-component />
+
 				<releases-component />
 
 				<useful-links></useful-links>
@@ -29,19 +29,19 @@
 
 <script>
 import { PageTitle, PageContainer } from '@/ui'
-import ActivityComponent from '../components/dashboard/ActivityComponent';
 import ShortCuts from '../components/dashboard/ShortCuts.vue';
 import ReleasesComponent from '../components/dashboard/Releases'
 import UsefulLinks from '../components/dashboard/UsefulLinks'
 import { openURL } from 'quasar'
+import AnnouncementComponent from '../components/dashboard/AnnouncementComponent'
 
 export default {
   name: 'PageIndex',
 
   components: {
+	  AnnouncementComponent,
 	  UsefulLinks,
 	  ReleasesComponent,
-    ActivityComponent,
     PageContainer,
     PageTitle,
 

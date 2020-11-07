@@ -101,12 +101,6 @@ export default {
           hasAccess: ['encoder']
         },
         {
-          label: 'Activity',
-          icon: 'work_outline',
-          url: '/activity',
-          hasAccess: []
-        },
-        {
           label: 'Profile',
           icon: 'tune',
           url: '/profile',

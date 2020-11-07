@@ -4,6 +4,9 @@
     label="Typology"
     :options="typologies"
     :rules="rules"
+		:loading="$apollo.loading"
+		with-refresh
+		@refetch="refetch"
   />
 </template>
 
@@ -34,6 +37,11 @@ export default {
     return {
       typologies: []
     };
-  }
+  },
+	methods: {
+  	refetch() {
+  		this.$apollo.queries.typologies.refetch()
+		}
+	}
 };
 </script>

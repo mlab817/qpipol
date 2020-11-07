@@ -9,7 +9,7 @@
         stack-label
         outlined
         readonly
-        color="secondary"
+        :color="color"
         :val="true"
       >
       </q-checkbox>
@@ -36,7 +36,11 @@ export default {
       type: Boolean,
       default: false
     },
-    value: Boolean
+    value: Boolean,
+		color: {
+    	type: String,
+			default: 'primary'
+		}
   },
   data() {
     return {

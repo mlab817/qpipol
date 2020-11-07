@@ -1,7 +1,7 @@
 <template>
-	<q-td>
+	<q-td class="q-pa-none">
 		<q-input
-                        standout
+			standout
 			v-model="internalValue"
 			input-class="text-right"
 			dense
@@ -15,6 +15,7 @@
 					v-copy="value"
 					color="blue"
 					size="xs"
+					v-if="copyMode"
 				>
 					<q-tooltip>Copy to clipboard</q-tooltip>
 				</q-btn>
@@ -26,7 +27,7 @@
 <script>
 export default {
   name: 'CopyTd',
-  props: ['value'],
+  props: ['value','copyMode'],
   computed: {
     internalValue: {
       get() {

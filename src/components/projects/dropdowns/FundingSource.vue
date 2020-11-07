@@ -4,6 +4,9 @@
     :label="label"
     :options="funding_sources"
     :rules="rules"
+		with-refresh
+		@refetch="refetch"
+		:loading="$apollo.loading"
   />
 </template>
 
@@ -34,6 +37,11 @@ export default {
     return {
       funding_sources: []
     };
-  }
+  },
+	methods: {
+  	refetch() {
+  		this.$apollo.queries.funding_sources.refetch()
+		}
+	}
 };
 </script>
