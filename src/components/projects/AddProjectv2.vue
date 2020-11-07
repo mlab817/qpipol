@@ -1,7 +1,5 @@
 <template>
   <div style="margin-bottom: 70px;">
-    <div class="text-h6" v-if="$apollo.loading">Loading...</div>
-
     <q-form
       ref="addProject"
       @submit="confirmSubmit"
@@ -14,12 +12,18 @@
 						label="Program"
 						v-model="prexc_program_id"
 						:options="prexc_programs"
+						:loading="$apollo.queries.prexc_programs.loading"
+						with-refresh
+						@refetch="refetchPrexcPrograms"
 					></single-select>
-          
+
 					<single-select
 						label="Subprogram"
 						v-model="prexc_subprogram_id"
 						:options="filtered_prexc_subprograms"
+						:loading="$apollo.queries.prexc_subprograms.loading"
+						with-refresh
+						@refetch="refetchPrexcSubprograms"
 					></single-select>
 
 					<text-input
@@ -156,6 +160,12 @@ export default {
         }
       });
     },
+	  refetchPrexcPrograms() {
+		  this.$apollo.queries.prexc_programs.refetch()
+	  },
+	  refetchPrexcSubprograms() {
+		  this.$apollo.queries.prexc_subprograms.refetch()
+	  },
     submitForm() {
       const payload = {
         prexc_program_id: this.prexc_program_id,

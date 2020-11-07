@@ -445,8 +445,8 @@ export const projectService = {
               id: payload.project_id
             }
           });
-
-          data.project.funding_source_financials.push(
+	
+	        data.project.funding_source_financials.push(
             createFundingSourceFinancial
           );
 
@@ -544,10 +544,8 @@ export const projectService = {
               id: payload.project_id
             }
           });
-
-          console.log('before save: ', data)
-
-          data.project.region_financials.push(createRegionFinancial);
+	
+	        data.project.region_financials.push(createRegionFinancial);
 
           store.writeQuery({
             query: FETCH_PROJECT_QUERY,
@@ -556,8 +554,6 @@ export const projectService = {
             },
             data
           });
-
-          console.log('after save: ', data)
         }
       })
       .then(handleResponse)
@@ -644,8 +640,8 @@ export const projectService = {
           });
 
           console.log('before save: ', data)
-
-          data.project.funding_source_infrastructures.push(
+	
+	        data.project.funding_source_infrastructures.push(
             createFundingSourceInfrastructure
           );
 

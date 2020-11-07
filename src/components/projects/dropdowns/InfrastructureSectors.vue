@@ -6,10 +6,10 @@
 		<template v-if="$apollo.loading">
 			<q-item v-for="i in 3" :key="i">
 				<q-item-section avatar>
-					<q-skeleton type="rect" />
+					<q-skeleton type="QAvatar" />
 				</q-item-section>
 				<q-item-section>
-					<q-skeleton type="QItemLabel" width="30%" />
+					<q-skeleton type="rect" width="30%" />
 				</q-item-section>
 			</q-item>
 		</template>
