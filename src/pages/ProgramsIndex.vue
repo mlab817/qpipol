@@ -4,7 +4,7 @@
       <page-title title="Programs" icon="view_module">
         <q-btn outline v-if="!isAc && !isAa" icon="add" label="Add Activity" @click="addPrexcActivity" class="q-mr-sm" />
         <q-btn outline v-if="!isAc && !isAa" icon="publish" label="Upload" to="/upload" class="q-mr-sm" />
-				<help-button @click="helpDialog = true" />
+				<help-button @click="help" />
       </page-title>
     </template>
 
@@ -18,19 +18,6 @@
         <q-btn flat to="/projects" label="Projects" />
       </template>
     </q-banner>
-
-    <q-dialog v-model="helpDialog">
-      <q-card>
-        <q-bar class="bg-accent text-white">
-          <div>Help</div>
-          <q-space />
-          <q-btn flat round icon="close" v-close-popup />
-        </q-bar>
-        <q-card-section>
-          <p v-for="(help, index) in helps" :key="index">{{help}}</p>
-        </q-card-section>
-      </q-card>
-    </q-dialog>
 
     <q-dialog
       v-model="addEditPrexcActivityDialog"
@@ -334,13 +321,12 @@ export default {
       operating_unit_id: null,
       selected: [],
       viewPrexcActivityDialog: false,
-      helps: [
-        'This is for Tier 1 (ongoing programs/subprograms/activities) only. Use the Add Project module for Tier 2 proposals. Projects added via Add Project Module will appear here as an activity under the identified program/subprogram.',
-        'This is the substitute for Form 4 of the Public Investment Program utilized in the FY 2019 updating of the Public Investment Program. It provides the summary of investment requirements and actual budget allocated and utilized per Program.',
-        'This is patterned after the PREXC programs of the operating units with some modifications particularly on General Management and Supervision and Locally Funded and Foreign Assisted Program.',
-        'For General Management and Supervision, only PAPs that fit the Three-Year Rolling Infrastructure Program should be reported.',
-        'For locally-funded and foreign-assisted projects (excluding individual FMR projects), they should be submitted using the project profile form.'
-      ]
+      helps:
+        `<p>This is for Tier 1 (ongoing programs/ subprograms/ activities) only. Use the <strong>Add Project module</strong> for Tier 2 proposals.</p>
+        <p>This is the substitute for Form 4 of the Public Investment Program utilized in the FY 2019 updating of the Public Investment Program. It provides the summary of investment requirements and actual budget allocated and utilized per Program.</p>
+        <p>This is patterned after the PREXC programs of the operating units with some modifications particularly on General Management and Supervision and Locally Funded and Foreign Assisted Program.</p>
+        <p>For General Management and Supervision, only PAPs that fit the Three-Year Rolling Infrastructure Program should be reported.</p>
+        <p>For locally-funded and foreign-assisted projects (excluding individual FMR projects), they should be submitted using the project profile form.</p>`
     };
   },
   methods: {
@@ -499,6 +485,14 @@ export default {
           })
         })
         .finally(() => this.$q.loading.hide())
+    },
+    help() {
+      this.$q.dialog({
+        title: 'Programs',
+        message: this.helps,
+        html: true,
+        cancel: true
+      })
     }
   },
 	filters: {

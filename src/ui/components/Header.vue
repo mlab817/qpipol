@@ -11,7 +11,6 @@
     <q-toolbar-title class="text-white">
       <span class="gt-md">{{ appName }}</span>
       <span class="lt-md">{{ appShortname }}</span>
-      ({{ env }})
     </q-toolbar-title>
     <q-space />
 
@@ -49,7 +48,6 @@ export default {
   },
   data() {
     return {
-      env: process.env.APP_ENV,
       menu: false,
       notificationsDropdown: false,
       markingAllAsRead: false,

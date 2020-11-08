@@ -24,7 +24,7 @@
       </div>
     </div>
 
-    <q-form greedy @submit="handleFormSubmit" @reset="handleReset" class="col">
+    <q-form ref="updateProfileForm" greedy @submit="handleFormSubmit" @reset="handleReset" class="col">
       <div class="column q-gutter-y-md q-pa-sm">
         <div>Operating Unit: {{ getCurrentUser.operating_unit.name }}</div>
         <text-input
@@ -179,16 +179,23 @@ export default {
 
       this.$q.loading.show();
 
-      this.$store
-        .dispatch('profile/updateProfile', payload)
-        .then(() => {
-          this.edit = false;
-          this.showSuccessNotification();
-        })
-        .catch(() => {
-          this.showErrorNotification();
-        })
-        .finally(() => this.$q.loading.hide());
+      this.$refs.updateProfileForm.validate().then(success => {
+        if (success) {
+          this.$store
+            .dispatch('profile/updateProfile', payload)
+            .then(() => {
+              this.edit = false;
+              this.showSuccessNotification();
+            })
+            .catch(() => {
+              this.showErrorNotification();
+            })
+            .finally(() => this.$q.loading.hide());
+        } else {
+          alert('Please check the form.')
+        }
+      })
+
     },
 
     handleUpload() {

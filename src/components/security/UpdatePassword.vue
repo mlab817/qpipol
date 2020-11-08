@@ -47,7 +47,7 @@
         </div>
 
         <div>
-          <q-btn label="Update" @click="handleSubmit" color="primary"></q-btn>
+          <q-btn type="submit" label="Update" color="primary"></q-btn>
         </div>
       </q-form>
     </div>
@@ -97,9 +97,7 @@ export default {
           message:
             'Be sure to backup your new password and keep it in a safe place.',
           cancel: true,
-          persistent: true,
-          transitionShow: 'jump-down',
-          transitionHide: 'jump-up'
+          persistent: true
         })
         .onOk(() => {
           this.$q.loading.show();
@@ -116,10 +114,6 @@ export default {
                   type: 'positive',
                   message: 'Successfully updated password.',
                   position: 'bottom-right'
-                });
-              } else {
-                return Promise.reject({
-                  message: 'Failed to update password'
                 });
               }
             })

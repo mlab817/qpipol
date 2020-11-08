@@ -55,13 +55,7 @@
 
             <div class="row">
               <div class="col">
-                <radio-input
-                  v-model="project.type_id"
-                  label="Locally-funded or Foreign-assisted"
-                  :options="types"
-                  :recode="true"
-                  :rules="rules.required"
-                />
+                <types :rules="rules.required" v-model="project.type_id" />
               </div>
             </div>
 
@@ -1190,7 +1184,6 @@
 
 <script>
 import {
-  FETCH_TYPES,
   FETCH_FUNDING_SOURCES
 } from '@/graphql/queries';
 import BudgetTier from './dropdowns/BudgetTier';
@@ -1205,7 +1198,6 @@ import InfrastructureSectors from './dropdowns/InfrastructureSectors';
 import SpatialCoverage from './dropdowns/SpatialCoverage';
 import TextInput from '@/ui/form-inputs/TextInput';
 import Typology from './dropdowns/Typology';
-import RadioInput from '@/ui/form-inputs/RadioInput';
 import MoneyInput from '@/ui/form-inputs/MoneyInput';
 import CheckboxInput from '@/ui/form-inputs/CheckboxInput';
 import DateInput from '@/ui/form-inputs/DateInput';
@@ -1230,6 +1222,7 @@ import ProjectDocument from './dropdowns/ProjectDocument';
 import ImplementationBases from './dropdowns/ImplementationBases';
 import TdMoney from '../../ui/components/TdMoney'
 import Years from './dropdowns/Years'
+import Types from './dropdowns/Types'
 
 export default {
   components: {
@@ -1249,7 +1242,6 @@ export default {
     ImplementingAgency,
     DateInput,
     MoneyInput,
-    RadioInput,
     TextInput,
     CheckboxInput,
     SectionHeader,
@@ -1268,7 +1260,8 @@ export default {
     TenPointAgenda,
     SdGoals,
     ProjectDocument,
-    ImplementationBases
+    ImplementationBases,
+    Types
   },
 
   name: 'EditPipol',
@@ -1276,9 +1269,6 @@ export default {
   props: ['project'],
 
   apollo: {
-    types: {
-      query: FETCH_TYPES
-    },
     funding_sources: {
       query: FETCH_FUNDING_SOURCES,
       result({ data }) {

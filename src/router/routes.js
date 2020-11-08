@@ -168,7 +168,7 @@ const routes = [
     children: [
       {
         path: '',
-        component: () => import('../pages/TestPage.vue'),
+        component: () => import('../pages/ProgramsUpload.vue'),
         meta: {
           requiresAuth: true,
           isEncoder: true

@@ -4,7 +4,7 @@
     v-model="model"
     mask="date"
     :label="label"
-    :dense="dense"
+    :dense="$q.screen.lt.md"
     :hint="hint"
     stack-label
     outlined

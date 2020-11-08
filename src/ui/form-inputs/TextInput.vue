@@ -7,7 +7,7 @@
       square
       v-model="model"
       :type="type"
-      :dense="dense"
+      :dense="$q.screen.lt.md"
       outlined
       :readonly="readonly"
       :rules="rules"
