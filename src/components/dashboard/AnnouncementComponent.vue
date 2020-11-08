@@ -5,7 +5,7 @@
 			<q-card-section>
 				<q-list>
 					<template v-if="$apollo.loading">
-						<q-item v-for="i in 5" :key="i">
+						<q-item v-for="i in 3" :key="i">
 							<q-item-section avatar>
 								<q-skeleton type="QAvatar" />
 							</q-item-section>
@@ -51,7 +51,10 @@
 <script>
 	import { timeDiff } from '../../filters'
 	import { FETCH_ANNOUNCEMENTS } from '@/graphql'
+	import { MiniRefresh } from '@/ui'
+
 	export default {
+		components: { MiniRefresh },
 		name: 'AnnouncementComponent',
 		apollo: {
 			announcements: {
