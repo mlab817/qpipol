@@ -4,6 +4,9 @@
     :options="gads"
     label="GAD Classification"
     :rules="rules"
+		:loading="$apollo.loading"
+		with-refresh
+		@refetch="refetch"
   ></single-select>
 </template>
 
@@ -34,6 +37,11 @@ export default {
     return {
       gads: []
     };
-  }
+  },
+	methods: {
+  	refetch() {
+  		this.$apollo.queries.gads.refetch()
+		}
+	}
 };
 </script>

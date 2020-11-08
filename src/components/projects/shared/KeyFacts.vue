@@ -1,6 +1,6 @@
 <template>
   <q-card
-    class="column q-ma-sm"
+    class="column q-mb-sm"
     :class="dark ? '' : 'bg-fao'"
     :dark="dark"
     tag="div"
@@ -11,6 +11,9 @@
     <q-item-label header class="text-uppercase text-subtitle1"
       >Key Facts</q-item-label
     >
+		<div class="row q-pa-md text-h6">
+			{{project.title}}
+		</div>
     <div class="row">
       <div class="col-4">
         <q-item>
@@ -33,33 +36,13 @@
         <q-item>
           <q-item-section>
             <q-item-label caption>
-              Fund Source/Institution
+              Fund Source
             </q-item-label>
             <q-item-label class="text-body2">
               {{
                 project.main_funding_source
                   ? project.main_funding_source.name
                   : 'Not specified'
-              }}
-              <span
-                v-if="
-                  project.main_funding_source_id === '2' ||
-                    project.main_funding_source_id === '3'
-                "
-              >
-                {{
-                  project.funding_institution
-                    ? `>> ${project.funding_institution.name}`
-                    : ''
-                }}
-              </span>
-            </q-item-label>
-            <q-item-label class="text-body2">
-              through
-              {{
-                project.implementation_mode
-                  ? project.implementation_mode.name
-                  : 'Not Specified'
               }}
             </q-item-label>
           </q-item-section>
@@ -73,7 +56,7 @@
               Total Project Cost (in PhP)
             </q-item-label>
             <q-item-label class="text-body2">
-              {{ project.total_project_cost | formatMoney }}
+              {{ project.investment_target_total | formatMoney }}
             </q-item-label>
           </q-item-section>
         </q-item>
@@ -98,7 +81,7 @@
         <q-item>
           <q-item-section>
             <q-item-label caption>
-              Coverage
+              Spatial Coverage
             </q-item-label>
             <q-item-label class="text-body2">
               {{
@@ -134,31 +117,7 @@
         <q-item>
           <q-item-section>
             <q-item-label caption>
-              Processing Status
-              <q-icon
-                name="help_outline"
-                class="cursor-pointer"
-                @click="history = true"
-              ></q-icon>
-            </q-item-label>
-            <q-item-label class="text-body2">
-              <q-badge>
-                {{
-                  project.processing_status
-                    ? project.processing_status.name
-                    : ''
-                }}
-              </q-badge>
-            </q-item-label>
-          </q-item-section>
-        </q-item>
-      </div>
-
-      <div class="col-4">
-        <q-item>
-          <q-item-section>
-            <q-item-label caption>
-              Added by
+              Added by <mini-help @click="showAddedByInfo" />
             </q-item-label>
             <q-item-label class="text-body2">
               {{ project.creator ? project.creator.name : '' }}
@@ -185,13 +144,33 @@
           </q-item-section>
         </q-item>
       </div>
+
+			<div class="col-4">
+				<q-item>
+					<q-item-section>
+						<q-item-label caption>
+							Submission Status
+							<mini-help @click="history = true" />
+						</q-item-label>
+						<q-item-label class="text-body2">
+							<q-badge>
+								{{
+								project.submission_status
+								? project.submission_status.name
+								: ''
+								}}
+							</q-badge>
+						</q-item-label>
+					</q-item-section>
+				</q-item>
+			</div>
     </div>
 
     <q-dialog v-model="history">
       <q-card square style="min-width:360px">
         <card-header title="History" @close="history = false"></card-header>
         <q-card-section class="q-pa-none">
-          <template v-if="project.project_processing_statuses.length">
+          <template v-if="project.project_processing_statuses && project.project_processing_statuses.length">
             <q-markup-table class="col" flat wrap-cells bordered square>
               <thead>
                 <tr>
@@ -229,9 +208,10 @@
 import { date } from 'quasar';
 import CardHeader from '@/ui/cards/CardHeader';
 import { timeAgo, formatDate } from '@/filters';
+import MiniHelp from '../../../ui/buttons/MiniHelp'
 
 export default {
-  components: { CardHeader },
+  components: {MiniHelp, CardHeader },
   name: 'KeyFacts',
   props: ['project'],
   computed: {
@@ -246,7 +226,15 @@ export default {
   },
   methods: {
     timeAgo,
-    formatDate
+    formatDate,
+	  showAddedByInfo() {
+    	this.$q.dialog({
+				title: 'Help',
+				message: 'Only the user who <strong>added</strong> the project can edit it and the reviewer assigned to the operating unit.',
+				html: true,
+				cancel: true
+			})
+		}
   },
   filters: {
     formatDate(val) {

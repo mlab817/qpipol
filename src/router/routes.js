@@ -26,17 +26,17 @@ const routes = [
           requiresAuth: true
         }
       },
-      {
-        path: 'activity',
-        name: 'activity',
-        component: () =>
-          import(
-            /* webpackChunkName: 'ActivityPage' */ '../pages/ActivityPage.vue'
-          ),
-        meta: {
-          requiresAuth: true
-        }
-      },
+      // {
+      //   path: 'activity',
+      //   name: 'activity',
+      //   component: () =>
+      //     import(
+      //       /* webpackChunkName: 'ActivityPage' */ '../pages/ActivityPage.vue'
+      //     ),
+      //   meta: {
+      //     requiresAuth: true
+      //   }
+      // },
       {
         path: 'notifications',
         name: 'notifications',
@@ -95,7 +95,7 @@ const routes = [
         name: 'programs',
         component: () =>
           import(
-            /* webpackChunkName: 'PrexcActivities' */ '@/pages/programs/PrexcActivities.vue'
+            /* webpackChunkName: 'ProgramsIndex' */ '@/pages/ProgramsIndex.vue'
           ),
         meta: {
           requiresAuth: true,
@@ -107,7 +107,7 @@ const routes = [
         name: 'review-activities',
         component: () =>
           import(
-            /* webpackChunkName: 'ReviewActivities' */ '@/pages/programs/ReviewActivities.vue'
+            /* webpackChunkName: 'ProgramsValidate' */ '@/pages/ProgramsValidate.vue'
           ),
         meta: {
           requiresAuth: true,
@@ -159,6 +159,20 @@ const routes = [
           import(
             /* webpackChunkName: 'ResetPassword' */ '../pages/ResetPassword.vue'
           )
+      }
+    ]
+  },
+  {
+    path: '/upload',
+    component: () => import('@/layouts/AppLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('../pages/TestPage.vue'),
+        meta: {
+          requiresAuth: true,
+          isEncoder: true
+        }
       }
     ]
   },

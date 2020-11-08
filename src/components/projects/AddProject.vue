@@ -8,7 +8,7 @@
       @submit="submitForm"
       @reset="resetForm"
       greedy
-      v-if="!$apollo.loading"
+      v-else
     >
       <span class="text-red">* All fields are required.</span>
 
@@ -31,6 +31,7 @@
               label="Program"
               v-model="prexc_program_id"
               :options="prexc_programs"
+
             ></single-select>
           </div>
           <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-sm-12">
@@ -313,6 +314,7 @@ export default {
         }
       });
     },
+
 
     submitForm() {
       const payload = {

@@ -3,7 +3,7 @@
     <!-- hide if project is finalized or endorsed and if the user is not a reviewer -->
     <q-banner
       class="bg-green-5 text-white col-xl-6 col-lg-6 col-md-8 col-sm-9 col-xs-12 q-mb-md"
-      v-if="(project.finalized || project.endorsed) && !isReviewer"
+      v-if="(submission_status === 'Finalized' || submission_status === 'Endorsed') && !isReviewer"
     >
       <template v-slot:avatar>
         <q-icon name="info" color="white" />
@@ -32,6 +32,7 @@
     </template>
 
     <template v-else>
+
       <q-form
         ref="editForm"
         @submit="updateProject"
@@ -83,7 +84,7 @@
           <q-card-section>
             <implementing-agency
               v-model="project.operating_unit_id"
-              :rules="rules.selectOne"
+              :rules="rules.required"
               :readonly="true"
             ></implementing-agency>
           </q-card-section>
@@ -144,7 +145,7 @@
                   v-model="project.pip"
                 />
                 <div class="q-pa-sm">
-                  <typology v-model="project.typology_id" v-if="project.pip" />
+                  <typology v-model="project.typology_id" v-if="project.pip" :rules="rules.required" />
                 </div>
               </div>
               <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -153,7 +154,7 @@
                   v-model="project.cip"
                 />
                 <div class="q-pa-sm">
-                  <cip-types v-model="project.cip_type_id" v-if="project.cip" />
+                  <cip-types v-model="project.cip_type_id" v-if="project.cip" :rules="rules.required" />
                 </div>
               </div>
             </div>
@@ -171,7 +172,7 @@
                 />
                 <div class="row justify-between">
                   <checkbox-input
-                    label="RCD Endorsed"
+                    label="RDC Endorsed"
                     v-model="project.rdc_endorsed"
                     v-if="project.rdip"
                     class="q-ml-md"
@@ -189,169 +190,153 @@
           </q-card-section>
         </q-card>
 
-        <template v-if="project.trip">
-          <section-header
-            sectionTitle="Three-Year Rolling Investment Program"
-          ></section-header>
-          <q-card square>
-            <q-card-section class="q-gutter-sm">
-              <div class="row q-col-gutter-sm">
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                  <q-item-label class="text-weight-bold text-caption"
-                    >Infrastructure Sector</q-item-label
-                  >
-                  <infrastructure-sectors
-                    v-model="project.selected_infrastructure_subsectors"
-                  />
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                  <q-item-label class="text-weight-bold text-caption"
-                    >Technical Readiness</q-item-label
-                  >
-                  <technical-readinesses
-                    v-model="project.selected_technical_readinesses"
-                  ></technical-readinesses>
-                </div>
-              </div>
+				<section-header
+					sectionTitle="Three-Year Rolling Investment Program (Required only for TRIP PAPs)"
+				></section-header>
+				<q-card square flat bordered>
+					<q-card-section class="q-gutter-sm">
+						<div class="row q-col-gutter-sm">
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+								<infrastructure-sectors
+									v-model="project.selected_infrastructure_subsectors"
+								/>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+								<technical-readinesses
+									v-model="project.selected_technical_readinesses"
+								></technical-readinesses>
+							</div>
+						</div>
 
-              <div class="row">
-                <text-input
-                  v-model="project.implementation_risk"
-                  label="Implementation Risk &amp; Mitigation Strategy"
-                  type="textarea"
-                  :rules="rules.required"
-                />
-              </div>
+						<div class="row">
+							<text-input
+								v-model="project.implementation_risk"
+								label="Implementation Risk &amp; Mitigation Strategy"
+								type="textarea"
+								:rules="rules.required"
+							/>
+						</div>
 
-              <div class="row">
-                <fs-infrastructure
-                  :data="project.funding_source_infrastructures"
-                  :project-id="project.id"
-                ></fs-infrastructure>
-              </div>
-            </q-card-section>
-          </q-card>
-        </template>
+						<div class="row">
+							<fs-infrastructure
+								:data="project.funding_source_infrastructures"
+								:project-id="project.id"
+							></fs-infrastructure>
+						</div>
+					</q-card-section>
+				</q-card>
 
         <section-header
           sectionTitle="Physical and Financial Status"
         ></section-header>
-        <q-card square>
+        <q-card square flat bordered>
           <q-card-section class="q-gutter-sm">
             <project-status
               v-model="project.project_status_id"
               :rules="rules.selectOne"
             ></project-status>
 
-            <div class="row">
-              <q-expansion-item bordered class="col">
-                <template v-slot:header>
-                  <q-item-section avatar>
-                    <checkbox-item v-model="project.iccable"></checkbox-item>
-                  </q-item-section>
-                  <q-item-section>
-                    Will require Investment Coordination Committee/NEDA Board
-                    Approval (ICC-able)?
-                  </q-item-section>
-                </template>
-                <q-card>
-                  <q-card-section class="q-gutter-y-md">
-                    <div class="row">
-                      <div class="col">
-                        <checkbox-input
-                          label="Approved by DA-wide Clearinghouse"
-                          v-model="project.clearinghouse"
-                        ></checkbox-input>
-                      </div>
-                      <div class="col">
-                        <date-input
-                          :disable="!project.clearinghouse"
-                          v-model="project.clearinghouse_date"
-                        ></date-input>
-                      </div>
-                    </div>
+            <div class="column">
+							<checkbox-item v-model="project.iccable" color="primary" label="Will require Investment Coordination Committee/NEDA Board Approval (ICC-able)?"></checkbox-item>
+							<q-card v-if="project.iccable" class="col" square flat bordered>
+								<q-card-section class="q-gutter-y-md">
+									<div class="row">
+										<div class="col">
+											<checkbox-input
+												label="Approved by DA-wide Clearinghouse"
+												v-model="project.clearinghouse"
+											></checkbox-input>
+										</div>
+										<div class="col">
+											<date-input
+													label="Date Approved by the DA-wide Clearinghouse"
+												:disable="!project.clearinghouse"
+												v-model="project.clearinghouse_date"
+											></date-input>
+										</div>
+									</div>
 
-                    <div class="row">
-                      <div class="col">
-                        <checkbox-input
-                          label="Yet to be submitted to the NEDA Secretariat"
-                          v-model="project.neda_submission"
-                        ></checkbox-input>
-                      </div>
-                      <div class="col">
-                        <date-input
-                          :disable="!project.neda_submission"
-                          v-model="project.neda_submission_date"
-                          label="Target Date of Submission"
-                        ></date-input>
-                      </div>
-                    </div>
+									<div class="row">
+										<div class="col">
+											<checkbox-input
+												label="Yet to be submitted to the NEDA Secretariat"
+												v-model="project.neda_submission"
+											></checkbox-input>
+										</div>
+										<div class="col">
+											<date-input
+												:disable="!project.neda_submission"
+												v-model="project.neda_submission_date"
+												label="Target Date of Submission"
+											></date-input>
+										</div>
+									</div>
 
-                    <div class="row">
-                      <div class="col">
-                        <checkbox-input
-                          label="Under the NEDA Secretariat Review"
-                          v-model="project.neda_secretariat_review"
-                        ></checkbox-input>
-                      </div>
-                      <div class="col">
-                        <date-input
-                          :disable="!project.neda_secretariat_review"
-                          v-model="project.neda_secretariat_review_date"
-                          label="Date of Submission to NEDA Secretariat"
-                        ></date-input>
-                      </div>
-                    </div>
+									<div class="row">
+										<div class="col">
+											<checkbox-input
+												label="Under the NEDA Secretariat Review"
+												v-model="project.neda_secretariat_review"
+											></checkbox-input>
+										</div>
+										<div class="col">
+											<date-input
+												:disable="!project.neda_secretariat_review"
+												v-model="project.neda_secretariat_review_date"
+												label="Date of Submission to NEDA Secretariat"
+											></date-input>
+										</div>
+									</div>
 
-                    <div class="row">
-                      <div class="col">
-                        <checkbox-input
-                          label="ICC-TB Endorsed"
-                          v-model="project.icc_endorsed"
-                        ></checkbox-input>
-                      </div>
-                      <div class="col">
-                        <date-input
-                          :disable="!project.icc_endorsed"
-                          v-model="project.icc_endorsed_date"
-                          label="Date of Approval"
-                        ></date-input>
-                      </div>
-                    </div>
+									<div class="row">
+										<div class="col">
+											<checkbox-input
+												label="ICC-TB Endorsed"
+												v-model="project.icc_endorsed"
+											></checkbox-input>
+										</div>
+										<div class="col">
+											<date-input
+												:disable="!project.icc_endorsed"
+												v-model="project.icc_endorsed_date"
+												label="Date of Approval"
+											></date-input>
+										</div>
+									</div>
 
-                    <div class="row">
-                      <div class="col">
-                        <checkbox-input
-                          label="ICC-CC Approved"
-                          v-model="project.icc_approved"
-                        ></checkbox-input>
-                      </div>
-                      <div class="col">
-                        <date-input
-                          :disable="!project.icc_approved"
-                          v-model="project.icc_approved_date"
-                          label="Date of Approval"
-                        ></date-input>
-                      </div>
-                    </div>
+									<div class="row">
+										<div class="col">
+											<checkbox-input
+												label="ICC-CC Approved"
+												v-model="project.icc_approved"
+											></checkbox-input>
+										</div>
+										<div class="col">
+											<date-input
+												:disable="!project.icc_approved"
+												v-model="project.icc_approved_date"
+												label="Date of Approval"
+											></date-input>
+										</div>
+									</div>
 
-                    <div class="row">
-                      <div class="col">
-                        <checkbox-input
-                          label="NEDA Board Confirmed"
-                          v-model="project.neda_board"
-                        ></checkbox-input>
-                      </div>
-                      <div class="col">
-                        <date-input
-                          :disable="!project.neda_board"
-                          v-model="project.neda_board_date"
-                        ></date-input>
-                      </div>
-                    </div>
-                  </q-card-section>
-                </q-card>
-              </q-expansion-item>
+									<div class="row">
+										<div class="col">
+											<checkbox-input
+												label="NEDA Board Confirmed"
+												v-model="project.neda_board"
+											></checkbox-input>
+										</div>
+										<div class="col">
+											<date-input
+													label="Date Confirmed"
+												:disable="!project.neda_board"
+												v-model="project.neda_board_date"
+											></date-input>
+										</div>
+									</div>
+								</q-card-section>
+							</q-card>
             </div>
 
             <budget-tier
@@ -362,6 +347,7 @@
             <text-input
               label="UACS Code"
               v-model="project.uacs_code"
+              with-na
             ></text-input>
 
             <text-input
@@ -369,6 +355,7 @@
               label="Updates"
               type="textarea"
               :rules="rules.required"
+							with-na
             />
 
             <date-input
@@ -382,9 +369,9 @@
         <section-header
           sectionTitle="Philippine Development (PDP) Chapter"
         ></section-header>
-        <q-card square>
+        <q-card square flat bordered>
           <q-card-section class="q-gutter-sm">
-            <pdp-chapter v-model="project.pdp_chapter_id"></pdp-chapter>
+            <pdp-chapter v-model="project.pdp_chapter_id" :rules="rules.required"></pdp-chapter>
 
             <!-- Skip this if there is no chapter or the PAP is an admin building -->
             <template
@@ -409,7 +396,7 @@
         <section-header
           sectionTitle="Philippine Development (PDP) Results Matrices"
         ></section-header>
-        <q-card square>
+        <q-card square flat bordered>
           <q-card-section class="q-gutter-sm">
             <pdp-indicators
               v-model="project.selected_pdp_indicators"
@@ -428,7 +415,7 @@
         />
 
         <section-header sectionTitle="Ten Point Agenda"></section-header>
-        <q-card square>
+        <q-card square flat bordered>
           <q-card-section class="q-gutter-sm">
             <ten-point-agenda
               v-model="project.selected_ten_point_agenda"
@@ -439,7 +426,7 @@
         <section-header
           sectionTitle="Sustainable Development Goals"
         ></section-header>
-        <q-card square>
+        <q-card square flat bordered>
           <q-card-section class="q-gutter-sm">
             <sd-goals
               v-model="project.selected_sustainable_development_goals"
@@ -451,7 +438,7 @@
           <section-header
             sectionTitle="Gender and Development Responsiveness"
           ></section-header>
-          <q-card square bordered>
+          <q-card square flat bordered>
             <q-card-section class="q-gutter-y-md">
               <q-item-label class="text-caption">Required if CIP</q-item-label>
               <gad
@@ -464,24 +451,21 @@
         </template>
 
         <section-header sectionTitle="Implementation Period"></section-header>
-        <q-card square>
+        <q-card square flat bordered>
           <q-card-section class="row q-col-gutter-sm">
             <div class="col">
-              <single-select
-                v-model="project.target_start_year"
-                label="Start of Project Implementation"
-                :options="years"
-                :rules="rules.required"
-              ></single-select>
+							<years
+								v-model="project.target_start_year"
+								label="Start of Project Implementation"
+								:rules="rules.required" />
             </div>
 
             <div class="col">
-              <single-select
-                v-model="project.target_end_year"
-                label="Year of Project Completion"
-                :options="filteredYears"
-                :rules="rules.required"
-              ></single-select>
+							<years
+								v-model="project.target_end_year"
+								label="Year of Project Completion"
+								:rules="rules.required"
+								:min-value="project.target_start_year" />
             </div>
           </q-card-section>
         </q-card>
@@ -489,10 +473,11 @@
         <section-header
           sectionTitle="Project Preparation Details"
         ></section-header>
-        <q-card square>
+        <q-card square flat bordered>
           <q-card-section class="q-gutter-sm">
             <project-document
               v-model="project.project_preparation_document_id"
+              :rules="rules.required"
             ></project-document>
 
             <template v-if="project.project_preparation_document_id === '1'">
@@ -519,9 +504,7 @@
                       <edit-button @click="editFSCostDialog = true" />
                     </td>
                     <td>Total</td>
-                    <td class="text-right">
-                      {{ project.fs_target_2017 }}
-                    </td>
+										<td-money :value="project.fs_target_2017" />
                     <td class="text-right">
                       {{ project.fs_target_2018 }}
                     </td>
@@ -554,7 +537,7 @@
         </q-card>
 
         <section-header sectionTitle="Pre-construction Costs"></section-header>
-        <q-card square>
+        <q-card square flat bordered>
           <q-card-section>
             <checkbox-item
               v-model="project.has_row"
@@ -660,13 +643,13 @@
         </q-card>
 
         <section-header sectionTitle="Employment Generation"></section-header>
-        <q-card square>
+        <q-card square flat bordered>
           <q-card-section>
             <text-input
               v-model="project.employment_generated"
               label="No. of persons to be employed"
-              :rules="rules.required"
               hint="Please indicate the no. of persons to be employed by the project outside of the implementing agency"
+							with-na
             />
           </q-card-section>
         </q-card>
@@ -674,13 +657,14 @@
         <section-header
           sectionTitle="Funding Source and Mode of Implementation"
         ></section-header>
-        <q-card square>
+        <q-card square flat bordered>
           <q-card-section>
             <div class="row q-col-gutter-sm">
               <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <funding-source
                   label="Main Funding Source"
                   v-model="project.main_funding_source_id"
+									:rules="rules.required"
                   class="q-mb-sm"
                 />
                 <q-item-label class="text-weight-bold text-caption"
@@ -713,7 +697,8 @@
         </q-card>
 
         <section-header sectionTitle="Project Cost"></section-header>
-        <q-card square>
+
+        <q-card square flat bordered>
           <div class="row">
             <fs-financials
               :data="project.funding_source_financials"
@@ -732,7 +717,7 @@
         <section-header
           sectionTitle="Financial Accomplishments"
         ></section-header>
-        <q-card square bordered>
+        <q-card square bordered flat>
           <q-card-section class="q-gutter-y-md">
             <!-- Investment Requirements (Total, Infrastructure, GAA, NEP, Disbursement) -->
             <q-item-label class="text-h6 text-weight-lighter">
@@ -766,89 +751,49 @@
                 <tbody>
                   <tr>
                     <td colspan="12">
-                      Target Investment Requirements (auto-computed from
-                      breakdown)
+                      Target Investment Requirements <span class="text-negative"> (Auto-computed from
+                      breakdown by Funding Source) </span>
                     </td>
                   </tr>
                   <tr>
                     <td>
-                      Total
+                      Total <q-icon name="help" color="primary">
+                        <q-tooltip>Computed from Project Cost Breakdown by Funding Source</q-tooltip>
+                      </q-icon>
                     </td>
-                    <td class="text-right">
-                      {{ investTotal.investment_target_2016 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ investTotal.investment_target_2017 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ investTotal.investment_target_2018 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ investTotal.investment_target_2019 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ investTotal.investment_target_2020 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ investTotal.investment_target_2021 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ investTotal.investment_target_2022 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ investTotal.investment_target_2023 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ investTotal.investment_target_2024 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ investTotal.investment_target_2025 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ investTotal.investment_target_total | money }}
-                    </td>
+										<td-money :value="investTotal.investment_target_2016" />
+										<td-money :value="investTotal.investment_target_2017" />
+										<td-money :value="investTotal.investment_target_2018" />
+										<td-money :value="investTotal.investment_target_2019" />
+										<td-money :value="investTotal.investment_target_2020" />
+										<td-money :value="investTotal.investment_target_2021" />
+										<td-money :value="investTotal.investment_target_2022" />
+										<td-money :value="investTotal.investment_target_2023" />
+										<td-money :value="investTotal.investment_target_2024" />
+										<td-money :value="investTotal.investment_target_2025" />
+										<td-money :value="investTotal.investment_target_total" />
                   </tr>
                   <tr>
                     <td>
-                      Infrastructure
+                      Infrastructure <q-icon name="help" color="primary">
+                        <q-tooltip>Computed from TRIP Breakdown by Funding Source</q-tooltip>
+                      </q-icon>
                     </td>
-                    <td class="text-right">
-                      {{ infraTotal.infrastructure_target_2016 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ infraTotal.infrastructure_target_2017 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ infraTotal.infrastructure_target_2018 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ infraTotal.infrastructure_target_2019 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ infraTotal.infrastructure_target_2020 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ infraTotal.infrastructure_target_2021 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ infraTotal.infrastructure_target_2022 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ infraTotal.infrastructure_target_2023 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ infraTotal.infrastructure_target_2024 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ infraTotal.infrastructure_target_2025 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ infraTotal.infrastructure_target_total | money }}
-                    </td>
+										<td-money :value="infraTotal.infrastructure_target_2016" />
+										<td-money :value="infraTotal.infrastructure_target_2017" />
+										<td-money :value="infraTotal.infrastructure_target_2018" />
+										<td-money :value="infraTotal.infrastructure_target_2019" />
+										<td-money :value="infraTotal.infrastructure_target_2020" />
+										<td-money :value="infraTotal.infrastructure_target_2021" />
+										<td-money :value="infraTotal.infrastructure_target_2022" />
+										<td-money :value="infraTotal.infrastructure_target_2023" />
+										<td-money :value="infraTotal.infrastructure_target_2024" />
+										<td-money :value="infraTotal.infrastructure_target_2025" />
+										<td-money :value="infraTotal.infrastructure_target_total" />
                   </tr>
                   <tr>
                     <td colspan="12">
-                      Actual Investments (Click edit button to edit)
+                      Actual Investments (Click edit button (<q-icon name="edit" color="blue" />) to edit)
                     </td>
                   </tr>
                   <tr @click="editNepDialog = true" class="cursor-pointer">
@@ -856,39 +801,17 @@
                       <edit-button @click="editNepDialog = true"></edit-button>
                       NEP
                     </td>
-                    <td class="text-right">
-                      {{ project.nep_2016 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.nep_2017 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.nep_2018 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.nep_2019 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.nep_2020 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.nep_2021 | money }}
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      {{ nep_total | money }}
-                    </td>
+										<td-money :value="project.nep_2016" />
+										<td-money :value="project.nep_2017" />
+										<td-money :value="project.nep_2018" />
+										<td-money :value="project.nep_2019" />
+										<td-money :value="project.nep_2020" />
+										<td-money :value="project.nep_2021" />
+										<td class="bg-red-1"></td>
+										<td class="bg-red-1"></td>
+										<td class="bg-red-1"></td>
+										<td class="bg-red-1"></td>
+										<td-money :value="nep_total" />
                   </tr>
                   <tr @click="editGaaDialog = true" class="cursor-pointer">
                     <td>
@@ -903,39 +826,17 @@
                       />
                       GAA
                     </td>
-                    <td class="text-right">
-                      {{ project.gaa_2016 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.gaa_2017 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.gaa_2018 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.gaa_2019 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.gaa_2020 | money }}
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      {{ gaa_total | money }}
-                    </td>
+                    <td-money :value="project.gaa_2016" />
+										<td-money :value="project.gaa_2017" />
+										<td-money :value="project.gaa_2018" />
+										<td-money :value="project.gaa_2019" />
+										<td-money :value="project.gaa_2020" />
+										<td-money :value="project.gaa_2021" />
+										<td class="bg-red-1"></td>
+										<td class="bg-red-1"></td>
+										<td class="bg-red-1"></td>
+										<td class="bg-red-1"></td>
+										<td-money :value="gaa_total" />
                   </tr>
                   <tr
                     @click="editDisbursementDialog = true"
@@ -951,41 +852,19 @@
                         size="sm"
                         @click="editDisbursementDialog = true"
                       />
-                      Disbursement
+                      Disbursement *
                     </td>
-                    <td class="text-right">
-                      {{ project.disbursement_2016 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.disbursement_2017 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.disbursement_2018 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.disbursement_2019 | money }}
-                    </td>
-                    <td class="text-right">
-                      {{ project.disbursement_2020 | money }}
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      -
-                    </td>
-                    <td class="text-right">
-                      {{ disbursement_total | money }}
-                    </td>
+										<td-money :value="project.disbursement_2016" />
+										<td-money :value="project.disbursement_2017" />
+										<td-money :value="project.disbursement_2018" />
+										<td-money :value="project.disbursement_2019" />
+										<td-money :value="project.disbursement_2020" />
+										<td class="bg-red-1"></td>
+										<td class="bg-red-1"></td>
+										<td class="bg-red-1"></td>
+										<td class="bg-red-1"></td>
+										<td class="bg-red-1"></td>
+										<td-money :value="disbursement_total" />
                   </tr>
                 </tbody>
               </q-markup-table>
@@ -1015,6 +894,7 @@
                     <money-input v-model="project.nep_2019" label="2019" />
                     <money-input v-model="project.nep_2020" label="2020" />
                     <money-input v-model="project.nep_2021" label="2021" />
+										<money-input :value="nep_total" label="Total" readonly />
                   </div>
                   <q-card-actions align="right">
                     <q-btn
@@ -1050,6 +930,7 @@
                     <money-input v-model="project.gaa_2018" label="2018" />
                     <money-input v-model="project.gaa_2019" label="2019" />
                     <money-input v-model="project.gaa_2020" label="2020" />
+										<money-input :value="gaa_total" label="Total" readonly />
                   </div>
                   <q-card-actions align="right">
                     <q-btn
@@ -1095,6 +976,7 @@
                       v-model="project.disbursement_2020"
                       label="2020"
                     />
+										<money-input :value="disbursement_total" label="Total" readonly />
                   </div>
                   <q-card-actions align="right">
                     <q-btn
@@ -1105,6 +987,10 @@
                   </q-card-actions>
                 </q-card>
               </q-dialog>
+            </div>
+
+            <div class="row justify-end">
+              <span class="text-caption">* Note: Actual Disbursement data must be as of September 30, 2020.</span>
             </div>
           </q-card-section>
         </q-card>
@@ -1275,7 +1161,7 @@
           <q-btn
             label="Validate"
             color="negative"
-            @click="handleValidateProject"
+            @click="$emit('validate')"
             v-if="canValidate"
           >
           </q-btn>
@@ -1303,10 +1189,8 @@
 </template>
 
 <script>
-import ValidateProject from '@/components/projects/dialogs/ValidateProject';
 import {
   FETCH_TYPES,
-  FETCH_YEARS,
   FETCH_FUNDING_SOURCES
 } from '@/graphql/queries';
 import BudgetTier from './dropdowns/BudgetTier';
@@ -1322,14 +1206,13 @@ import SpatialCoverage from './dropdowns/SpatialCoverage';
 import TextInput from '@/ui/form-inputs/TextInput';
 import Typology from './dropdowns/Typology';
 import RadioInput from '@/ui/form-inputs/RadioInput';
-import SingleSelect from '@/ui/form-inputs/SingleSelect';
 import MoneyInput from '@/ui/form-inputs/MoneyInput';
 import CheckboxInput from '@/ui/form-inputs/CheckboxInput';
 import DateInput from '@/ui/form-inputs/DateInput';
 // dropdowns
 import ImplementingAgency from './dropdowns/ImplementingAgency';
 import ProjectStatus from './dropdowns/ProjectStatus';
-import SectionHeader from './shared/SectionHeader';
+import {SectionHeader} from '@/ui';
 import EditButton from './shared/EditButton';
 import CardHeader from '@/ui/cards/CardHeader';
 import CheckboxItem from '@/ui/form-inputs/CheckboxItem';
@@ -1345,9 +1228,13 @@ import TenPointAgenda from './dropdowns/TenPointAgenda';
 import SdGoals from './dropdowns/SdGoals';
 import ProjectDocument from './dropdowns/ProjectDocument';
 import ImplementationBases from './dropdowns/ImplementationBases';
+import TdMoney from '../../ui/components/TdMoney'
+import Years from './dropdowns/Years'
 
 export default {
   components: {
+	  Years,
+	  TdMoney,
     BudgetTier,
     CipTypes,
     SpatialCoverage,
@@ -1362,7 +1249,6 @@ export default {
     ImplementingAgency,
     DateInput,
     MoneyInput,
-    SingleSelect,
     RadioInput,
     TextInput,
     CheckboxInput,
@@ -1385,16 +1271,13 @@ export default {
     ImplementationBases
   },
 
-  name: 'EditProject',
+  name: 'EditPipol',
 
   props: ['project'],
 
   apollo: {
     types: {
       query: FETCH_TYPES
-    },
-    years: {
-      query: FETCH_YEARS
     },
     funding_sources: {
       query: FETCH_FUNDING_SOURCES,
@@ -1410,24 +1293,27 @@ export default {
   },
 
   computed: {
-    canUpdate() {
-      const finalized = this.project.finalized || false,
-        endorsed = this.project.endorsed || false,
-        isReviewer = this.isReviewer,
-        isEncoder = this.isEncoder;
-      console.log(
-        `endorsed: ${endorsed}, finalized: ${finalized}, isReviewer: ${isReviewer}, isEncoder: ${isEncoder}`
-      );
-      let res;
+    submission_status() {
+      const name = this.project.submission_status ? this.project.submission_status.name : ''
 
-      if (isReviewer && endorsed) {
+      return name
+    },
+    canUpdate() {
+      const submissionStatus = this.submission_status
+      const isReviewer = this.isReviewer,
+        isEncoder = this.isEncoder;
+        console.log(
+          `submissionStatus: ${submissionStatus}, isReviewer: ${isReviewer}, isEncoder: ${isEncoder}`
+        );
+      let res = false;
+
+      if (isReviewer && submissionStatus === 'Endorsed') {
         res = true;
-      } else if (!finalized && isEncoder) {
+      } else if (submissionStatus === 'Draft' && isEncoder) {
         res = true;
       } else {
         res = false;
       }
-      console.log(res);
       return res;
     },
     canFinalize() {
@@ -1665,7 +1551,8 @@ export default {
         project.gaa_2017 +
         project.gaa_2018 +
         project.gaa_2019 +
-        project.gaa_2020
+        project.gaa_2020 +
+        project.gaa_2021
       );
     },
 
@@ -1933,52 +1820,6 @@ export default {
 
     saved() {
       this.$emit('saved');
-    },
-    handleValidateProject() {
-      this.$q
-        .dialog({
-          title: 'Confirm Validation',
-          message:
-            "Be sure to save your changes before clicking the <strong>validate</strong>  project.validated ||or you'll lose them. Done saving? Type <strong>YES</strong> to confirm.",
-          html: true,
-          cancel: true,
-          prompt: {
-            model: '',
-            isValid: val => val.toLowerCase() === 'yes'
-          }
-        })
-        .onOk(() => this.validateProject());
-    },
-    validateProject() {
-      const id = this.$route.params.id;
-
-      this.$q
-        .dialog({
-          component: ValidateProject,
-          title: 'Validate Project'
-        })
-        .onOk(data => {
-          const payload = {
-            id: id,
-            validation_data: data.validation_data,
-            validation_signed: data.validation_signed,
-            remarks: data.remarks
-          };
-
-          this.$q.loading.show();
-          this.$store
-            .dispatch('projects/validateProject', payload)
-            .then(() => {
-              this.$q.notify({
-                type: 'positive',
-                message: 'Successfully validated project.',
-                position: 'bottom-right'
-              });
-
-              this.validated = true;
-            })
-            .finally(() => this.$q.loading.hide());
-        });
     }
   },
   filters: {

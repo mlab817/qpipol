@@ -1,71 +1,75 @@
 <template>
   <div style="margin-bottom: 70px;">
-    <div class="text-h6" v-if="$apollo.loading">Loading...</div>
-
     <q-form
       ref="addProject"
-      class="column q-gutter-sm"
-      @submit="submitForm"
+      @submit="confirmSubmit"
       @reset="resetForm"
       greedy
-      v-else
     >
-      <single-select
-        label="Program"
-        v-model="prexc_program_id"
-        :options="prexc_programs"
-        :rules="rules.required"
-      ></single-select>
-      <single-select
-        label="Subprogram"
-        v-model="prexc_subprogram_id"
-        :options="filtered_prexc_subprograms"
-        :rules="rules.required"
-      ></single-select>
+			<q-card flat square>
+				<q-card-section class="q-gutter-sm">
+					<single-select
+						label="Program"
+						v-model="prexc_program_id"
+						:options="prexc_programs"
+						:loading="$apollo.queries.prexc_programs.loading"
+						with-refresh
+						@refetch="refetchPrexcPrograms"
+					></single-select>
 
-      <text-input
-        label="UACS Code"
-        v-model="uacs_code"
-        :rules="rules.required"
-        hint="Input N/A if the PAP does not have a UACS Code yet."
-        with-na
-      />
+					<single-select
+						label="Subprogram"
+						v-model="prexc_subprogram_id"
+						:options="filtered_prexc_subprograms"
+						:loading="$apollo.queries.prexc_subprograms.loading"
+						with-refresh
+						@refetch="refetchPrexcSubprograms"
+					></single-select>
 
-      <div class="row">
-        <text-input
-          label="Title"
-          v-model="title"
-          :rules="rules.required"
-          hint="The PAP Title must match the title of the proposal to be submitted to NEDA/DBM."
-        />
-        <!--
-					if title is not empty,
-					if no matches were found
-				-->
-        <div class="row" v-if="matches.length > 0">
-          <q-list>
-            <q-item v-for="{ name, id } in matches" :key="id">
-              <q-item-section>
-                <q-item-label
-                  class="text-caption"
-                  v-html="$options.filters.searchHighlight(name, title)"
-                ></q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </div>
-      </div>
+					<text-input
+						label="UACS Code"
+						v-model="uacs_code"
+						hint="Input N/A if the PAP does not have a UACS Code yet."
+						with-na
+					/>
 
-      <div class="row justify-end">
-        <q-btn
-          label="Reset"
-          @click="confirmReset"
-          outline
-          color="primary"
-          class="q-mr-sm"
-        ></q-btn>
-        <q-btn label="Submit" @click="confirmSubmit" color="primary"></q-btn>
-      </div>
+					<div class="row">
+						<text-input
+							label="Title"
+							v-model="title"
+							:rules="rules.required"
+							hint="The PAP Title must match the title of the proposal to be submitted to NEDA/DBM."
+						/>
+						<!--
+							if title is not empty,
+							if no matches were found
+						-->
+						<div class="row" v-if="matches.length > 0">
+							<q-list>
+								<q-item v-for="{ name, id } in matches" :key="id">
+									<q-item-section>
+										<q-item-label
+											class="text-caption"
+											v-html="$options.filters.searchHighlight(name, title)"
+										></q-item-label>
+									</q-item-section>
+								</q-item>
+							</q-list>
+						</div>
+					</div>
+				</q-card-section>
+
+				<q-card-actions align="right">
+					<q-btn
+						label="Reset"
+						@click="confirmReset"
+						outline
+						color="primary"
+						class="q-mr-sm"
+					></q-btn>
+					<q-btn label="Submit" type="submit" color="primary"></q-btn>
+				</q-card-actions>
+			</q-card>
     </q-form>
   </div>
 </template>
@@ -80,15 +84,12 @@ import {
   PREXC_ACTIVITIES
 } from 'src/graphql/queries';
 import { showError } from '@/utils';
-
 export default {
   name: 'AddProject',
-
   components: {
     SingleSelect,
     TextInput
   },
-
   apollo: {
     prexc_programs: {
       query: PREXC_PROGRAMS
@@ -100,7 +101,6 @@ export default {
       query: PREXC_ACTIVITIES
     }
   },
-
   data() {
     return {
       prexc_programs: [],
@@ -122,36 +122,27 @@ export default {
       prexc_subprogram_id: null
     };
   },
-
   computed: {
     ...mapGetters('auth', ['user']),
-
     filtered_prexc_subprograms() {
       const subprograms = this.prexc_subprograms;
-
       if (!this.prexc_program_id) {
         return [{ id: null, name: 'Select program first' }];
       }
-
       return subprograms.filter(
         x => x.prexc_program_id === this.prexc_program_id
       );
     },
-
     matches() {
       const title = this.title && this.title.toLowerCase();
-
       if (title && title.length > 3) {
         const activities = this.prexc_activities;
-
         const matches = activities.filter(x => x.name.includes(title));
-
         return matches;
       }
       return [];
     }
   },
-
   methods: {
     confirmSubmit() {
       // prepare data
@@ -164,12 +155,17 @@ export default {
               cancel: true
             })
             .onOk(() => {
-              this.$refs.addProject.submit();
+              this.submitForm()
             });
         }
       });
     },
-
+	  refetchPrexcPrograms() {
+		  this.$apollo.queries.prexc_programs.refetch()
+	  },
+	  refetchPrexcSubprograms() {
+		  this.$apollo.queries.prexc_subprograms.refetch()
+	  },
     submitForm() {
       const payload = {
         prexc_program_id: this.prexc_program_id,
@@ -193,7 +189,6 @@ export default {
         .catch(showError)
         .finally(() => this.$q.loading.hide());
     },
-
     confirmReset() {
       this.$q
         .dialog({
@@ -205,18 +200,15 @@ export default {
           this.$refs.addProject.reset();
         });
     },
-
     resetForm() {
       this.prexc_program_id = null;
       this.prexc_subprogram_id = null;
       this.title = null;
     },
-
     handleSaved(id) {
       this.saved();
       this.confirmNextStep(id);
     },
-
     confirmNextStep(id) {
       this.$q
         .dialog({
@@ -233,11 +225,9 @@ export default {
           this.$refs.addProject.reset();
         });
     },
-
     goTo(id) {
       this.$router.push('/projects/' + id);
     },
-
     saved() {
       this.$emit('saved');
     }
@@ -253,7 +243,6 @@ export default {
       return value;
     }
   },
-
   mounted() {
     this.operating_unit_id = this.user.operating_unit.id;
   }

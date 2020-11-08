@@ -5,6 +5,9 @@
     :options="spatial_coverages"
     :rules="rules"
     lazy-rules
+		:loading="$apollo.loading"
+		with-refresh
+		@refetch="refetch"
   />
 </template>
 
@@ -35,6 +38,11 @@ export default {
     return {
       spatial_coverages: []
     };
-  }
+  },
+	methods: {
+  	refetch() {
+  		this.$apollo.queries.spatial_coverages.refetch()
+		}
+	}
 };
 </script>

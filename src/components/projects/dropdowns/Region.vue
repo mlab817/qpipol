@@ -5,6 +5,9 @@
     :options="regions"
     :rules="rules"
     :readonly="readonly"
+		:loading="$apollo.loading"
+		with-refresh
+		@refetch="refetch"
   />
 </template>
 
@@ -35,6 +38,11 @@ export default {
     return {
       regions: []
     };
-  }
+  },
+	methods: {
+  	refetch() {
+  		this.$apollo.queries.regions.refetch()
+		}
+	}
 };
 </script>

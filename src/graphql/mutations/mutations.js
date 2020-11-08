@@ -130,7 +130,6 @@ export const CHOOSE_AVATAR_MUTATION = gql`
 export const UPDATE_PROFILE_MUTATION = gql`
   mutation updateUser(
     $name: String
-    $nickname: String
     $operating_unit_id: ID
     $position: String
     $contact_number: String
@@ -138,7 +137,6 @@ export const UPDATE_PROFILE_MUTATION = gql`
     updateUser(
       input: {
         name: $name
-        nickname: $nickname
         operating_unit_id: $operating_unit_id
         position: $position
         contact_number: $contact_number
@@ -146,7 +144,6 @@ export const UPDATE_PROFILE_MUTATION = gql`
     ) {
       id
       name
-      nickname
       position
       contact_number
       operating_unit {

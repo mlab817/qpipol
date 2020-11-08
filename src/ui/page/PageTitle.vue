@@ -7,7 +7,8 @@
       <q-avatar v-if="icon">
         <q-icon :name="icon"></q-icon>
       </q-avatar>
-      <q-toolbar-title class="text-uppercase">{{ title }}</q-toolbar-title>
+      <!-- will be visible only if screen is greater than sm -->
+      <q-toolbar-title class="gt-sm text-uppercase">{{ title }}</q-toolbar-title>
 
       <q-space />
 

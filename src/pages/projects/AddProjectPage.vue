@@ -2,7 +2,7 @@
   <page-container>
     <template v-slot:title>
       <page-title title="Add Program/Project" icon="add_box">
-        <q-btn icon="help" flat round @click="showHelp" />
+				<help-button @click="showHelp" />
       </page-title>
     </template>
 
@@ -14,9 +14,11 @@
 import AddProject from '../../components/projects/AddProjectv2';
 import PageTitle from '@/ui/page/PageTitle';
 import PageContainer from '@/ui/page/PageContainer';
+import HelpButton from '../ui/buttons/HelpButton'
 
 export default {
   components: {
+	  HelpButton,
     PageContainer,
     PageTitle,
     AddProject
@@ -46,7 +48,18 @@ export default {
   },
 
   methods: {
-    showHelp() {}
+    showHelp() {
+    	const content = `
+    		<p>Add Programs, Projects and Activities here. Complete the details needed to qualify for inclusion in the Public Investment Program and the Three-Year Rolling Infrastructure Program.</p>
+    		<p>Can\'t find your Programs and Subprograms? Contact your assigned IPD Staff.</p>
+    	`
+      this.$q.dialog({
+        title: 'Help',
+        message: content,
+				html: true,
+				cancel: true
+      })
+    }
   }
 };
 </script>

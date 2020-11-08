@@ -20,9 +20,11 @@
     <notification-button></notification-button>
 
     <q-btn flat round>
-      <user-avatar :src="user ? user.user_avatar : ''"></user-avatar>
+      <div>
+        <user-avatar :src="user ? user.user_avatar : ''"></user-avatar>
 
-      <dropdown-menu :user="user" />
+        <dropdown-menu :user="user" />
+      </div>
     </q-btn>
   </q-toolbar>
 </template>

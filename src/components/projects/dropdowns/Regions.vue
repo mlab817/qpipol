@@ -1,35 +1,40 @@
 <template>
-  <q-expansion-item bordered>
-    <template v-slot:header>
-      <q-item-section>
-        Select Regions
-      </q-item-section>
-
-      <q-item-section side>
-        <div class="row items-center">
-          {{ `${value.length} regions selected` }}
-        </div>
-      </q-item-section>
-    </template>
-    <q-card>
-      <q-card-section>
-        <list-option-group
-          v-model="model"
-          :options="filteredRegions"
-          :recode="true"
-          :rules="rules"
-        />
-      </q-card-section>
-    </q-card>
-  </q-expansion-item>
+	<div>
+		<q-item-label class="text-weight-bold text-caption">
+			Inter-regional (Select all that applies) <mini-refresh @click="refetch" />
+		</q-item-label>
+		<template v-if="$apollo.loading">
+			<q-item v-for="i in 3" :key="i">
+				<q-item-section avatar>
+					<q-skeleton type="QAvatar" />
+				</q-item-section>
+				<q-item-section>
+					<q-skeleton type="rect" width="30%" />
+				</q-item-section>
+			</q-item>
+		</template>
+		<template v-else>
+			<q-card flat>
+				<q-card-section>
+					<list-option-group
+						v-model="model"
+						:options="filteredRegions"
+						:recode="true"
+						:rules="rules"
+					/>
+				</q-card-section>
+			</q-card>
+		</template>
+	</div>
 </template>
 
 <script>
 import ListOptionGroup from '@/ui/form-inputs/ListOptionGroup';
 import { FETCH_REGIONS } from '@/graphql/queries';
+import MiniRefresh from '../../../ui/buttons/MiniRefresh'
 
 export default {
-  components: { ListOptionGroup },
+  components: {MiniRefresh, ListOptionGroup },
   name: 'Regions',
   props: ['value', 'rules'],
   computed: {
@@ -42,13 +47,18 @@ export default {
       }
     },
     filteredRegions() {
-      return this.regions.filter(x => x.id !== '99');
+      return this.regions.length ? this.regions.filter(x => x.id !== '99') : [];
     }
   },
   apollo: {
     regions: {
       query: FETCH_REGIONS
     }
-  }
+  },
+	methods: {
+  	refetch() {
+  		this.$apollo.queries.regions.refetch()
+		}
+	}
 };
 </script>

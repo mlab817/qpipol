@@ -14,44 +14,28 @@
       wrap-cells
       style="margin-bottom: 70px;"
     >
+			<template v-slot:top-left>
+				<div class="row text-caption">
+					{{ lastDeleteProjectsUpdated ? `Last downloaded on ${lastDeleteProjectsUpdated}` : null }}
+				</div>
+			</template>
+
       <template v-slot:top-right="props">
         <div class="row q-gutter-sm">
-          <q-input
-            v-model="filter"
-            dense
-            borderless
-            placeholder="Search..."
-            clearable
-          >
-            <template v-slot:append>
-              <q-icon name="search" />
-            </template>
-          </q-input>
+					<search v-model="filter" />
 
-          <q-btn flat round icon="refresh" @click="refetch">
-            <q-tooltip>Refetch projects</q-tooltip>
-          </q-btn>
+					<icon-button icon="refresh" tooltip="Re-download Data from server" @click="refetch" />
 
-          <q-btn flat round icon="archive" @click="exportTable">
-            <q-tooltip>Download</q-tooltip>
-          </q-btn>
+					<icon-button icon="archive" tooltip="Download this table" @click="exportTable" />
 
-          <q-btn
-            flat
-            round
-            dense
-            :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-            @click="props.toggleFullscreen"
-          >
-            <q-tooltip>Enter fullscreen mode</q-tooltip>
-          </q-btn>
+					<fullscreen-button @click="props.toggleFullscreen" :in-fullscreen="props.inFullscreen"></fullscreen-button>
         </div>
       </template>
 
       <template v-slot:body-cell-avatar="props">
         <q-td :props="props">
           <q-avatar color="grey-3">
-            <q-img :src="props.row.operating_unit.image" />
+            <q-img :src="props.row.submission_status ? props.row.submission_status.name: '' " />
           </q-avatar>
         </q-td>
       </template>
@@ -59,39 +43,28 @@
       <template v-slot:body-cell-type="props">
         <q-td :props="props">
           <q-badge
-            :color="props.row.type.name === 'Program' ? 'blue' : 'negative'"
-            >{{ props.row.type.name }}</q-badge
+            :color="props.row.type && props.row.type.name === '1' ? 'blue' : 'negative'"
+            >{{ props.row.type && props.row.type.name }}</q-badge
           >
         </q-td>
       </template>
 
       <template v-slot:body-cell-last_updated="props">
         <q-td :props="props">
-          {{ props.row.updatedAt | formatDate }}
+          {{ props.row.deleted_at | formatDate }}
         </q-td>
       </template>
 
       <template v-slot:body-cell-processing_status="props">
         <q-td :props="props">
-          {{ props.row.processing_status.name }}
+          {{ props.row.submission_status && props.row.submission_status .name }}
         </q-td>
       </template>
 
       <template v-slot:body-cell-actions="props">
         <q-td :props="props" class="text-center">
-          <q-btn
-            flat
-            round
-            icon="restore"
-            @click.stop="promptRestore(props.row)"
-          ></q-btn>
-          <q-btn
-            flat
-            round
-            icon="delete"
-            color="negative"
-            @click.stop="promptDelete(props.row)"
-          ></q-btn>
+					<restore-button @click="promptRestore(props.row)" />
+					<delete-button @click="promptDelete(props.row)" />
         </q-td>
       </template>
 
@@ -102,7 +75,7 @@
               <q-item class="q-pa-sm">
                 <q-item-section avatar>
                   <q-avatar color="grey-3">
-                    <img :src="props.row.operating_unit.image" />
+                    <img :src="props.row.operating_unit.image_url" />
                   </q-avatar>
                 </q-item-section>
                 <q-item-section>
@@ -110,36 +83,31 @@
                   <q-item-label>
                     <q-badge
                       :color="
-                        props.row.type.name === 'Program' ? 'blue' : 'negative'
+                        props.row.type && props.row.type.id === '1' ? 'blue' : 'negative'
                       "
-                      >{{ props.row.type.name }}</q-badge
+                      >{{ props.row.type && props.row.type.name }}</q-badge
                     >
                     |
-                    {{ props.row.main_funding_source.name }}
+                    {{ props.row.main_funding_source && props.row.main_funding_source.name }}
                   </q-item-label>
                 </q-item-section>
                 <q-item-section side>
-                  <q-btn
-                    flat
-                    round
-                    icon="restore"
-                    @click="promptRestore(props.row)"
-                  >
-                  </q-btn>
+									<restore-button @click="promptRestore(props.row)" />
+									<delete-button @click="promptDelete(props.row)" />
                 </q-item-section>
               </q-item>
               <q-item>
                 <q-item-section>
                   <q-item-label caption class="text-capitalize"
-                    >{{ props.row.processing_status.name }}:</q-item-label
+                    >{{ props.row.submission_status && props.row.submission_status.name }}:</q-item-label
                   >
                   <q-item-label>{{
-                    props.row.updatedAt | formatDate
+                    props.row.deleted_at | formatDate
                   }}</q-item-label>
                 </q-item-section>
                 <q-item-section side>
                   <q-item-label class="text-h6">
-                    PhP {{ props.row.total_project_cost.toLocaleString() }}
+                    PhP {{ props.row.investment_target_total }}
                   </q-item-label>
                 </q-item-section>
               </q-item>
@@ -156,21 +124,38 @@ import PageContainer from '@/ui/page/PageContainer';
 import PageTitle from '@/ui/page/PageTitle';
 import { DELETED_PROJECTS_QUERY } from '@/graphql';
 import { wrapCsvValue, timeAgo } from '@/utils';
-import { exportFile } from 'quasar';
+import { exportFile, date, LocalStorage } from 'quasar';
+import Search from '../ui/form-inputs/Search'
+import FullscreenButton from '../ui/buttons/FullscreenButton'
+import RestoreButton from '../ui/buttons/RestoreButton'
+import DeleteButton from '../ui/buttons/DeleteButton'
+import IconButton from '../ui/buttons/IconButton'
 
 export default {
   components: {
+	  IconButton,
+	  DeleteButton,
+	  RestoreButton,
+	  FullscreenButton,
+	  Search,
     PageContainer,
     PageTitle
   },
   name: 'PageDeletedProjects',
   apollo: {
     allProjects: {
-      query: DELETED_PROJECTS_QUERY
+      query: DELETED_PROJECTS_QUERY,
+	    result() {
+		    const now = Date.now();
+		    const dateNow = date.formatDate(now, 'MMM D YYYY / HH:mm:ss A');
+		    LocalStorage.set('lastDeleteProjectsUpdated', dateNow);
+		    this.lastDeleteProjectsUpdated = dateNow;
+	    }
     }
   },
   data() {
     return {
+	    lastDeleteProjectsUpdated: LocalStorage.getItem('lastDeleteProjectsUpdated') || null,
       allProjects: [],
       filter: '',
       columns: [
@@ -196,14 +181,14 @@ export default {
         {
           name: 'funding_source',
           label: 'Main Funding Source',
-          field: row => row.main_funding_source.name,
+          field: row => row.main_funding_source && row.main_funding_source.name,
           sortable: true,
           align: 'center'
         },
         {
           name: 'cost',
           label: 'Total Project Cost',
-          field: row => row.total_project_cost.toLocaleString()
+          field: row => row.investment_target_total && row.investment_target_total.toLocaleString()
         },
         {
           name: 'updated_by',
@@ -211,17 +196,17 @@ export default {
           field: row => (row.creator ? row.creator.nickname : '')
         },
         {
-          name: 'last_updated',
-          label: 'Last Updated',
-          field: row => row.updatedAt,
+          name: 'deleted_at',
+          label: 'Delete on',
+          field: row => row.deleted_at,
           sortable: true,
           align: 'center'
         },
         {
-          name: 'processing_status',
+          name: 'submission_status',
           label: 'Processing Status',
           field: row =>
-            row.processing_status ? row.processing_status.name : '',
+            row.submission_status ? row.submission_status.name : '',
           sortable: true,
           align: 'center'
         },

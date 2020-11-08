@@ -39,6 +39,7 @@ const actions = {
 
     // remove token and user from localStorage
     LocalStorage.remove('token');
+	  LocalStorage.remove('lastUpdated');
     LocalStorage.remove('user');
 
     // remove user data from store

@@ -108,6 +108,17 @@ export const projectService = {
             query: ALL_PROJECTS,
             data
           });
+
+          const data2 = store.readQuery({
+            query: DELETED_PROJECTS_QUERY
+          })
+
+          data2.allProjects.push(deleteProject)
+
+          store.writeQuery({
+            query: DELETED_PROJECTS_QUERY,
+            data2
+          })
         }
       })
       .then(handleResponse)
@@ -128,7 +139,7 @@ export const projectService = {
 
           console.log(data);
 
-          data.push(restoreProject);
+          data.allProjects.push(restoreProject);
 
           store.writeQuery({
             query: ALL_PROJECTS,
@@ -141,7 +152,7 @@ export const projectService = {
 
           data2.filter(project => project.id !== id);
 
-          data2.writeQuery({
+          data2.allProjects.writeQuery({
             query: DELETED_PROJECTS_QUERY,
             data2
           });
@@ -434,8 +445,8 @@ export const projectService = {
               id: payload.project_id
             }
           });
-
-          data.project.funding_source_financials.push(
+	
+	        data.project.funding_source_financials.push(
             createFundingSourceFinancial
           );
 
@@ -503,7 +514,7 @@ export const projectService = {
           const index = data.project.funding_source_financials.findIndex(
             x => x.id === deleteFundingSourceFinancial.id
           );
-          data.project.funding_source_financials = data.project.funding_source_financials.splice(
+          data.project.funding_source_financials.splice(
             index,
             1
           );
@@ -533,8 +544,8 @@ export const projectService = {
               id: payload.project_id
             }
           });
-
-          data.project.region_financials.push(createRegionFinancial);
+	
+	        data.project.region_financials.push(createRegionFinancial);
 
           store.writeQuery({
             query: FETCH_PROJECT_QUERY,
@@ -628,7 +639,9 @@ export const projectService = {
             }
           });
 
-          data.project.funding_source_infrastructures.push(
+          console.log('before save: ', data)
+	
+	        data.project.funding_source_infrastructures.push(
             createFundingSourceInfrastructure
           );
 
@@ -639,6 +652,8 @@ export const projectService = {
             },
             data
           });
+
+          console.log('after save: ', data)
         }
       })
       .then(handleResponse)

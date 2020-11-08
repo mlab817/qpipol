@@ -1,10 +1,17 @@
 <template>
   <div>
     <q-item-label class="text-weight-bold text-caption">
-      Implementation Basis
+      Implementation Basis <mini-refresh @click="refetch" />
     </q-item-label>
     <template v-if="$apollo.loading">
-      Loading options...
+      <q-item v-for="i in 3" :key="i">
+				<q-item-section avatar>
+					<q-skeleton type="QAvatar" />
+				</q-item-section>
+				<q-item-section>
+					<q-skeleton type="rect" width="30%" />
+				</q-item-section>
+			</q-item>
     </template>
     <template v-else>
       <q-option-group v-model="model" :options="bases" type="checkbox" />
@@ -14,10 +21,12 @@
 
 <script>
 import { BASES_QUERY } from '@/graphql/queries';
+import MiniRefresh from '../../../ui/buttons/MiniRefresh'
 
 export default {
   name: 'ImplementationBases',
-  props: ['value', 'rules'],
+	components: {MiniRefresh},
+	props: ['value', 'rules'],
   computed: {
     model: {
       get() {
@@ -45,6 +54,11 @@ export default {
     return {
       bases: []
     };
-  }
+  },
+	methods: {
+  	refetch() {
+  		this.$apollo.queries.bases.refetch()
+		}
+	}
 };
 </script>

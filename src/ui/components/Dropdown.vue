@@ -1,142 +1,20 @@
 <template>
   <q-menu square max-width="300px" :offset="[0, 15]">
-    <q-img
-      class="absolute-top"
-      src="statics/agri.jpg"
-      style="height: 190px; z-index: -1;"
-    >
-      <q-btn
-        flat
-        round
-        dense
-        icon="refresh"
-        class="absolute all-pointer-events cursor-pointer"
-        size="md"
-        color="white"
-        style="top: 8px; right: 8px; z-index: 999"
-        @click="refetch"
-      >
-        <q-tooltip>
-          Refresh user
-        </q-tooltip>
-      </q-btn>
-      <div class="absolute-bottom bg-transparent text-center">
-        <q-avatar size="56px" class="q-mb-sm">
-          <img :src="user ? user.user_avatar : ''" />
-        </q-avatar>
-        <div class="text-weight-bold text-uppercase">
-          {{ user ? user.name : '' }}
-        </div>
-        <div>{{ user ? user.email : '' }}</div>
-        <div>
-          {{ user && user.operating_unit ? user.operating_unit.name : '' }}
-        </div>
-        <div>
-          <q-badge>
-            {{ user && user.role ? user.role.name : 'No role.' }}
-          </q-badge>
-        </div>
-      </div>
-    </q-img>
+    <user-info :user="user"></user-info>
 
     <q-separator />
 
-    <q-list style="min-width: 280px; margin-top: 185px;" dense>
-      <menu-item label="Dashboard" to="/dashboard" icon="dashboard"></menu-item>
-      <menu-item label="Programs" to="/programs" icon="view_module"></menu-item>
-      <menu-item label="Projects" to="/projects" icon="list"></menu-item>
-      <menu-item label="Trash" to="/projects/trash" icon="delete"></menu-item>
-      <menu-item label="Profile" to="/profile" icon="tune"></menu-item>
-      <q-separator></q-separator>
-      <menu-item
-        label="Activity"
-        to="/activity"
-        icon="work_outline"
-      ></menu-item>
-      <menu-item label="Security" to="/security" icon="vpn_key"></menu-item>
-      <menu-item label="Settings" to="/settings" icon="settings"></menu-item>
-      <q-separator />
-      <q-item
-        clickable
-        v-close-popup
-        @click="openURL('https://github.com/mlab817/q-pipol/issues')"
-        type="a"
-        target="_blank"
-      >
-        <q-item-section avatar>
-          <q-avatar>
-            <q-icon name="img:statics/github.svg" />
-          </q-avatar>
-        </q-item-section>
-        <q-item-section>
-          <q-item-label>
-            Report Issues
-          </q-item-label>
-        </q-item-section>
-        <q-item-section side>
-          <q-icon name="open_in_new">
-            <q-tooltip>This opens a new window.</q-tooltip>
-          </q-icon>
-        </q-item-section>
-      </q-item>
-      <q-separator></q-separator>
-      <q-item clickable v-close-popup @click="handleSignoutUser">
-        <q-item-section avatar>
-          <q-avatar>
-            <q-icon name="exit_to_app" />
-          </q-avatar>
-        </q-item-section>
-        <q-item-section>Logout</q-item-section>
-      </q-item>
-    </q-list>
+    <app-menu style="min-width: 280px; margin-top: 200px;"></app-menu>
   </q-menu>
 </template>
 
 <script>
-import { openURL } from 'quasar';
-import github from '@/statics/github.svg';
-import MenuItem from './MenuItem';
-import { GET_CURRENT_USER } from '@/graphql';
+import AppMenu from './Menu.vue';
+import UserInfo from './UserInfo.vue';
 
 export default {
   name: 'DropdownMenu',
-
-  components: { MenuItem },
-
-  props: ['user'],
-
-  apollo: {
-    getCurrentUser: {
-      query: GET_CURRENT_USER
-    }
-  },
-
-  data() {
-    return {
-      github: null
-    };
-  },
-
-  methods: {
-    handleSignoutUser() {
-      this.$q
-        .dialog({
-          title: 'Logout',
-          message: 'Are you sure you want to log out?',
-          cancel: true
-        })
-        .onOk(() => this.$store.dispatch('auth/signoutUser'));
-    },
-
-    openURL,
-
-    refetch() {
-      this.$apollo.queries.getCurrentUser.refetch();
-    }
-  },
-
-  created() {
-    this.github = github;
-  }
+  components: { AppMenu, UserInfo },
+  props: ['user']
 };
 </script>

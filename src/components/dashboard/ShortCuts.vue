@@ -94,17 +94,11 @@ export default {
           hasAccess: ['reviewer']
         },
         {
-          label: 'Trash',
+          label: 'Deleted Projects',
           icon: 'delete',
           url: '/projects/trash',
           color: 'red',
           hasAccess: ['encoder']
-        },
-        {
-          label: 'Activity',
-          icon: 'work_outline',
-          url: '/activity',
-          hasAccess: []
         },
         {
           label: 'Profile',

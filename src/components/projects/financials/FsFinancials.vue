@@ -1,410 +1,334 @@
 <template>
-  <div class="col q-pa-md">
-    <q-dialog v-model="addFsDialog">
-      <q-card style="max-width: 80wh; min-width: 400px;">
-        <q-bar class="bg-accent text-white">
-          <div>Add/Edit Funding Source</div>
-          <q-space />
-          <q-btn flat round dense icon="close" v-close-popup />
-        </q-bar>
-        <q-form @submit="handleSubmit">
-          <q-card-section>
-            <q-select
-              label="Funding Source"
-              stack-label
-              v-model="investmentToSubmit.funding_source_id"
-              :options="filteredFs"
-              option-value="id"
-              option-label="name"
-              map-options
-              emit-value
-              :rules="[val => !!val || '* Required']"
-              :readonly="editMode"
-            ></q-select>
-            <q-input
-              input-class="text-right"
-              label="2016 &amp; Prior"
-              stack-label
-              v-model="investmentToSubmit.investment_target_2016"
-            />
-            <q-input
-              input-class="text-right"
-              label="2017"
-              stack-label
-              v-model="investmentToSubmit.investment_target_2017"
-            />
-            <q-input
-              input-class="text-right"
-              label="2018"
-              stack-label
-              v-model="investmentToSubmit.investment_target_2018"
-            />
-            <q-input
-              input-class="text-right"
-              label="2019"
-              stack-label
-              v-model="investmentToSubmit.investment_target_2019"
-            />
-            <q-input
-              input-class="text-right"
-              label="2020"
-              stack-label
-              v-model="investmentToSubmit.investment_target_2020"
-            />
-            <q-input
-              input-class="text-right"
-              label="2021"
-              stack-label
-              v-model="investmentToSubmit.investment_target_2021"
-            />
-            <q-input
-              input-class="text-right"
-              label="2022"
-              stack-label
-              v-model="investmentToSubmit.investment_target_2022"
-            />
-            <q-input
-              input-class="text-right"
-              label="2023"
-              stack-label
-              v-model="investmentToSubmit.investment_target_2023"
-            />
-            <q-input
-              input-class="text-right"
-              label="2024"
-              stack-label
-              v-model="investmentToSubmit.investment_target_2024"
-            />
-            <q-input
-              input-class="text-right"
-              label="2025 &amp; Beyond"
-              stack-label
-              v-model="investmentToSubmit.investment_target_2025"
-            />
-            <q-input
-              input-class="text-right"
-              label="Total"
-              stack-label
-              :value="investment_target_total"
-              readonly
-            />
-          </q-card-section>
-          <q-card-actions align="right">
-            <q-btn label="Cancel" flat v-close-popup color="primary"></q-btn>
-            <q-btn label="Ok" flat type="submit" color="primary"></q-btn>
-          </q-card-actions>
-        </q-form>
-      </q-card>
-    </q-dialog>
+	<div class="col q-pa-md">
+		<q-dialog v-model="addDialog"
+			full-height
+			:position="$q.screen.xs ? void 0 : 'right'"
+			persistent
+			:maximized="$q.screen.xs"
+			transition-show="jump-left"
+			transition-hide="jump-right">
+			<add-fs :taken="taken" :edit-mode="false" :investment-to-edit="investmentToSubmit" :project-id="projectId" @close="addDialog = false" />
+		</q-dialog>
 
-    <q-table
-      flat
-      bordered
-      separator="cell"
-      wrap-cells
-      title="Total Investment Requirement by Funding Source (in absolute PhP)"
-      class="col"
-      :data="data"
-      :columns="columns"
-      :pagination="pagination"
-      hide-bottom
-    >
-      <template v-slot:top-right>
-        <add-button @click="addRow"></add-button>
-      </template>
+		<q-dialog
+			v-model="editDialog"
+			full-height
+			:position="$q.screen.xs ? void 0 : 'right'"
+			persistent
+			:maximized="$q.screen.xs"
+			transition-show="jump-left"
+			transition-hide="jump-right">
+			<add-fs :taken="taken" :edit-mode="true" :investment-to-edit="investmentToSubmit" @close="editDialog = false"/>
+		</q-dialog>
 
-      <template v-slot:body-cell-actions="props">
-        <q-td :props="props">
-          <q-btn
-            icon="edit"
-            flat
-            round
-            size="sm"
-            @click="editRow(props.row)"
-            color="blue"
-          />
-          <q-btn
-            icon="delete"
-            flat
-            round
-            size="sm"
-            @click="deleteRow(props.row)"
-            color="red"
-          />
-        </q-td>
-      </template>
+		<q-table
+				flat
+				bordered
+				separator="cell"
+				wrap-cells
+				title="Total Investment Requirement by Funding Source (in absolute PhP)"
+				class="col"
+				:data="data"
+				:columns="columns"
+				:pagination="pagination"
+				hide-bottom
+		>
+			<template v-slot:top-right>
+				<plus-button @click="addRow" />
+			</template>
 
-      <template v-slot:bottom-row>
-        <q-tr class="text-weight-bold">
-          <q-td>TOTAL</q-td>
-          <q-td class="text-right" v-for="(item, key) in totalRow" :key="key">
-            {{ item }}
-          </q-td>
-        </q-tr>
-      </template>
-    </q-table>
+			<template v-slot:body-cell-actions="props">
+				<q-td :props="props">
+					<q-btn
+							icon="edit"
+							flat
+							round
+							size="sm"
+							@click="editRow(props.row)"
+							color="blue"
+					/>
+					<q-btn
+							icon="delete"
+							flat
+							round
+							size="sm"
+							@click="deleteRow(props.row)"
+							color="red"
+					/>
+				</q-td>
+			</template>
 
-    <div class="row text-caption q-pt-sm justify-end">
-      Note: Each new and updated item are saved immediately in the database.
-    </div>
-  </div>
+			<template v-slot:bottom-row>
+				<q-tr class="text-weight-bold">
+					<q-td>TOTAL</q-td>
+					<q-td class="text-right" v-for="(item, key) in totalRow" :key="key">
+						{{ item && item.toLocaleString() }}
+					</q-td>
+				</q-tr>
+			</template>
+		</q-table>
+
+		<div class="row text-caption q-pt-sm justify-end">
+			Note: Each new and updated item are saved immediately in the database.
+		</div>
+	</div>
 </template>
 
 <script>
-import { FETCH_FUNDING_SOURCES } from 'src/graphql';
-import { projectService } from 'src/services';
-import AddButton from '@/ui/buttons/AddButton';
+	import { projectService } from 'src/services';
+	import PlusButton from '../../../ui/buttons/PlusButton'
+	import AddFs from './AddFs'
 
-export default {
-  components: {
-    AddButton
-  },
-  name: 'FsFinancials',
-  props: ['data', 'projectId'],
-  apollo: {
-    funding_sources: {
-      query: FETCH_FUNDING_SOURCES
-    }
-  },
-  computed: {
-    editMode() {
-      return !!this.investmentToSubmit.id;
-    },
-    taken() {
-      const fs = this.data;
+	export default {
+		name: 'FsFinancials',
+		components: { AddFs, PlusButton },
+		props: ['data', 'projectId'],
 
-      const taken = fs.map(x => x.funding_source_id);
+		computed: {
+			editMode() {
+				return !!this.investmentToSubmit.id;
+			},
+			taken() {
+				const fs = this.data;
 
-      return taken;
-    },
-    filteredFs() {
-      let fs = this.funding_sources,
-        taken = this.taken;
+				const taken = fs.map(x => x.funding_source_id);
 
-      // if in edit mode, show all
-      if (this.investmentToSubmit.id) {
-        return fs;
-      }
+				return taken;
+			},
+			totalRow() {
+				const data = this.data;
 
-      // if in add mode, filter
-      return fs.filter(x => !taken.includes(x.id));
-    },
-    investment_target_total() {
-      return 0;
-    },
-    totalRow() {
-      const data = this.data;
+				let arraySum = {
+					investment_target_2016: 0,
+					investment_target_2017: 0,
+					investment_target_2018: 0,
+					investment_target_2019: 0,
+					investment_target_2020: 0,
+					investment_target_2021: 0,
+					investment_target_2022: 0,
+					investment_target_2023: 0,
+					investment_target_2024: 0,
+					investment_target_2025: 0,
+					investment_target_total: 0
+				};
 
-      let arraySum = {
-        investment_target_2016: 0,
-        investment_target_2017: 0,
-        investment_target_2018: 0,
-        investment_target_2019: 0,
-        investment_target_2020: 0,
-        investment_target_2021: 0,
-        investment_target_2022: 0,
-        investment_target_2023: 0,
-        investment_target_2024: 0,
-        investment_target_2025: 0,
-        investment_target_total: 0
-      };
+				arraySum = data.reduce((prev, cur) => {
+					arraySum.investment_target_2016 += cur.investment_target_2016;
+					arraySum.investment_target_2017 += cur.investment_target_2017;
+					arraySum.investment_target_2018 += cur.investment_target_2018;
+					arraySum.investment_target_2019 += cur.investment_target_2019;
+					arraySum.investment_target_2020 += cur.investment_target_2020;
+					arraySum.investment_target_2021 += cur.investment_target_2021;
+					arraySum.investment_target_2022 += cur.investment_target_2022;
+					arraySum.investment_target_2023 += cur.investment_target_2023;
+					arraySum.investment_target_2024 += cur.investment_target_2024;
+					arraySum.investment_target_2025 += cur.investment_target_2025;
+					arraySum.investment_target_total +=
+						cur.investment_target_2016 +
+						cur.investment_target_2017 +
+						cur.investment_target_2018 +
+						cur.investment_target_2019 +
+						cur.investment_target_2020 +
+						cur.investment_target_2021 +
+						cur.investment_target_2022 +
+						cur.investment_target_2023 +
+						cur.investment_target_2024 +
+						cur.investment_target_2025;
+					return arraySum;
+				}, arraySum);
 
-      arraySum = data.reduce((prev, cur) => {
-        arraySum.investment_target_2016 += cur.investment_target_2016;
-        arraySum.investment_target_2017 += cur.investment_target_2017;
-        arraySum.investment_target_2018 += cur.investment_target_2018;
-        arraySum.investment_target_2019 += cur.investment_target_2019;
-        arraySum.investment_target_2020 += cur.investment_target_2020;
-        arraySum.investment_target_2021 += cur.investment_target_2021;
-        arraySum.investment_target_2022 += cur.investment_target_2022;
-        arraySum.investment_target_2023 += cur.investment_target_2023;
-        arraySum.investment_target_2024 += cur.investment_target_2024;
-        arraySum.investment_target_2025 += cur.investment_target_2025;
-        arraySum.investment_target_total +=
-          cur.investment_target_2016 +
-          cur.investment_target_2017 +
-          cur.investment_target_2018 +
-          cur.investment_target_2019 +
-          cur.investment_target_2020 +
-          cur.investment_target_2021 +
-          cur.investment_target_2022 +
-          cur.investment_target_2023 +
-          cur.investment_target_2024 +
-          cur.investment_target_2025;
-        return arraySum;
-      }, arraySum);
+				return arraySum;
+			},
+			investment_target_total() {
+				const investmentToSubmit = this.investmentToSubmit
 
-      return arraySum;
-    }
-  },
-  data() {
-    return {
-      funding_sources: [],
-      addFsDialog: false,
-      pagination: {
-        rowsPerPage: 0
-      },
-      investmentToSubmit: {
-        id: null,
-        funding_source_id: null,
-        investment_target_2016: 0,
-        investment_target_2017: 0,
-        investment_target_2018: 0,
-        investment_target_2019: 0,
-        investment_target_2020: 0,
-        investment_target_2021: 0,
-        investment_target_2022: 0,
-        investment_target_2023: 0,
-        investment_target_2024: 0,
-        investment_target_2025: 0
-      },
-      columns: [
-        {
-          name: 'funding_source',
-          label: 'Funding Source',
-          field: row => row.funding_source && row.funding_source.name,
-          align: 'left'
-        },
-        {
-          name: 'y1',
-          label: '2016 & Prior',
-          field: row => row.investment_target_2016
-        },
-        {
-          name: 'y2',
-          label: '2017',
-          field: row => row.investment_target_2017
-        },
-        {
-          name: 'y3',
-          label: '2018',
-          field: row => row.investment_target_2018
-        },
-        {
-          name: 'y4',
-          label: '2019',
-          field: row => row.investment_target_2019
-        },
-        {
-          name: 'y5',
-          label: '2020',
-          field: row => row.investment_target_2020
-        },
-        {
-          name: 'y6',
-          label: '2021',
-          field: row => row.investment_target_2021
-        },
-        {
-          name: 'y7',
-          label: '2022',
-          field: row => row.investment_target_2022
-        },
-        {
-          name: 'y8',
-          label: '2023',
-          field: row => row.investment_target_2023
-        },
-        {
-          name: 'y9',
-          label: '2024',
-          field: row => row.investment_target_2024
-        },
-        {
-          name: 'y10',
-          label: '2025 & Beyond',
-          field: row => row.investment_target_2025
-        },
-        {
-          name: 'total',
-          label: 'Total',
-          field: row =>
-            row.investment_target_2016 +
-            row.investment_target_2017 +
-            row.investment_target_2018 +
-            row.investment_target_2019 +
-            row.investment_target_2020 +
-            row.investment_target_2021 +
-            row.investment_target_2022 +
-            row.investment_target_2023 +
-            row.investment_target_2024 +
-            row.investment_target_2025
-        },
-        {
-          name: 'actions',
-          label: 'Actions'
-        }
-      ]
-    };
-  },
-  methods: {
-    addRow() {
-      // console.log('add row')
-      this.investmentToSubmit = {
-        // id: null,
-        funding_source_id: null,
-        investment_target_2016: 0,
-        investment_target_2017: 0,
-        investment_target_2018: 0,
-        investment_target_2019: 0,
-        investment_target_2020: 0,
-        investment_target_2021: 0,
-        investment_target_2022: 0,
-        investment_target_2023: 0,
-        investment_target_2024: 0,
-        investment_target_2025: 0
-      };
+				const total = Object.keys(investmentToSubmit).filter(key => key !== 'funding_source_id').reduce((acc, value) => (acc + investmentToSubmit[value]), 0);
 
-      this.addFsDialog = true;
-    },
-    editRow(row) {
-      this.investmentToSubmit = Object.assign({}, row);
+				return total
+			}
+		},
+		data() {
+			return {
+				funding_sources: [],
+				addDialog: false,
+				editDialog: false,
+				pagination: {
+					rowsPerPage: 0
+				},
+				investmentToSubmit: {
+					id: null,
+					funding_source_id: null,
+					project_id: null,
+					investment_target_2016: 0,
+					investment_target_2017: 0,
+					investment_target_2018: 0,
+					investment_target_2019: 0,
+					investment_target_2020: 0,
+					investment_target_2021: 0,
+					investment_target_2022: 0,
+					investment_target_2023: 0,
+					investment_target_2024: 0,
+					investment_target_2025: 0
+				},
+				columns: [
+					{
+						name: 'funding_source',
+						label: 'Funding Source',
+						field: row => row.funding_source && row.funding_source.name,
+						align: 'left'
+					},
+					{
+						name: 'y1',
+						label: '2016 & Prior',
+						field: row => row.investment_target_2016,
+						format: (val, row) => val && val.toLocaleString(),
+					},
+					{
+						name: 'y2',
+						label: '2017',
+						field: row => row.investment_target_2017,
+						format: (val, row) => val && val.toLocaleString(),
+					},
+					{
+						name: 'y3',
+						label: '2018',
+						field: row => row.investment_target_2018,
+						format: (val, row) => val && val.toLocaleString(),
+					},
+					{
+						name: 'y4',
+						label: '2019',
+						field: row => row.investment_target_2019,
+						format: (val, row) => val && val.toLocaleString(),
+					},
+					{
+						name: 'y5',
+						label: '2020',
+						field: row => row.investment_target_2020,
+						format: (val, row) => val && val.toLocaleString(),
+					},
+					{
+						name: 'y6',
+						label: '2021',
+						field: row => row.investment_target_2021,
+						format: (val, row) => val && val.toLocaleString(),
+					},
+					{
+						name: 'y7',
+						label: '2022',
+						field: row => row.investment_target_2022,
+						format: (val, row) => val && val.toLocaleString(),
+					},
+					{
+						name: 'y8',
+						label: '2023',
+						field: row => row.investment_target_2023,
+						format: (val, row) => val && val.toLocaleString(),
+					},
+					{
+						name: 'y9',
+						label: '2024',
+						field: row => row.investment_target_2024,
+						format: (val, row) => val && val.toLocaleString(),
+					},
+					{
+						name: 'y10',
+						label: '2025 & Beyond',
+						field: row => row.investment_target_2025,
+						format: (val, row) => val && val.toLocaleString(),
+					},
+					{
+						name: 'total',
+						label: 'Total',
+						field: row =>
+							row.investment_target_2016 +
+							row.investment_target_2017 +
+							row.investment_target_2018 +
+							row.investment_target_2019 +
+							row.investment_target_2020 +
+							row.investment_target_2021 +
+							row.investment_target_2022 +
+							row.investment_target_2023 +
+							row.investment_target_2024 +
+							row.investment_target_2025,
+						format: (val, row) => val && val.toLocaleString(),
+					},
+					{
+						name: 'actions',
+						label: 'Actions',
+						align: 'center'
+					}
+				]
+			};
+		},
+		methods: {
+			addRow() {
+				// console.log('add row')
+				this.investmentToSubmit = {
+					// id: null,
+					funding_source_id: null,
+					investment_target_2016: 0,
+					investment_target_2017: 0,
+					investment_target_2018: 0,
+					investment_target_2019: 0,
+					investment_target_2020: 0,
+					investment_target_2021: 0,
+					investment_target_2022: 0,
+					investment_target_2023: 0,
+					investment_target_2024: 0,
+					investment_target_2025: 0
+				};
 
-      this.addFsDialog = true;
-    },
-    deleteRow(row) {
-      this.$q
-        .dialog({
-          title: 'Confirm Delete',
-          message: 'Are you sure you want to delete this item?',
-          cancel: true
-        })
-        .onOk(() => {
-          this.$q.loading.show();
-          projectService
-            .deleteFundingSourceFinancial({ id: row.id })
-            .then(() => this.$q.loading.hide());
-        });
-    },
-    handleSubmit() {
-      const investmentToSubmit = this.investmentToSubmit,
-        project_id = this.projectId;
+				this.addDialog = true;
+			},
+			editRow(row) {
+				const {
+					id,
+					funding_source_id,
+					project_id,
+					investment_target_2016,
+					investment_target_2017,
+					investment_target_2018,
+					investment_target_2019,
+					investment_target_2020,
+					investment_target_2021,
+					investment_target_2022,
+					investment_target_2023,
+					investment_target_2024,
+					investment_target_2025
+				} = row
+				this.investmentToSubmit = {
+					id: id,
+					funding_source_id: funding_source_id,
+					project_id: project_id,
+					investment_target_2016: investment_target_2016,
+					investment_target_2017: investment_target_2017,
+					investment_target_2018: investment_target_2018,
+					investment_target_2019: investment_target_2019,
+					investment_target_2020: investment_target_2020,
+					investment_target_2021: investment_target_2021,
+					investment_target_2022: investment_target_2022,
+					investment_target_2023: investment_target_2023,
+					investment_target_2024: investment_target_2024,
+					investment_target_2025: investment_target_2025
+				}
 
-      investmentToSubmit.project_id = project_id;
-
-      this.$q.loading.show();
-
-      if (investmentToSubmit.id) {
-        // update
-        projectService
-          .updateFundingSourceFinancial(investmentToSubmit)
-          .then(() => {
-            this.addFsDialog = false;
-          })
-          .finally(() => this.$q.loading.hide());
-      } else {
-        // create
-        projectService
-          .createFundingSourceFinancial(investmentToSubmit)
-          .then(() => {
-            this.addFsDialog = false;
-          })
-          .finally(() => this.$q.loading.hide());
-      }
-    }
-  },
-  mounted() {
-    console.log(this.projectId);
-  }
-};
+				this.editDialog = true;
+			},
+			deleteRow(row) {
+				this.$q
+					.dialog({
+						title: 'Confirm Delete',
+						message: 'Are you sure you want to delete this item?',
+						cancel: true
+					})
+					.onOk(() => {
+						this.$q.loading.show();
+						projectService
+							.deleteFundingSourceFinancial({ id: row.id })
+							.then(() => this.$q.loading.hide());
+					});
+			}
+		}
+	};
 </script>

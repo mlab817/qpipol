@@ -4,38 +4,48 @@
       <page-title title="Dashboard" icon="dashboard"></page-title>
     </template>
 
-    <div class="row q-pa-md q-gutter-y-md q-col-gutter-md">
-      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-sm-12">
-        <short-cuts></short-cuts>
+    <q-banner class="bg-red-1" v-if="env === 'STAGING'">
+      This is the staging version of the System. For the live production version, please click the link below.
+      <template v-slot:action>
+        <q-btn flat color="negative" label="GO" @click="openURL('https://da-ipms2020.web.app')" />
+      </template>
+    </q-banner>
 
-        <!-- <processing-statuses></processing-statuses> -->
+    <div class="row q-pa-md q-gutter-y-md q-col-gutter-md">
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-sm-12">
+        <short-cuts></short-cuts>
       </div>
 
-      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-        <!-- Shortcuts -->
-        <activity-component></activity-component>
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+				<announcement-component />
+
+				<releases-component />
+
+				<useful-links></useful-links>
       </div>
     </div>
   </page-container>
 </template>
 
 <script>
-import PageTitle from '@/ui/page/PageTitle';
-import PageContainer from '@/ui/page/PageContainer';
-import ActivityComponent from '../components/dashboard/ActivityComponent';
+import { PageTitle, PageContainer } from '@/ui'
 import ShortCuts from '../components/dashboard/ShortCuts.vue';
-// import ProcessingStatuses from '../components/dashboard/ProcessingStatuses';
+import ReleasesComponent from '../components/dashboard/Releases'
+import UsefulLinks from '../components/dashboard/UsefulLinks'
+import { openURL } from 'quasar'
+import AnnouncementComponent from '../components/dashboard/AnnouncementComponent'
 
 export default {
   name: 'PageIndex',
 
   components: {
-    ActivityComponent,
+	  AnnouncementComponent,
+	  UsefulLinks,
+	  ReleasesComponent,
     PageContainer,
     PageTitle,
 
     ShortCuts
-    // ProcessingStatuses
   },
 
   computed: {
@@ -46,6 +56,16 @@ export default {
     isEncoder() {
       return this.$store.getters['auth/isEncoder'];
     }
+  },
+
+  data() {
+    return {
+      env: process.env.APP_ENV
+    }
+  },
+
+  methods: {
+    openURL
   }
 };
 </script>

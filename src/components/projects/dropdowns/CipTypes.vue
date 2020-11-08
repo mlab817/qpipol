@@ -3,6 +3,10 @@
     label="CIP Type"
     v-model="selected"
     :options="cip_types"
+    :rules="rules"
+		with-refresh
+		@refetch="refetch"
+		:loading="$apollo.loading"
   ></single-select>
 </template>
 
@@ -13,7 +17,7 @@ import SingleSelect from '@/ui/form-inputs/SingleSelect';
 export default {
   components: { SingleSelect },
   name: 'CipType',
-  props: ['value'],
+  props: ['value','rules'],
   apollo: {
     cip_types: {
       query: CIP_TYPES_QUERY
@@ -33,6 +37,11 @@ export default {
         this.$emit('input', val);
       }
     }
-  }
+  },
+	methods: {
+  	refetch() {
+  		this.$apollo.queries.cip_types.refetch()
+		}
+	}
 };
 </script>
