@@ -214,7 +214,7 @@
 	            message: `Click OK to download the file.`,
 	            html: true,
 	            cancel: true
-	          }).onOk(() => openURL(exportExcel.link, {
+	          }).onOk(() => openURL(exportExcel.link, null, {
 	            target: '_blank'
 	          }))
 	        })

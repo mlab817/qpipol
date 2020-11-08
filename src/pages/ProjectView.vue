@@ -225,7 +225,7 @@ export default {
             .exportProjectDocx({ id: id })
             .then(res => {
               if (res.exportProjectDocx.link) {
-                openURL(res.exportProjectDocx.link)
+                openURL(res.exportProjectDocx.link, null, { target: '_blank' })
               } else {
                 this.$q.notify({
                   type: 'negative',
