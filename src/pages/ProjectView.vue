@@ -3,20 +3,10 @@
     <div class="text-h6" v-if="$apollo.loading">Loading...</div>
 
     <template v-slot:title>
-      <page-title title="Project Profile" icon="search">
-        <q-btn
-          flat
-          color="white"
-          icon="archive"
-          @click="project.signed_copy_link ? openURL(project.signed_copy_link) : downloadFile" />
-        <q-btn
-          icon="refresh"
-          @click="refetch"
-          flat
-          round
-          dense
-          class="q-mr-sm"
-        ></q-btn>
+      <page-title title="Project/Program Profile" icon="search">
+				<archive-button @click="downloadFile" />
+				<refresh-button @click="refetch" />
+				<help-button @click="help" />
       </page-title>
     </template>
 
@@ -37,6 +27,7 @@
             <q-btn flat color="white" label="Download" @click="downloadFile" />
             <q-btn
               flat
+							icon="upload"
               color="white"
               label="Upload Signed Copy"
               @click="uploadSignedCopyDialog = true"
@@ -45,31 +36,26 @@
         </q-banner>
       </div>
 
-      <view-pipol :project="project" />
-
-      <review-result :review="project.review" v-if="project.review" />
-
-      <div class="row justify-center q-gutter-sm">
+      <div class="row justify-center q-gutter-sm q-mb-md">
         <q-btn
-          label="Update"
-          color="primary"
+          label="Edit"
+					icon="edit"
+					color="blue"
           @click="$router.push(`/projects/${$route.params.id}/edit`)"
           v-if="owner && !project.finalized"
         />
+      </div>
+
+      <view-pipol :project="project" />
+
+      <div class="row justify-center q-gutter-sm">
         <q-btn
-          v-if="!project.endorsed && !project.signed_copy_link"
-          label="Download"
-          color="secondary"
-          @click="downloadFile"
+          label="Edit"
+					icon="edit"
+          color="blue"
+          @click="$router.push(`/projects/${$route.params.id}/edit`)"
+          v-if="owner && !project.finalized"
         />
-        <q-btn
-          v-if="project.signed_copy_link"
-          color="secondary"
-          target="_blank"
-          type="a"
-          label="Download"
-          :href="project.signed_copy_link"
-        ></q-btn>
       </div>
     </template>
 
@@ -88,20 +74,24 @@ import {
 	PageContainer
 } from '@/ui'
 import ViewPipol from '@/components/projects/ViewPipol';
-import ReviewResult from '@/components/projects/ReviewResult';
 import { FETCH_PROJECT_QUERY } from '@/graphql/queries';
 import axios from 'axios';
 import { showError } from '@/utils';
-import { openURL } from 'quasar'
+import { openURL, exportFile } from 'quasar'
 import UploadSigned from '../components/projects/shared/UploadSigned';
+import RefreshButton from '../ui/buttons/RefreshButton'
+import ArchiveButton from '../ui/buttons/ArchiveButton'
+import HelpButton from '../ui/buttons/HelpButton'
 
 export default {
   components: {
+	  HelpButton,
+	  ArchiveButton,
+	  RefreshButton,
     UploadSigned,
     PageContainer,
     PageTitle,
-	  ViewPipol,
-    ReviewResult
+	  ViewPipol
   },
   name: 'ViewProject',
   apollo: {
@@ -153,38 +143,104 @@ export default {
     refetch() {
       this.$apollo.queries.project.refetch();
     },
+		help() {
+    	this.$q.dialog({
+				title: 'Project/Program Profile',
+				message: 'Only the owner of the project and the reviewer assigned to the operating unit can edit it. Hit refresh to get the latest data on the project. Click the download button to download the project in .DOCX format (if not endorsed) or signed copy, otherwise.',
+				cancel: true
+			})
+		},
 
     downloadFile() {
-      this.$q.loading.show({
-        message: 'This may take a while as the file is being generated.'
-      });
-      // console.log(process.env)
-      axios
-        .post(process.env.REPORT_ENDPOINT, this.project, {
-          responseType: 'arraybuffer',
-          headers: {
-            'content-type': 'application/json',
-            accept: 'application/pdf',
-            'Access-Control-Expose-Headers': 'X-Suggested-Filename'
-          }
-        })
-        .then(res => {
-          console.log(res);
-          const type = res.headers['content-type'];
+    	const options = [{
+					value: 'docx',
+					label: 'Microsoft Word'
+				},
+				{
+					value: 'signed',
+					label: 'Signed Copy (if uploaded)'
+				},
+				{
+					value: 'json',
+					label: 'JSON'
+				}]
 
-          const blob = new Blob([res.data], {
-            type: type,
-            encoding: 'UTF-8'
-          });
+				this.$q.dialog({
+					title: 'Download',
+					message: 'Choose what file to download',
+					cancel: true,
+					options: {
+						items: options,
+						isValid: val => !!val,
+						model: 'docx'
+					}
+				}).onOk(data => {
+					if (data === 'docx') {
+						this.downloadDocx()
+					} else if (data === 'signed') {
+						this.downloadSignedCopy()
+					} else if (data === 'json') {
+						this.downloadJson()
+					}
+				})
+    },
 
-          const link = document.createElement('a');
-          link.href = window.URL.createObjectURL(blob);
-          link.download = 'export.docx';
-          link.click();
-        })
-        .catch(err => showError(err))
-        .finally(() => this.$q.loading.hide());
-    }
+		downloadSignedCopy() {
+    	if (this.project.signed_copy_link) {
+		    openURL(project.signed_copy_link)
+			} else {
+    		alert('Signed copy has not been uploaded yet')
+			}
+		},
+
+		downloadJson() {
+			const project = this.project
+
+			const status = exportFile(`project_${project.id}.json`, JSON.stringify(project), 'text/json')
+
+			if (status === true) {
+				this.$q.notify({
+					type: 'positive',
+					message: 'File downloaded'
+				})
+			} else {
+				this.$q.notify({
+					type: 'negative',
+					message: `Error ${status}`
+				})
+			}
+		},
+
+		downloadDocx() {
+			  this.$q.loading.show({
+			    message: 'This may take a while as the file is being generated.'
+			  });
+			  axios
+			    .post(process.env.REPORT_ENDPOINT, this.project, {
+				    responseType: 'arraybuffer',
+				    headers: {
+					    'content-type': 'application/json',
+					    accept: 'application/pdf',
+					    'Access-Control-Expose-Headers': 'X-Suggested-Filename'
+				    }
+			    })
+			    .then(res => {
+				    console.log(res);
+				    const type = res.headers['content-type'];
+
+				    const blob = new Blob([res.data], {
+					    type: type,
+					    encoding: 'UTF-8'
+				    });
+
+				    const link = document.createElement('a');
+				    link.href = window.URL.createObjectURL(blob);
+				    link.download = 'export.docx';
+				    link.click();
+			    })
+			    .catch(err => showError(err))
+			    .finally(() => this.$q.loading.hide());
+		}
   }
 };
 </script>

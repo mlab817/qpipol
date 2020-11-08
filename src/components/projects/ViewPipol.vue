@@ -20,6 +20,7 @@
 				</q-banner>
 			</template>
 
+
 					<div class="row justify-end q-mb-md">
 						<q-badge color="blue"> v. {{ project.version }} </q-badge>
 					</div>
@@ -235,13 +236,13 @@
 									<tbody>
 									<tr>
 										<td>Feasibility Study</td>
-										<td-money :value="project.fs_target_2017" />
-										<td-money :value="project.fs_target_2018" />
-										<td-money :value="project.fs_target_2019" />
-										<td-money :value="project.fs_target_2020" />
-										<td-money :value="project.fs_target_2021" />
-										<td-money :value="project.fs_target_2022" />
-										<td-money :value="project.fs_target_total" />
+										<copy-td :copy-mode="copyMode" :value="project.fs_target_2017" />
+										<copy-td :copy-mode="copyMode" :value="project.fs_target_2018" />
+										<copy-td :copy-mode="copyMode" :value="project.fs_target_2019" />
+										<copy-td :copy-mode="copyMode" :value="project.fs_target_2020" />
+										<copy-td :copy-mode="copyMode" :value="project.fs_target_2021" />
+										<copy-td :copy-mode="copyMode" :value="project.fs_target_2022" />
+										<copy-td :copy-mode="copyMode" :value="project.fs_target_total" />
 									</tr>
 									</tbody>
 								</q-markup-table>
@@ -402,9 +403,13 @@
 					<q-card square bordered flat>
 						<q-card-section class="q-gutter-y-md">
 							<!-- Investment Requirements (Total, Infrastructure, GAA, NEP, Disbursement) -->
-							<q-item-label class="text-h6 text-weight-lighter">
-								Investment Requirements (in absolute PhP)
-							</q-item-label>
+							<div class="row">
+								<q-item-label class="text-h6 text-weight-lighter">
+									Investment Requirements (in absolute PhP)
+								</q-item-label>
+								<q-space />
+								<q-toggle :value="copyMode" @input="copyMode = !copyMode" label="Toggle Copy" color="secondary" />
+							</div>
 
 							<div class="row">
 								<q-markup-table
@@ -441,33 +446,33 @@
 										<td>
 											Total
 										</td>
-										<copy-td :value="investTotal.investment_target_2016" />
-										<copy-td :value="investTotal.investment_target_2017" />
-										<copy-td :value="investTotal.investment_target_2018" />
-										<copy-td :value="investTotal.investment_target_2019" />
-										<copy-td :value="investTotal.investment_target_2020" />
-										<copy-td :value="investTotal.investment_target_2021" />
-										<copy-td :value="investTotal.investment_target_2022" />
-										<copy-td :value="investTotal.investment_target_2023" />
-										<copy-td :value="investTotal.investment_target_2024" />
-										<copy-td :value="investTotal.investment_target_2025" />
-										<copy-td :value="investTotal.investment_target_total" />
+										<copy-td :value="investTotal.investment_target_2016" :copy-mode="copyMode" />
+										<copy-td :value="investTotal.investment_target_2017" :copy-mode="copyMode" />
+										<copy-td :value="investTotal.investment_target_2018" :copy-mode="copyMode" />
+										<copy-td :value="investTotal.investment_target_2019" :copy-mode="copyMode" />
+										<copy-td :value="investTotal.investment_target_2020" :copy-mode="copyMode" />
+										<copy-td :value="investTotal.investment_target_2021" :copy-mode="copyMode" />
+										<copy-td :value="investTotal.investment_target_2022" :copy-mode="copyMode" />
+										<copy-td :value="investTotal.investment_target_2023" :copy-mode="copyMode" />
+										<copy-td :value="investTotal.investment_target_2024" :copy-mode="copyMode" />
+										<copy-td :value="investTotal.investment_target_2025" :copy-mode="copyMode" />
+										<copy-td :value="investTotal.investment_target_total" :copy-mode="copyMode" />
 									</tr>
 									<tr>
 										<td>
 											Infrastructure
 										</td>
-										<copy-td :value="infraTotal.infrastructure_target_2016" />
-										<copy-td :value="infraTotal.infrastructure_target_2017" />
-										<copy-td :value="infraTotal.infrastructure_target_2018" />
-										<copy-td :value="infraTotal.infrastructure_target_2019" />
-										<copy-td :value="infraTotal.infrastructure_target_2020" />
-										<copy-td :value="infraTotal.infrastructure_target_2021" />
-										<copy-td :value="infraTotal.infrastructure_target_2022" />
-										<copy-td :value="infraTotal.infrastructure_target_2023" />
-										<copy-td :value="infraTotal.infrastructure_target_2024" />
-										<copy-td :value="infraTotal.infrastructure_target_2025" />
-										<copy-td :value="infraTotal.infrastructure_target_total" />
+										<copy-td :value="infraTotal.infrastructure_target_2016" :copy-mode="copyMode" />
+										<copy-td :value="infraTotal.infrastructure_target_2017" :copy-mode="copyMode" />
+										<copy-td :value="infraTotal.infrastructure_target_2018" :copy-mode="copyMode" />
+										<copy-td :value="infraTotal.infrastructure_target_2019" :copy-mode="copyMode" />
+										<copy-td :value="infraTotal.infrastructure_target_2020" :copy-mode="copyMode" />
+										<copy-td :value="infraTotal.infrastructure_target_2021" :copy-mode="copyMode" />
+										<copy-td :value="infraTotal.infrastructure_target_2022" :copy-mode="copyMode" />
+										<copy-td :value="infraTotal.infrastructure_target_2023" :copy-mode="copyMode" />
+										<copy-td :value="infraTotal.infrastructure_target_2024" :copy-mode="copyMode"/>
+										<copy-td :value="infraTotal.infrastructure_target_2025" :copy-mode="copyMode" />
+										<copy-td :value="infraTotal.infrastructure_target_total" :copy-mode="copyMode" />
 									</tr>
 									<tr>
 										<td colspan="12">
@@ -478,49 +483,49 @@
 										<td>
 											NEP
 										</td>
-										<copy-td :value="project.nep_2016" />
-										<copy-td :value="project.nep_2017" />
-										<copy-td :value="project.nep_2018" />
-										<copy-td :value="project.nep_2019" />
-										<copy-td :value="project.nep_2020" />
-										<copy-td :value="project.nep_2021" />
-										<copy-td :value="project.nep_2022" />
-										<copy-td :value="project.nep_2023" />
-										<copy-td :value="project.nep_2024" />
-										<copy-td :value="project.nep_2025" />
-										<copy-td :value="project.nep_total" />
+										<copy-td :value="project.nep_2016" :copy-mode="copyMode" />
+										<copy-td :value="project.nep_2017" :copy-mode="copyMode" />
+										<copy-td :value="project.nep_2018" :copy-mode="copyMode" />
+										<copy-td :value="project.nep_2019" :copy-mode="copyMode" />
+										<copy-td :value="project.nep_2020" :copy-mode="copyMode" />
+										<copy-td :value="project.nep_2021" :copy-mode="copyMode" />
+										<copy-td :value="project.nep_2022" :copy-mode="copyMode" />
+										<copy-td :value="project.nep_2023" :copy-mode="copyMode" />
+										<copy-td :value="project.nep_2024" :copy-mode="copyMode" />
+										<copy-td :value="project.nep_2025" :copy-mode="copyMode" />
+										<copy-td :value="project.nep_total" :copy-mode="copyMode" />
 									</tr>
 									<tr>
 										<td>
 											GAA
 										</td>
-										<copy-td :value="project.gaa_2016" />
-										<copy-td :value="project.gaa_2017" />
-										<copy-td :value="project.gaa_2018" />
-										<copy-td :value="project.gaa_2019" />
-										<copy-td :value="project.gaa_2020" />
-										<copy-td :value="project.gaa_2021" />
-										<copy-td :value="project.gaa_2022" />
-										<copy-td :value="project.gaa_2023" />
-										<copy-td :value="project.gaa_2024" />
-										<copy-td :value="project.gaa_2025" />
-										<copy-td :value="project.gaa_total" />
+										<copy-td :value="project.gaa_2016" :copy-mode="copyMode" />
+										<copy-td :value="project.gaa_2017" :copy-mode="copyMode" />
+										<copy-td :value="project.gaa_2018" :copy-mode="copyMode" />
+										<copy-td :value="project.gaa_2019" :copy-mode="copyMode" />
+										<copy-td :value="project.gaa_2020" :copy-mode="copyMode" />
+										<copy-td :value="project.gaa_2021" :copy-mode="copyMode" />
+										<copy-td :value="project.gaa_2022" :copy-mode="copyMode" />
+										<copy-td :value="project.gaa_2023" :copy-mode="copyMode" />
+										<copy-td :value="project.gaa_2024" :copy-mode="copyMode" />
+										<copy-td :value="project.gaa_2025" :copy-mode="copyMode" />
+										<copy-td :value="project.gaa_total" :copy-mode="copyMode" />
 									</tr>
 									<tr>
 										<td>
 											Disbursement
 										</td>
-										<copy-td :value="project.disbursement_2016" />
-										<copy-td :value="project.disbursement_2017" />
-										<copy-td :value="project.disbursement_2018" />
-										<copy-td :value="project.disbursement_2019" />
-										<copy-td :value="project.disbursement_2020" />
-										<copy-td :value="project.disbursement_2021" />
-										<copy-td :value="project.disbursement_2022" />
-										<copy-td :value="project.disbursement_2023" />
-										<copy-td :value="project.disbursement_2024" />
-										<copy-td :value="project.disbursement_2025" />
-										<copy-td :value="project.disbursement_total" />
+										<copy-td :value="project.disbursement_2016" :copy-mode="copyMode" />
+										<copy-td :value="project.disbursement_2017" :copy-mode="copyMode" />
+										<copy-td :value="project.disbursement_2018" :copy-mode="copyMode" />
+										<copy-td :value="project.disbursement_2019" :copy-mode="copyMode" />
+										<copy-td :value="project.disbursement_2020" :copy-mode="copyMode" />
+										<copy-td :value="project.disbursement_2021" :copy-mode="copyMode" />
+										<copy-td :value="project.disbursement_2022" :copy-mode="copyMode" />
+										<copy-td :value="project.disbursement_2023" :copy-mode="copyMode" />
+										<copy-td :value="project.disbursement_2024" :copy-mode="copyMode" />
+										<copy-td :value="project.disbursement_2025" :copy-mode="copyMode" />
+										<copy-td :value="project.disbursement_total" :copy-mode="copyMode" />
 									</tr>
 									</tbody>
 								</q-markup-table>
@@ -539,7 +544,6 @@
 	import { LabelValue,
 		LabelList,
 		LabelTable,
-		TdMoney,
 		SectionHeader} from '@/ui'
 	import VfsFinancials from './financials/VfsFinancials'
 	import VrFinancials from './financials/VrFinancials'
@@ -553,7 +557,6 @@
 			VrFinancials,
 			VfsFinancials,
 			CopyTd,
-			TdMoney,
 			LabelTable,
 			LabelList,
 			LabelValue,
@@ -694,6 +697,7 @@
 		},
 		data() {
 			return {
+				copyMode: false,
 				copyData: '', // cannot be null
 				file: null,
 				attachment_types: [],

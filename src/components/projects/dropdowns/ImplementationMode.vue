@@ -4,6 +4,9 @@
     label="Implementation Mode"
     :options="implementation_modes"
     :rules="rules"
+		:loading="$apollo.loading"
+		with-refresh
+		@refetch="refetch"
   />
 </template>
 
@@ -34,6 +37,11 @@ export default {
     return {
       implementation_modes: []
     };
-  }
+  },
+	methods: {
+  	refetch() {
+  		this.$apollo.queries.implementation_modes.refetch()
+		}
+	}
 };
 </script>

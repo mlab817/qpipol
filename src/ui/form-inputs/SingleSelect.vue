@@ -1,6 +1,6 @@
 <template>
   <div class="col">
-    <span class="text-caption text-weight-bold">{{ label }}</span>
+    <span class="text-caption text-weight-bold">{{ label }} <mini-refresh v-if="withRefresh" @click="refetch" /></span>
     <q-select
       square
       v-model="model"
@@ -28,10 +28,12 @@
 
 <script>
 import { mapState } from 'vuex';
+import MiniRefresh from '../buttons/MiniRefresh'
 
 export default {
   name: 'SingleSelect',
-  props: {
+	components: {MiniRefresh},
+	props: {
     label: {
       type: String,
       default: ''
@@ -46,7 +48,8 @@ export default {
     loading: {
       type: Boolean,
       default: false
-    }
+    },
+		withRefresh: Boolean
   },
   computed: {
     ...mapState('settings', ['dense']),
@@ -59,5 +62,11 @@ export default {
       }
     }
   },
+	methods: {
+		refetch() {
+			console.log('refetch called')
+			this.$emit('refetch')
+		}
+	}
 };
 </script>

@@ -5,6 +5,9 @@
     :options="operating_units"
     :rules="rules"
     hint="Determined based on the user's indicated operating unit/office"
+		:loading="$apollo.loading"
+		with-refresh
+		@refetch="refetch"
   />
 </template>
 
@@ -35,6 +38,11 @@ export default {
     return {
       operating_units: []
     };
-  }
+  },
+	methods: {
+  	refetch() {
+  		this.$apollo.queries.operating_units.refetch()
+		}
+	}
 };
 </script>

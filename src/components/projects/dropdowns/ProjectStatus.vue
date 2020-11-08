@@ -4,6 +4,9 @@
     label="Status of Implementation Readiness"
     :options="project_statuses"
     :rules="rules"
+		:loading="$apollo.loading"
+		with-refresh
+		@refetch="refetch"
   />
 </template>
 
@@ -34,6 +37,11 @@ export default {
     return {
       project_statuses: []
     };
-  }
+  },
+	methods: {
+  	refetch() {
+  		this.$apollo.queries.project_statuses.refetch()
+		}
+	}
 };
 </script>

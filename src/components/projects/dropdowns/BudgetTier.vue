@@ -4,6 +4,9 @@
     label="Budget Tier"
     :options="tiers"
     :rules="rules"
+		with-refresh
+		@refetch="refetch"
+		:loading="$apollo.loading"
   />
 </template>
 
@@ -35,6 +38,11 @@ export default {
     return {
       tiers: []
     };
-  }
+  },
+	methods: {
+		refetch() {
+			this.$apollo.queries.tiers.refetch()
+		}
+	}
 };
 </script>

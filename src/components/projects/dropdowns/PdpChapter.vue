@@ -4,6 +4,9 @@
     :options="pdp_chapters"
     v-model="selected"
     :rules="rules"
+		:loading="$apollo.loading"
+		with-refresh
+		@refetch="refetch"
   ></single-select>
 </template>
 
@@ -37,6 +40,11 @@ export default {
     return {
       pdp_chapters: []
     };
-  }
+  },
+	methods: {
+  	refetch() {
+  		this.$apollo.queries.pdp_chapters.refetch()
+		}
+	}
 };
 </script>

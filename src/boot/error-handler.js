@@ -7,7 +7,7 @@ export default async ({ Vue }) => {
     captureUncaught: true,
     captureUnhandledRejections: true,
     enabled: true,
-    environment: 'production'
+    environment: process.env.APP_ENV
   });
 
   Vue.config.errorHandler = (err, vm, info) => {

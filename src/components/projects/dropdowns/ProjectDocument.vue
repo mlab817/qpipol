@@ -4,7 +4,9 @@
     v-model="model"
     :options="project_preparation_documents"
     :rules="rules"
-    :loading="$apollo.loading"
+		:loading="$apollo.loading"
+		with-refresh
+		@refetch="refetch"
   />
 </template>
 
@@ -46,8 +48,10 @@ export default {
       }
     }
   },
-  mounted() {
-    this.$apollo.queries.project_preparation_documents.refetch();
-  }
+  methods: {
+  	refetch() {
+		  this.$apollo.queries.project_preparation_documents.refetch();
+		}
+	}
 };
 </script>

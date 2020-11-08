@@ -1,10 +1,10 @@
 <template>
   <page-container>
     <template v-slot:title>
-      <page-title title="Programs">
-        <q-btn v-if="!isAc && !isAa" icon="add" label="Add Activity" @click="addPrexcActivity" color="primary" class="q-mr-sm" />
-        <q-btn v-if="!isAc && !isAa" icon="publish" label="Upload" to="/upload" color="primary" class="q-mr-sm" />
-        <q-btn icon="help" flat round @click="helpDialog = true" />
+      <page-title title="Programs" icon="view_module">
+        <q-btn outline v-if="!isAc && !isAa" icon="add" label="Add Activity" @click="addPrexcActivity" class="q-mr-sm" />
+        <q-btn outline v-if="!isAc && !isAa" icon="publish" label="Upload" to="/upload" class="q-mr-sm" />
+				<help-button @click="helpDialog = true" />
       </page-title>
     </template>
 
@@ -78,26 +78,22 @@
       style="margin-bottom: 70px;"
        v-if="!isAc && !isAa"
     >
+			<template v-slot:top-left>
+				<div class="row text-caption">
+					{{ lastUpdatedPrograms ? `Last downloaded on ${lastUpdatedPrograms}` : null }}
+				</div>
+			</template>
+
       <template v-slot:top-right="props">
 				<search v-model="filter" />
 
-        <q-btn
-          flat
-          round
-          icon="check"
-          @click="finalizePrexcActivities"
-          :disabled="!selected.length"
-        >
-          <q-tooltip>Finalize multiple activities at once</q-tooltip>
-        </q-btn>
+				<icon-button icon="done_all" @click="finalizePrexcActivities" tooltip="Finalize multiple activities at once" />
 
-				<refresh-button @click="refetch" />
+				<icon-button icon="refresh" tooltip="Re-download from server" @click="refetch" />
 
-        <q-btn flat round icon="get_app" @click="exportExcel">
-          <q-tooltip>Download with annual data</q-tooltip>
-        </q-btn>
+				<icon-button icon="cloud_download" tooltip="Download with annual data" @click="exportExcel" />
 
-				<download-button @click="download" />
+				<icon-button icon="table_chart" tooltip="Download this table" @click="download" />
 
 				<fullscreen-button @click="props.toggleFullscreen" :in-fullscreen="props.inFullscreen"></fullscreen-button>
       </template>
@@ -121,53 +117,39 @@
 
       <template v-slot:body-cell-actions="props">
         <q-td :props="props">
-          <q-btn
-            icon="visibility"
-            flat
-            round
+          <icon-button
+            icon="preview"
             size="sm"
+						tooltip="View activity"
             @click="viewPrexcActivity(props.row.id)"
-          ></q-btn>
+          ></icon-button>
 
-          <q-btn
-            icon="edit"
-            flat
-            round
-            size="sm"
-            v-if="props.row.project_id"
-            :disabled="props.row.finalized"
-            :to="`/projects/${props.row.project_id}`"
-          ></q-btn>
+					<icon-button
+							icon="edit"
+							size="sm"
+							tooltip="Edit activity"
+							color="blue"
+							@click="editPrexcActivity(props.row.id)"
+							:disabled="props.row.finalized"
+					></icon-button>
 
-          <q-btn
-            icon="edit"
-            flat
-            round
-            size="sm"
-            @click="editPrexcActivity(props.row.id)"
-            :disabled="props.row.finalized"
-            v-else
-          ></q-btn>
-
-          <q-btn
+          <icon-button
             icon="delete"
-            flat
-            round
             size="sm"
             color="negative"
+						tooltip="Delete activity"
             :disabled="props.row.finalized"
             @click="deletePrexcActivity(props.row.id)"
-          ></q-btn>
+          ></icon-button>
 
-          <q-btn
-            icon="check"
-            flat
-            round
+          <icon-button
+            icon="done"
             size="sm"
             color="green"
+						tooltip="Finalize activity"
             :disabled="props.row.finalized"
             @click="finalizePrexcActivity(props.row.id)"
-          ></q-btn>
+          ></icon-button>
         </q-td>
       </template>
 
@@ -195,18 +177,18 @@ import PageTitle from '@/ui/page/PageTitle.vue';
 import PrexcActivity from '@/components/programs/PrexcActivity.vue';
 import ViewActivity from '@/components/programs/ViewActivity.vue';
 import { wrapCsvValue } from 'src/utils';
-import { exportFile, openURL } from 'quasar';
+import { exportFile, openURL, date, LocalStorage } from 'quasar';
 import { programService } from 'src/services';
 
 import {
-	RefreshButton,
-	DownloadButton,
 	Search,
 	FullscreenButton
 } from '@/ui'
+import IconButton from '../ui/buttons/IconButton'
+import HelpButton from '../ui/buttons/HelpButton'
 
 export default {
-  components: { Search, DownloadButton, RefreshButton, PageContainer, PageTitle, PrexcActivity, ViewActivity, FullscreenButton },
+  components: {HelpButton, IconButton, Search, PageContainer, PageTitle, PrexcActivity, ViewActivity, FullscreenButton },
   name: 'PrexcActivities',
   apollo: {
     prexc_programs: {
@@ -216,7 +198,13 @@ export default {
       query: PREXC_SUBPROGRAMS
     },
     prexc_activities: {
-      query: PREXC_ACTIVITIES
+      query: PREXC_ACTIVITIES,
+	    result() {
+		    const now = Date.now();
+		    const dateNow = date.formatDate(now, 'MMM D YYYY / HH:mm:ss A');
+		    LocalStorage.set('lastUpdatedPrograms', dateNow);
+		    this.lastUpdatedPrograms = dateNow;
+	    }
     }
   },
   computed: {
@@ -253,6 +241,7 @@ export default {
   },
   data() {
     return {
+	    lastUpdatedPrograms: LocalStorage.getItem('lastUpdatedPrograms') || null,
       helpDialog: false,
       filter: '',
       getCurrentUser: {},
@@ -300,6 +289,7 @@ export default {
           name: 'infrastructure_target_total',
           label: 'Infrastructure Investment (PhP)',
           field: row => row.infrastructure_target_total,
+	        format: (val, row) => val && val.toLocaleString(),
           align: 'right',
           sortable: true
         },
@@ -307,20 +297,23 @@ export default {
           name: 'investment_target_total',
           label: 'Total Investment (PhP)',
           field: row => row.investment_target_total,
+	        format: (val, row) => val && val.toLocaleString(),
           align: 'right',
           sortable: true
         },
+	      {
+		      name: 'nep_total',
+		      label: 'National Expenditure Program (PhP)',
+		      field: row => row.nep_total,
+					format: (val, row) => val && val.toLocaleString(),
+		      align: 'right',
+		      sortable: true
+	      },
         {
           name: 'gaa_total',
           label: 'General Appropriations Act (PhP)',
           field: row => row.gaa_total,
-          align: 'right',
-          sortable: true
-        },
-        {
-          name: 'nep_total',
-          label: 'National Expenditure Program (PhP)',
-          field: row => row.nep_total,
+	        format: (val, row) => val && val.toLocaleString(),
           align: 'right',
           sortable: true
         },
@@ -328,6 +321,7 @@ export default {
           name: 'disbursement_total',
           label: 'Actual Disbursement (PhP)',
           field: row => row.disbursement_total,
+	        format: (val, row) => val && val.toLocaleString(),
           align: 'right',
           sortable: true
         },
@@ -452,35 +446,37 @@ export default {
         });
     },
     finalizePrexcActivities() {
-      console.log(this.selected);
-      const id = this.selected.map(x => x.id);
-      console.log(id);
+    	if (!this.selected.length) {
+    		alert('Select activities first')
+			} else {
+		    const id = this.selected.map(x => x.id);
 
-      this.$q
-        .dialog({
-          title: 'Finalize Activities',
-          message: `Are you sure you want to finalize these ${id.length} activities? You will no longer be able to edit it once finalized. Type <strong>YES</strong> to confirm.`,
-          html: true,
-          prompt: {
-            model: '',
-            isValid: val => val.toLowerCase() === 'yes'
-          },
-          cancel: true
-        })
-        .onOk(() => {
-          this.$q.loading.show();
-          programService
-            .finalizePrexcActivities({ id: id })
-            .then(() => this.$q.notify({
-              type: 'positive',
-              message: 'Success!'
-            }))
-            .catch(err => this.$q.notify({
-              type: 'negative',
-              message: err.message
-            }))
-            .finally(() => this.$q.loading.hide());
-        });
+		    this.$q
+			    .dialog({
+				    title: 'Finalize Activities',
+				    message: `Are you sure you want to finalize these ${id.length} activities? You will no longer be able to edit it once finalized. Type <strong>YES</strong> to confirm.`,
+				    html: true,
+				    prompt: {
+					    model: '',
+					    isValid: val => val.toLowerCase() === 'yes'
+				    },
+				    cancel: true
+			    })
+			    .onOk(() => {
+				    this.$q.loading.show();
+				    programService
+					    .finalizePrexcActivities({id: id})
+					    .then(() => this.$q.notify({
+						    type: 'positive',
+						    message: 'Success!'
+					    }))
+					    .catch(err => this.$q.notify({
+						    type: 'negative',
+						    message: err.message
+					    }))
+					    .finally(() => this.$q.loading.hide());
+			    });
+	    }
     },
     exportExcel() {
       this.$q.loading.show()

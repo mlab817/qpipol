@@ -1,10 +1,25 @@
 <template>
   <div class="col q-pa-md">
-    <q-dialog v-model="addDialog">
+    <q-dialog
+			v-model="addDialog"
+			full-height
+			:position="$q.screen.xs ? void 0 : 'right'"
+			persistent
+			:maximized="$q.screen.xs"
+			transition-show="jump-left"
+			transition-hide="jump-right"
+		>>
       <add-region :taken="taken" :edit-mode="false" :investment-to-edit="investmentToSubmit" :project-id="projectId" @close="addDialog = false" />
     </q-dialog>
 
-		<q-dialog v-model="editDialog">
+		<q-dialog
+			v-model="editDialog"
+			full-height
+			:position="$q.screen.xs ? void 0 : 'right'"
+			persistent
+			:maximized="$q.screen.xs"
+			transition-show="jump-left"
+			transition-hide="jump-right">
 			<add-region :taken="taken" :edit-mode="true" :investment-to-edit="investmentToSubmit" @close="editDialog = false"/>
 		</q-dialog>
 

@@ -2,10 +2,7 @@
   <page-container>
     <template v-slot:title>
       <page-title title="Update Project" icon="edit">
-        <q-btn icon="archive" flat round class="q-mr-sm" @click="exportJson">
-          <q-tooltip>You can save the state of your project here.</q-tooltip>
-        </q-btn>
-        <q-btn icon="refresh" flat round @click="refetchProject"></q-btn>
+				<refresh-button @click="refetchProject" />
       </page-title>
     </template>
 
@@ -21,10 +18,11 @@ import PageTitle from '@/ui/page/PageTitle';
 import PageContainer from '@/ui/page/PageContainer';
 import EditPipol from '../components/projects/EditPipol';
 import { FETCH_PROJECT_QUERY } from '@/graphql';
-import { exportFile } from 'quasar'
+import RefreshButton from '../ui/buttons/RefreshButton'
 
 export default {
   components: {
+	  RefreshButton,
     EditPipol,
     PageContainer,
     PageTitle
@@ -64,23 +62,6 @@ export default {
   methods: {
     refetchProject() {
       this.$apollo.queries.project.refetch();
-    },
-    exportJson() {
-      const project = this.project
-
-      const status = exportFile(`project_${project.id}.json`, JSON.stringify(project), 'text/json')
-
-      if (status === true) {
-        this.$.notify({
-          type: 'positive',
-          message: 'File downloaded'
-        })
-      } else {
-        this.$.notify({
-          type: 'negative',
-          message: `Error ${status}`
-        })
-      }
     }
   },
 
