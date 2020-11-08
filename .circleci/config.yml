@@ -16,7 +16,7 @@ jobs:
           paths:
             - ./node_modules
       # remove :staging if deploying for production
-      - run: yarn build:staging
+      - run: yarn build
       - persist_to_workspace:
           root: .
           paths:
@@ -36,5 +36,3 @@ workflows:
       - deploy:
           requires:
             - build
-
-
