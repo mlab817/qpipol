@@ -32,7 +32,8 @@ import {
   CREATE_FUNDING_SOURCE_INFRASTRUCTURE,
   UPDATE_FUNDING_SOURCE_INFRASTRUCTURE,
   DELETE_FUNDING_SOURCE_INFRASTRUCTURE,
-  UPLOAD_SIGNED_COPY
+  UPLOAD_SIGNED_COPY,
+  EXPORT_PROJECT_DOCX_MUTATION
 } from '@/graphql';
 
 export const projectService = {
@@ -445,7 +446,7 @@ export const projectService = {
               id: payload.project_id
             }
           });
-	
+
 	        data.project.funding_source_financials.push(
             createFundingSourceFinancial
           );
@@ -544,7 +545,7 @@ export const projectService = {
               id: payload.project_id
             }
           });
-	
+
 	        data.project.region_financials.push(createRegionFinancial);
 
           store.writeQuery({
@@ -640,7 +641,7 @@ export const projectService = {
           });
 
           console.log('before save: ', data)
-	
+
 	        data.project.funding_source_infrastructures.push(
             createFundingSourceInfrastructure
           );
@@ -724,5 +725,14 @@ export const projectService = {
       })
       .then(handleResponse)
       .catch(handleError);
+  },
+  exportProjectDocx(payload) {
+    return client
+      .mutate({
+        mutation: EXPORT_PROJECT_DOCX_MUTATION,
+        variables: payload
+      })
+      .then(handleResponse)
+      .catch(handleError)
   }
 };

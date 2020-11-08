@@ -75,13 +75,13 @@ import {
 } from '@/ui'
 import ViewPipol from '@/components/projects/ViewPipol';
 import { FETCH_PROJECT_QUERY } from '@/graphql/queries';
-import axios from 'axios';
 import { showError } from '@/utils';
 import { openURL, exportFile } from 'quasar'
 import UploadSigned from '../components/projects/shared/UploadSigned';
 import RefreshButton from '../ui/buttons/RefreshButton'
 import ArchiveButton from '../ui/buttons/ArchiveButton'
 import HelpButton from '../ui/buttons/HelpButton'
+import { projectService } from '@/services'
 
 export default {
   components: {
@@ -140,9 +140,11 @@ export default {
   },
   methods: {
     openURL,
+
     refetch() {
       this.$apollo.queries.project.refetch();
     },
+
 		help() {
     	this.$q.dialog({
 				title: 'Project/Program Profile',
@@ -215,31 +217,27 @@ export default {
 			  this.$q.loading.show({
 			    message: 'This may take a while as the file is being generated.'
 			  });
-			  axios
-			    .post(process.env.REPORT_ENDPOINT, this.project, {
-				    responseType: 'arraybuffer',
-				    headers: {
-					    'content-type': 'application/json',
-					    accept: 'application/pdf',
-					    'Access-Control-Expose-Headers': 'X-Suggested-Filename'
-				    }
-			    })
-			    .then(res => {
-				    console.log(res);
-				    const type = res.headers['content-type'];
 
-				    const blob = new Blob([res.data], {
-					    type: type,
-					    encoding: 'UTF-8'
-				    });
+        const id = this.project.id
 
-				    const link = document.createElement('a');
-				    link.href = window.URL.createObjectURL(blob);
-				    link.download = 'export.docx';
-				    link.click();
-			    })
-			    .catch(err => showError(err))
-			    .finally(() => this.$q.loading.hide());
+        if (id) {
+          projectService
+            .exportProjectDocx({ id: id })
+            .then(res => {
+              if (res.exportProjectDocx.link) {
+                openURL(res.exportProjectDocx.link)
+              } else {
+                this.$q.notify({
+                  type: 'negative',
+                  message: 'The server did not return a file. Please contact IPD if this error continues.'
+                })
+              }
+            })
+            .catch(err => console.log(err.message))
+            .finally(() => this.$q.loading.hide())
+        } else {
+          console.log('no id')
+        }
 		}
   }
 };

@@ -1836,3 +1836,11 @@ export const UPDATE_OPERATING_UNIT_PREXC_ACTIVITIES = gql`
     }
   }
 `
+
+export const EXPORT_PROJECT_DOCX_MUTATION = gql`
+  mutation ($id: ID!) {
+    exportProjectDocx(id: $id) {
+      link
+    }
+  }
+`
