@@ -4,7 +4,7 @@
       <div class="row justify-center q-my-lg">
         <div class="column text-center">
           <div>
-            <q-img src="statics/app-logo-128x128.png" width="128px" />
+            <q-img src="~assets/app-logo-128x128.png" width="128px" />
           </div>
         </div>
       </div>
@@ -159,3 +159,10 @@ export default {
   }
 };
 </script>
+
+<style>
+.my-card {
+  width: 100%;
+  max-width: 400px;
+}
+</style>
