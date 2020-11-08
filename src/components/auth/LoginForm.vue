@@ -24,6 +24,7 @@
         val => !!val || '* Required',
         val => validEmail(val) || 'Please enter valid email.'
       ]"
+      v-test="{ id: 'username' }"
       :dense="$q.screen.lt.md"
       dark
     ></email-input>
@@ -32,6 +33,7 @@
       placeholder="Password"
       v-model="password"
       :rules="required"
+      v-test="{ id: 'password' }"
       :dense="$q.screen.lt.md"
       dark
     ></password-input>
@@ -42,6 +44,7 @@
         class="full-width"
         type="submit"
         unelevated
+        v-test="{ id: 'login' }"
         :size="$q.screen.lt.md ? 'md' : 'lg'"
         square
       >

@@ -8,7 +8,6 @@ import notifications from './notifications';
 import profile from './profile';
 import security from './security';
 import settings from './settings';
-import upload from './upload';
 
 Vue.use(Vuex);
 
@@ -25,8 +24,7 @@ const Store = new Vuex.Store({
     notifications,
     profile,
     security,
-    settings,
-    upload
+    settings
   },
 
   // enable strict mode (adds overhead!)

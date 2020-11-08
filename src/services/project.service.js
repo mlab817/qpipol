@@ -31,9 +31,9 @@ import {
   DELETE_REGION_FINANCIAL,
   CREATE_FUNDING_SOURCE_INFRASTRUCTURE,
   UPDATE_FUNDING_SOURCE_INFRASTRUCTURE,
-  DELETE_FUNDING_SOURCE_INFRASTRUCTURE,
-  UPLOAD_SIGNED_COPY
+  DELETE_FUNDING_SOURCE_INFRASTRUCTURE
 } from '@/graphql';
+import { ENDORSE_PROJECT } from '../graphql';
 
 export const projectService = {
   index() {
@@ -374,22 +374,22 @@ export const projectService = {
   uploadSignedCopy(payload) {
     return client
       .mutate({
-        mutation: UPLOAD_SIGNED_COPY,
+        mutation: ENDORSE_PROJECT,
         variables: payload,
-        update: (store, { data: { uploadSignedCopy } }) => {
+        update: (store, { data: { endorseProject } }) => {
           const data = store.readQuery({
             query: FETCH_PROJECT_QUERY,
             variables: {
-              id: uploadSignedCopy.id
+              id: endorseProject.id
             }
           });
 
-          data.project.signed_copy_link = uploadSignedCopy.signed_copy_link;
+          data.project.signed_copy_link = endorseProject.signed_copy_link;
 
           store.writeQuery({
             query: FETCH_PROJECT_QUERY,
             variables: {
-              id: uploadSignedCopy.id
+              id: endorseProject.id
             },
             data
           });
@@ -479,7 +479,7 @@ export const projectService = {
           const index = data.project.funding_source_financials.findIndex(
             x => x.id === updateFundingSourceFinancial.id
           );
-          data.project.funding_source_financials.splice(
+          data.project.funding_source_financials = data.project.funding_source_financials.splice(
             index,
             1,
             updateFundingSourceFinancial
@@ -576,7 +576,7 @@ export const projectService = {
           const index = data.project.region_financials.findIndex(
             x => x.id === updateRegionFinancial.id
           );
-          data.project.region_financials.splice(
+          data.project.region_financials = data.project.region_financials.splice(
             index,
             1,
             updateRegionFinancial

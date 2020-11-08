@@ -1,7 +1,7 @@
 <template>
   <div class="row q-pa-sm q-col-gutter-lg">
     <div class="col-3 justify-center">
-      <div class="row justify-center">
+      <div class="row">
         <q-img
           :src="user_avatar"
           @click="uploadAvatar = true"

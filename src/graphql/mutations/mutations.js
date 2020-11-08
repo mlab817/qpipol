@@ -458,21 +458,20 @@ export const VALIDATE_PROJECT_MUTATION = gql`
     $id: ID!
     $validation_data: Boolean
     $validation_signed: Boolean
+    $validation_endorsed: Boolean
     $remarks: String
   ) {
     validateProject(
       id: $id
       validation_data: $validation_data
       validation_signed: $validation_signed
+      validation_endorsed: $validation_endorsed
       remarks: $remarks
     ) {
       id
       validation_data
       validation_signed
-	    submission_status {
-		    id
-		    name
-	    }
+      validation_endorsed
     }
   }
 `;
@@ -546,10 +545,16 @@ export const UPLOAD_SIGNED_COPY = gql`
       id
       signed_copy
       signed_copy_link
-      submission_status {
-        id
-        name
-      }
+    }
+  }
+`;
+
+export const ENDORSE_PROJECT = gql`
+  mutation($id: ID!, $signed_copy: Upload, $remarks: String) {
+    endorseProject(id: $id, signed_copy: $signed_copy, remarks: $remarks) {
+      id
+      signed_copy
+      signed_copy_link
     }
   }
 `;
@@ -909,14 +914,8 @@ export const CREATE_PREXC_ACTIVITY = gql`
         id
         name
       }
-      banner_program_id
-      banner_program {
-        id
-        name
-      }
       project_id
       uacs_code
-      trip
       infrastructure_target_2016
       infrastructure_target_2017
       infrastructure_target_2018
@@ -1122,12 +1121,6 @@ export const UPDATE_PREXC_ACTIVITY = gql`
         id
         name
       }
-      banner_program_id
-      banner_program {
-        id
-        name
-      }
-      trip
       project_id
       uacs_code
       infrastructure_target_2016
@@ -1489,6 +1482,17 @@ export const CREATE_REGION_FINANCIAL = gql`
     $investment_target_2024: Float
     $investment_target_2025: Float
     $investment_target_total: Float
+    $infrastructure_target_2016: Float
+    $infrastructure_target_2017: Float
+    $infrastructure_target_2018: Float
+    $infrastructure_target_2019: Float
+    $infrastructure_target_2020: Float
+    $infrastructure_target_2021: Float
+    $infrastructure_target_2022: Float
+    $infrastructure_target_2023: Float
+    $infrastructure_target_2024: Float
+    $infrastructure_target_2025: Float
+    $infrastructure_target_total: Float
   ) {
     createRegionFinancial(
       input: {
@@ -1505,6 +1509,17 @@ export const CREATE_REGION_FINANCIAL = gql`
         investment_target_2024: $investment_target_2024
         investment_target_2025: $investment_target_2025
         investment_target_total: $investment_target_total
+        infrastructure_target_2016: $infrastructure_target_2016
+        infrastructure_target_2017: $infrastructure_target_2017
+        infrastructure_target_2018: $infrastructure_target_2018
+        infrastructure_target_2019: $infrastructure_target_2019
+        infrastructure_target_2020: $infrastructure_target_2020
+        infrastructure_target_2021: $infrastructure_target_2021
+        infrastructure_target_2022: $infrastructure_target_2022
+        infrastructure_target_2023: $infrastructure_target_2023
+        infrastructure_target_2024: $infrastructure_target_2024
+        infrastructure_target_2025: $infrastructure_target_2025
+        infrastructure_target_total: $infrastructure_target_total
       }
     ) {
       id
@@ -1525,6 +1540,17 @@ export const CREATE_REGION_FINANCIAL = gql`
       investment_target_2024
       investment_target_2025
       investment_target_total
+      infrastructure_target_2016
+      infrastructure_target_2017
+      infrastructure_target_2018
+      infrastructure_target_2019
+      infrastructure_target_2020
+      infrastructure_target_2021
+      infrastructure_target_2022
+      infrastructure_target_2023
+      infrastructure_target_2024
+      infrastructure_target_2025
+      infrastructure_target_total
     }
   }
 `;
@@ -1545,8 +1571,19 @@ export const UPDATE_REGION_FINANCIAL = gql`
     $investment_target_2024: Float
     $investment_target_2025: Float
     $investment_target_total: Float
+    $infrastructure_target_2016: Float
+    $infrastructure_target_2017: Float
+    $infrastructure_target_2018: Float
+    $infrastructure_target_2019: Float
+    $infrastructure_target_2020: Float
+    $infrastructure_target_2021: Float
+    $infrastructure_target_2022: Float
+    $infrastructure_target_2023: Float
+    $infrastructure_target_2024: Float
+    $infrastructure_target_2025: Float
+    $infrastructure_target_total: Float
   ) {
-    updateRegionFinancial(
+    createRegionFinancial(
       input: {
         id: $id
         project_id: $project_id
@@ -1562,6 +1599,17 @@ export const UPDATE_REGION_FINANCIAL = gql`
         investment_target_2024: $investment_target_2024
         investment_target_2025: $investment_target_2025
         investment_target_total: $investment_target_total
+        infrastructure_target_2016: $infrastructure_target_2016
+        infrastructure_target_2017: $infrastructure_target_2017
+        infrastructure_target_2018: $infrastructure_target_2018
+        infrastructure_target_2019: $infrastructure_target_2019
+        infrastructure_target_2020: $infrastructure_target_2020
+        infrastructure_target_2021: $infrastructure_target_2021
+        infrastructure_target_2022: $infrastructure_target_2022
+        infrastructure_target_2023: $infrastructure_target_2023
+        infrastructure_target_2024: $infrastructure_target_2024
+        infrastructure_target_2025: $infrastructure_target_2025
+        infrastructure_target_total: $infrastructure_target_total
       }
     ) {
       id
@@ -1582,6 +1630,17 @@ export const UPDATE_REGION_FINANCIAL = gql`
       investment_target_2024
       investment_target_2025
       investment_target_total
+      infrastructure_target_2016
+      infrastructure_target_2017
+      infrastructure_target_2018
+      infrastructure_target_2019
+      infrastructure_target_2020
+      infrastructure_target_2021
+      infrastructure_target_2022
+      infrastructure_target_2023
+      infrastructure_target_2024
+      infrastructure_target_2025
+      infrastructure_target_total
     }
   }
 `;
@@ -1635,7 +1694,6 @@ export const CREATE_FUNDING_SOURCE_INFRASTRUCTURE = gql`
         id
         name
       }
-			project_id
       infrastructure_target_2016
       infrastructure_target_2017
       infrastructure_target_2018
@@ -1668,7 +1726,7 @@ export const UPDATE_FUNDING_SOURCE_INFRASTRUCTURE = gql`
     $infrastructure_target_2025: Float
     $infrastructure_target_total: Float
   ) {
-    updateFundingSourceInfrastructure(
+    createFundingSourceInfrastructure(
       input: {
         id: $id
         project_id: $project_id
@@ -1693,7 +1751,6 @@ export const UPDATE_FUNDING_SOURCE_INFRASTRUCTURE = gql`
         id
         name
       }
-	    project_id
       infrastructure_target_2016
       infrastructure_target_2017
       infrastructure_target_2018
@@ -1788,51 +1845,3 @@ export const REVIEW_PREXC_ACTIVITY = gql`
   }
   ${PREXC_ACTIVITY_FRAGMENT}
 `;
-
-export const EXPORT_EXCEL = gql`
-  mutation ($operating_unit_id: ID) {
-    exportExcel (operating_unit_id: $operating_unit_id) {
-      link
-    }
-  }
-`
-
-export const UPDATE_OPERATING_UNIT_PREXC_ACTIVITIES = gql`
-  mutation updateOperatingUnit(
-    $id: ID!
-    $prexc_activities: UpdatePrexcActivitiesHasMany
-  ) {
-    updateOperatingUnit(input: {
-      id: $id
-      prexc_activities: $prexc_activities
-    }) {
-      id
-      prexc_activities {
-        id
-        name
-        operating_unit_id
-        operating_unit {
-          id
-          name
-        }
-        prexc_program {
-          id
-          name
-        }
-        prexc_subprogram {
-          id
-          name
-        }
-        project_id
-        uacs_code
-        infrastructure_target_total
-        investment_target_total
-        gaa_total
-        nep_total
-        disbursement_total
-        finalized
-        reviewed
-      }
-    }
-  }
-`
