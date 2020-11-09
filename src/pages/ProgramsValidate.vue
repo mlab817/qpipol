@@ -37,7 +37,7 @@
     </q-dialog>
 
     <q-table
-      :title="`Programs: ${operating_unit.acronym}`"
+      :title="`Programs: ${operating_unit ? operating_unit.acronym : ''}`"
       :data="prexc_activities"
       :columns="columns"
       :loading="$apollo.loading"
@@ -48,6 +48,7 @@
       :selected.sync="selected"
       selection="multiple"
       style="margin-bottom: 70px;"
+      v-if="!$apollo.loading"
     >
       <template v-slot:top-right>
         <q-input borderless v-model="filter" placeholder="Search">
@@ -55,15 +56,6 @@
             <q-icon name="search" />
           </template>
         </q-input>
-        <q-btn
-          flat
-          round
-          icon="check"
-          @click="reviewPrexcActivities"
-          :disabled="!selected.length"
-        >
-          <q-tooltip>Finalize multiple activities at once</q-tooltip>
-        </q-btn>
         <q-btn flat round icon="refresh" @click="refetch"></q-btn>
         <q-btn flat round icon="archive" @click="download"></q-btn>
       </template>
@@ -174,6 +166,7 @@ export default {
                 id
                 name
               }
+              name
               project_id
               infrastructure_target_total
               investment_target_total
@@ -229,6 +222,7 @@ export default {
       prexc_subprograms: [],
       prexc_activities: [],
       addEditPrexcActivityDialog: false,
+      operating_unit: {},
       columns: [
         // {
         //   name: 'id',
