@@ -12,7 +12,7 @@
     <menu-item
       label="#AskHelp"
       icon="help"
-      @click="openURL('https://bit.ly/IPMSSlack')"
+      @click="openURL('https://ipmsglobal.slack.com')"
       type="a"
       target="_blank"
     />
