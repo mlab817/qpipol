@@ -5,13 +5,15 @@
         <q-btn flat round icon="refresh" @click="refetch" />
       </page-title>
     </template>
+
     <q-table
-      v-if="getCurrentUser.reviews.length"
+      v-if="getCurrentUser.reviews && getCurrentUser.reviews.length"
       grid
       :data="getCurrentUser.reviews"
       :filter="filter"
       :pagination="pagination"
       hide-bottom
+      :loading="$apollo.loading"
     >
       <template v-slot:top-right>
         <q-input v-model="filter" placeholder="Search" borderless>
@@ -42,6 +44,7 @@
         </div>
       </template>
     </q-table>
+    
     <q-banner class="bg-grey-3" v-else>
       <template v-slot:avatar>
         <q-icon name="warning" color="negative" />
