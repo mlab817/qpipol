@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "da-ipms2020"
+    "default": "da-ipms2020",
+    "staging": "staging-ipms"
   }
 }
