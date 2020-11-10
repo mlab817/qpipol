@@ -1,7 +1,7 @@
 <template>
   <page-container>
     <template v-slot:title>
-      <page-title title="Banner Programs: For Consolidation" />
+      <page-title icon="pageview" title="Banner Programs: For Consolidation" />
     </template>
 
     <q-table

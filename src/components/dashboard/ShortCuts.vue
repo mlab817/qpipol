@@ -87,6 +87,12 @@ export default {
           hasAccess: ['encoder']
         },
         {
+          label: 'Consolidators',
+          icon: 'pageview',
+          url: '/consolidates',
+          hasAccess: ['encoder']
+        },
+        {
           label: 'Review Projects',
           icon: 'list',
           url: '/projects',
