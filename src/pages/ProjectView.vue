@@ -75,7 +75,7 @@ import {
 } from '@/ui'
 import ViewPipol from '@/components/projects/ViewPipol';
 import { FETCH_PROJECT_QUERY } from '@/graphql/queries';
-import { showError } from '@/utils';
+import { showError, generateDocx } from '@/utils';
 import { openURL, exportFile } from 'quasar'
 import UploadSigned from '../components/projects/shared/UploadSigned';
 import RefreshButton from '../ui/buttons/RefreshButton'
@@ -214,30 +214,7 @@ export default {
 		},
 
 		downloadDocx() {
-			  this.$q.loading.show({
-			    message: 'This may take a while as the file is being generated.'
-			  });
-
-        const id = this.project.id
-
-        if (id) {
-          projectService
-            .exportProjectDocx({ id: id })
-            .then(res => {
-              if (res.exportProjectDocx.link) {
-                openURL(res.exportProjectDocx.link, null, { target: '_blank' })
-              } else {
-                this.$q.notify({
-                  type: 'negative',
-                  message: 'The server did not return a file. Please contact IPD if this error continues.'
-                })
-              }
-            })
-            .catch(err => console.log(err.message))
-            .finally(() => this.$q.loading.hide())
-        } else {
-          console.log('no id')
-        }
+			generateDocx(this.project)
 		}
   }
 };
