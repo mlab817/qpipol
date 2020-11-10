@@ -1844,3 +1844,12 @@ export const EXPORT_PROJECT_DOCX_MUTATION = gql`
     }
   }
 `
+
+// new in v1.1.0
+export const EXPORT_FOR_CONSOLIDATION = gql`
+  mutation {
+    exportForConsolidation {
+      link
+    }
+  }
+`

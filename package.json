@@ -37,6 +37,7 @@
     "axios": "^0.18.1",
     "core-js": "^3.6.5",
     "cross-env": "^7.0.2",
+    "docx": "^5.4.0",
     "firebase": "^8.0.0",
     "graphql": "^15.4.0",
     "graphql-tag": "^2.11.0",

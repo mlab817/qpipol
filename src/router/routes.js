@@ -177,6 +177,19 @@ const routes = [
     ]
   },
   {
+    path: '/consolidates',
+    component: () => import('@/layouts/AppLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('../pages/ProgramsConsolidate.vue'),
+        meta: {
+          requiresAuth: true
+        }
+      }
+    ]
+  },
+  {
     path: '/error',
     name: 'error',
     component: () =>

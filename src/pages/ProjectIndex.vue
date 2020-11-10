@@ -61,12 +61,6 @@
         </q-td>
       </template>
 
-      <template v-slot:body-cell-last_updated="props">
-        <q-td :props="props">
-          {{ props.row.updated_at | formatDate }}
-        </q-td>
-      </template>
-
       <template v-slot:body-cell-processing_status="props">
         <q-td :props="props">
           {{
@@ -289,7 +283,7 @@ export default {
           name: 'cost',
           label: 'Total Project Cost',
           field: row => row.investment_target_total,
-					format: (val) => val.toLocaleString()
+					format: (val) => val && val.toLocaleString()
         },
         {
           name: 'created_by',
@@ -299,9 +293,11 @@ export default {
         {
           name: 'last_updated',
           label: 'Last Updated',
-          field: row => row.updatedAt,
+          field: row => Date.parse(row.updated_at),
           sortable: true,
-          align: 'center'
+          format: (val) => date.formatDate(val, 'MMM D, YYYY hh:mm A'),
+          align: 'center',
+          sort: (a, b) => a - b
         },
         {
           name: 'submission_status',

@@ -8,7 +8,8 @@ import {
   FINALIZE_PREXC_ACTIVITY,
   FINALIZE_PREXC_ACTIVITIES,
   EXPORT_EXCEL,
-  UPDATE_OPERATING_UNIT_PREXC_ACTIVITIES
+  UPDATE_OPERATING_UNIT_PREXC_ACTIVITIES,
+  EXPORT_FOR_CONSOLIDATION
 } from 'src/graphql';
 
 export const programService = {
@@ -141,6 +142,15 @@ export const programService = {
             query: PREXC_ACTIVITIES
           }
         ]
+      })
+      .then(handleResponse)
+      .catch(handleError)
+  },
+  exportForConsolidation() {
+    return client
+      .mutate({
+        mutation: EXPORT_FOR_CONSOLIDATION,
+        variables: null
       })
       .then(handleResponse)
       .catch(handleError)
