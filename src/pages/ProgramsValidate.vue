@@ -116,12 +116,12 @@
           <q-td></q-td>
           <q-td></q-td>
           <q-td class="text-right">{{
-            totalRow.infrastructure_target_total
+            totalRow.infrastructure_target_total | money
           }}</q-td>
-          <q-td class="text-right">{{ totalRow.investment_target_total }}</q-td>
-          <q-td class="text-right">{{ totalRow.gaa_total }}</q-td>
-          <q-td class="text-right">{{ totalRow.nep_total }}</q-td>
-          <q-td class="text-right">{{ totalRow.disbursement_total }}</q-td>
+          <q-td class="text-right">{{ totalRow.investment_target_total | money }}</q-td>
+          <q-td class="text-right">{{ totalRow.nep_total | money }}</q-td>
+          <q-td class="text-right">{{ totalRow.gaa_total | money }}</q-td>
+          <q-td class="text-right">{{ totalRow.disbursement_total | money }}</q-td>
           <q-td></q-td>
         </q-tr>
       </template>
@@ -267,16 +267,16 @@ export default {
           sortable: true
         },
         {
-          name: 'gaa_total',
-          label: 'General Appropriations Act (PhP)',
-          field: row => row.gaa_total,
+          name: 'nep_total',
+          label: 'National Expenditure Program (PhP)',
+          field: row => row.nep_total,
           align: 'right',
           sortable: true
         },
         {
-          name: 'nep_total',
-          label: 'National Expenditure Program (PhP)',
-          field: row => row.nep_total,
+          name: 'gaa_total',
+          label: 'General Appropriations Act (PhP)',
+          field: row => row.gaa_total,
           align: 'right',
           sortable: true
         },
@@ -351,6 +351,14 @@ export default {
     reviewPrexcActivities() {
       console.log('review activities');
     }
-  }
+  },
+  filters: {
+		money(val) {
+			if (val) {
+				return val.toLocaleString('en-US', {maximumFractionDigits:2})
+			}
+			return 0.00
+		}
+	}
 };
 </script>

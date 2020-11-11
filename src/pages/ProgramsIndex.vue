@@ -147,8 +147,8 @@
             totalRow.infrastructure_target_total | money
           }}</q-td>
           <q-td class="text-right">{{ totalRow.investment_target_total  | money }}</q-td>
-          <q-td class="text-right">{{ totalRow.gaa_total  | money }}</q-td>
           <q-td class="text-right">{{ totalRow.nep_total  | money }}</q-td>
+          <q-td class="text-right">{{ totalRow.gaa_total  | money }}</q-td>
           <q-td class="text-right">{{ totalRow.disbursement_total  | money }}</q-td>
           <q-td></q-td>
         </q-tr>

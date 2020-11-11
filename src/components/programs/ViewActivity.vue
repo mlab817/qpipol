@@ -96,80 +96,80 @@
             <td>2016 &amp; Prior</td>
 						<td-money :value="investmentToSubmit.infrastructure_target_2016" />
 						<td-money :value="investmentToSubmit.investment_target_2016" />
-						<td-money :value="investmentToSubmit.gaa_2016" />
 						<td-money :value="investmentToSubmit.nep_2016" />
-						<td-money :value="investmentToSubmit.disbursement_2016" />
+            <td-money :value="investmentToSubmit.gaa_2016" />
+            <td-money :value="investmentToSubmit.disbursement_2016" />
           </tr>
           <tr>
             <td>2017</td>
 						<td-money :value="investmentToSubmit.infrastructure_target_2017" />
 						<td-money :value="investmentToSubmit.investment_target_2017" />
-						<td-money :value="investmentToSubmit.gaa_2017" />
 						<td-money :value="investmentToSubmit.nep_2017" />
-						<td-money :value="investmentToSubmit.disbursement_2017" />
+            <td-money :value="investmentToSubmit.gaa_2017" />
+            <td-money :value="investmentToSubmit.disbursement_2017" />
           </tr>
           <tr>
             <td>2018</td>
 						<td-money :value="investmentToSubmit.infrastructure_target_2018" />
 						<td-money :value="investmentToSubmit.investment_target_2018" />
-						<td-money :value="investmentToSubmit.gaa_2018" />
 						<td-money :value="investmentToSubmit.nep_2018" />
-						<td-money :value="investmentToSubmit.disbursement_2018" />
+            <td-money :value="investmentToSubmit.gaa_2018" />
+            <td-money :value="investmentToSubmit.disbursement_2018" />
           </tr>
           <tr>
             <td>2019</td>
 						<td-money :value="investmentToSubmit.infrastructure_target_2019" />
 						<td-money :value="investmentToSubmit.investment_target_2019" />
-						<td-money :value="investmentToSubmit.gaa_2019" />
 						<td-money :value="investmentToSubmit.nep_2019" />
+            <td-money :value="investmentToSubmit.gaa_2019" />
 						<td-money :value="investmentToSubmit.disbursement_2019" />
           </tr>
           <tr>
             <td>2020</td>
 						<td-money :value="investmentToSubmit.infrastructure_target_2020" />
 						<td-money :value="investmentToSubmit.investment_target_2020" />
-						<td-money :value="investmentToSubmit.gaa_2020" />
 						<td-money :value="investmentToSubmit.nep_2020" />
+            <td-money :value="investmentToSubmit.gaa_2020" />
 						<td-money :value="investmentToSubmit.disbursement_2020" />
           </tr>
           <tr>
             <td>2021</td>
 						<td-money :value="investmentToSubmit.infrastructure_target_2021" />
 						<td-money :value="investmentToSubmit.investment_target_2021" />
-						<td-money :value="investmentToSubmit.gaa_2021" />
 						<td-money :value="investmentToSubmit.nep_2021" />
+            <td-money :value="investmentToSubmit.gaa_2021" />
 						<td-money :value="investmentToSubmit.disbursement_2021" />
           </tr>
           <tr>
             <td>2022</td>
 						<td-money :value="investmentToSubmit.infrastructure_target_2022" />
 						<td-money :value="investmentToSubmit.investment_target_2022" />
-						<td-money :value="investmentToSubmit.gaa_2022" />
 						<td-money :value="investmentToSubmit.nep_2022" />
+            <td-money :value="investmentToSubmit.gaa_2022" />
 						<td-money :value="investmentToSubmit.disbursement_2022" />
           </tr>
           <tr>
             <td>2023</td>
 						<td-money :value="investmentToSubmit.infrastructure_target_2023" />
 						<td-money :value="investmentToSubmit.investment_target_2023" />
-						<td-money :value="investmentToSubmit.gaa_2023" />
 						<td-money :value="investmentToSubmit.nep_2023" />
+            <td-money :value="investmentToSubmit.gaa_2023" />
 						<td-money :value="investmentToSubmit.disbursement_2023" />
           </tr>
           <tr>
             <td>2024</td>
 						<td-money :value="investmentToSubmit.infrastructure_target_2024" />
 						<td-money :value="investmentToSubmit.investment_target_2024" />
-						<td-money :value="investmentToSubmit.gaa_2024" />
 						<td-money :value="investmentToSubmit.nep_2024" />
+            <td-money :value="investmentToSubmit.gaa_2024" />
 						<td-money :value="investmentToSubmit.disbursement_2024" />
           </tr>
           <tr>
             <td>2025 &amp; Beyond</td>
 						<td-money :value="investmentToSubmit.infrastructure_target_2025" />
 						<td-money :value="investmentToSubmit.investment_target_2025" />
-						<td-money :value="investmentToSubmit.gaa_2025" />
 						<td-money :value="investmentToSubmit.nep_2025" />
+            <td-money :value="investmentToSubmit.gaa_2025" />
 						<td-money :value="investmentToSubmit.disbursement_2025" />
           </tr>
         </tbody>
@@ -178,8 +178,8 @@
 						<td-money value="Total" />
 						<td-money :value="infrastructure_target_total" />
 						<td-money :value="investment_target_total" />
-						<td-money :value="gaa_total" />
 						<td-money :value="nep_total" />
+            <td-money :value="gaa_total" />
 						<td-money :value="disbursement_total" />
           </tr>
         </tfoot>
