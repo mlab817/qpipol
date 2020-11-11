@@ -90,12 +90,12 @@
             </td>
             <td>
               <money-input
-                v-model="investmentToSubmit.gaa_2016"
+                v-model="investmentToSubmit.nep_2016"
               ></money-input>
             </td>
             <td>
               <money-input
-                v-model="investmentToSubmit.nep_2016"
+                v-model="investmentToSubmit.gaa_2016"
               ></money-input>
             </td>
             <td>
@@ -118,12 +118,12 @@
             </td>
             <td>
               <money-input
-                v-model="investmentToSubmit.gaa_2017"
+                v-model="investmentToSubmit.nep_2017"
               ></money-input>
             </td>
             <td>
               <money-input
-                v-model="investmentToSubmit.nep_2017"
+                v-model="investmentToSubmit.gaa_2017"
               ></money-input>
             </td>
             <td>
@@ -146,12 +146,12 @@
             </td>
             <td>
               <money-input
-                v-model="investmentToSubmit.gaa_2018"
+                v-model="investmentToSubmit.nep_2018"
               ></money-input>
             </td>
             <td>
               <money-input
-                v-model="investmentToSubmit.nep_2018"
+                v-model="investmentToSubmit.gaa_2018"
               ></money-input>
             </td>
             <td>
@@ -174,12 +174,12 @@
             </td>
             <td>
               <money-input
-                v-model="investmentToSubmit.gaa_2019"
+                v-model="investmentToSubmit.nep_2019"
               ></money-input>
             </td>
             <td>
               <money-input
-                v-model="investmentToSubmit.nep_2019"
+                v-model="investmentToSubmit.gaa_2019"
               ></money-input>
             </td>
             <td>
@@ -202,13 +202,13 @@
             </td>
             <td>
               <money-input
-                v-model="investmentToSubmit.gaa_2020"
-              />
+                v-model="investmentToSubmit.nep_2020"
+              ></money-input>
             </td>
             <td>
               <money-input
-                v-model="investmentToSubmit.nep_2020"
-              ></money-input>
+                v-model="investmentToSubmit.gaa_2020"
+              />
             </td>
             <td>
               <money-input
@@ -230,12 +230,12 @@
             </td>
             <td>
               <money-input
-                v-model="investmentToSubmit.gaa_2021"
+                v-model="investmentToSubmit.nep_2021"
               />
             </td>
             <td>
               <money-input
-                v-model="investmentToSubmit.nep_2021"
+                v-model="investmentToSubmit.gaa_2021"
               />
             </td>
             <td>
@@ -258,12 +258,12 @@
             </td>
             <td>
               <money-input
-                v-model="investmentToSubmit.gaa_2022"
+                v-model="investmentToSubmit.nep_2022"
               />
             </td>
             <td>
               <money-input
-                v-model="investmentToSubmit.nep_2022"
+                v-model="investmentToSubmit.gaa_2022"
               />
             </td>
             <td>
@@ -288,12 +288,12 @@
             </td>
             <td>
               <money-input
-                v-model="investmentToSubmit.gaa_2023"
+                v-model="investmentToSubmit.nep_2023"
               />
             </td>
             <td>
               <money-input
-                v-model="investmentToSubmit.nep_2023"
+                v-model="investmentToSubmit.gaa_2023"
               />
             </td>
             <td>
@@ -316,12 +316,12 @@
             </td>
             <td>
               <money-input
-                v-model="investmentToSubmit.gaa_2024"
+                v-model="investmentToSubmit.nep_2024"
               ></money-input>
             </td>
             <td>
               <money-input
-                v-model="investmentToSubmit.nep_2024"
+                v-model="investmentToSubmit.gaa_2024"
               ></money-input>
             </td>
             <td>
@@ -344,12 +344,12 @@
             </td>
             <td>
               <money-input
-                v-model="investmentToSubmit.gaa_2025"
+                v-model="investmentToSubmit.nep_2025"
               ></money-input>
             </td>
             <td>
               <money-input
-                v-model="investmentToSubmit.nep_2025"
+                v-model="investmentToSubmit.gaa_2025"
               ></money-input>
             </td>
             <td>
@@ -366,8 +366,8 @@
               {{ infrastructure_target_total | money }}
             </td>
             <td class="text-right">{{ investment_target_total | money }}</td>
-            <td class="text-right">{{ gaa_total | money }}</td>
             <td class="text-right">{{ nep_total | money }}</td>
+            <td class="text-right">{{ gaa_total | money }}</td>
             <td class="text-right">{{ disbursement_total | money }}</td>
           </tr>
         </tfoot>
@@ -624,16 +624,6 @@ export default {
         investment_target_2023: 0,
         investment_target_2024: 0,
         investment_target_2025: 0,
-        gaa_2016: 0,
-        gaa_2017: 0,
-        gaa_2018: 0,
-        gaa_2019: 0,
-        gaa_2020: 0,
-        gaa_2021: 0,
-        gaa_2022: 0,
-        gaa_2023: 0,
-        gaa_2024: 0,
-        gaa_2025: 0,
         nep_2016: 0,
         nep_2017: 0,
         nep_2018: 0,
@@ -644,6 +634,16 @@ export default {
         nep_2023: 0,
         nep_2024: 0,
         nep_2025: 0,
+        gaa_2016: 0,
+        gaa_2017: 0,
+        gaa_2018: 0,
+        gaa_2019: 0,
+        gaa_2020: 0,
+        gaa_2021: 0,
+        gaa_2022: 0,
+        gaa_2023: 0,
+        gaa_2024: 0,
+        gaa_2025: 0,
         disbursement_2016: 0,
         disbursement_2017: 0,
         disbursement_2018: 0,
