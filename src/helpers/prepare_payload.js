@@ -1,55 +1,4 @@
 export const preparePayload = project => {
-  const disbursement_total =
-    parseFloat(project.disbursement_2016) ||
-    0 + parseFloat(project.disbursement_2017) ||
-    0 + parseFloat(project.disbursement_2018) ||
-    0 + parseFloat(project.disbursement_2019) ||
-    0 + parseFloat(project.disbursement_2020) ||
-    0;
-
-  const gaa_total =
-    parseFloat(project.gaa_2016) ||
-    0 + parseFloat(project.gaa_2017) ||
-    0 + parseFloat(project.gaa_2018) ||
-    0 + parseFloat(project.gaa_2019) ||
-    0 + parseFloat(project.gaa_2020) ||
-    0;
-
-  const nep_total =
-    parseFloat(project.nep_2016) ||
-    0 + parseFloat(project.nep_2017) ||
-    0 + parseFloat(project.nep_2018) ||
-    0 + parseFloat(project.nep_2019) ||
-    0 + parseFloat(project.nep_2020) ||
-    0 + parseFloat(project.nep_2021) ||
-    0;
-
-  const investment_target_total =
-    parseFloat(project.investment_target_2016) ||
-    0 + parseFloat(project.investment_target_2017) ||
-    0 + parseFloat(project.investment_target_2018) ||
-    0 + parseFloat(project.investment_target_2019) ||
-    0 + parseFloat(project.investment_target_2020) ||
-    0 + parseFloat(project.investment_target_2021) ||
-    0 + parseFloat(project.investment_target_2022) ||
-    0 + parseFloat(project.investment_target_2023) ||
-    0 + parseFloat(project.investment_target_2024) ||
-    0 + parseFloat(project.investment_target_2025) ||
-    0;
-
-  const infrastructure_target_total =
-    parseFloat(project.infrastructure_target_2016) ||
-    0 + parseFloat(project.infrastructure_target_2017) ||
-    0 + parseFloat(project.infrastructure_target_2018) ||
-    0 + parseFloat(project.infrastructure_target_2019) ||
-    0 + parseFloat(project.infrastructure_target_2020) ||
-    0 + parseFloat(project.infrastructure_target_2021) ||
-    0 + parseFloat(project.infrastructure_target_2022) ||
-    0 + parseFloat(project.infrastructure_target_2023) ||
-    0 + parseFloat(project.infrastructure_target_2024) ||
-    0 + parseFloat(project.infrastructure_target_2025) ||
-    0;
-
   const payload = {
     id: project.id,
     pip: project.pip,
@@ -125,7 +74,7 @@ export const preparePayload = project => {
     investment_target_2023: project.investment_target_2023,
     investment_target_2024: project.investment_target_2024,
     investment_target_2025: project.investment_target_2025,
-    investment_target_total: investment_target_total,
+    investment_target_total: project.investment_target_total,
     infrastructure_target_2016: project.infrastructure_target_2016,
     infrastructure_target_2017: project.infrastructure_target_2017,
     infrastructure_target_2018: project.infrastructure_target_2018,
@@ -136,7 +85,7 @@ export const preparePayload = project => {
     infrastructure_target_2023: project.infrastructure_target_2023,
     infrastructure_target_2024: project.infrastructure_target_2024,
     infrastructure_target_2025: project.infrastructure_target_2025,
-    infrastructure_target_total: infrastructure_target_total,
+    infrastructure_target_total: project.infrastructure_target_total,
     nep_2016: project.nep_2016,
     nep_2017: project.nep_2017,
     nep_2018: project.nep_2018,
@@ -147,7 +96,7 @@ export const preparePayload = project => {
     // nep_2023: project.nep_2023,
     // nep_2024: project.nep_2024,
     // nep_2025: project.nep_2025,
-    nep_total: nep_total,
+    nep_total: project.nep_total,
     gaa_2016: project.gaa_2016,
     gaa_2017: project.gaa_2017,
     gaa_2018: project.gaa_2018,
@@ -158,7 +107,7 @@ export const preparePayload = project => {
     // gaa_2023: project.gaa_2023,
     // gaa_2024: project.gaa_2024,
     // gaa_2025: project.gaa_2025,
-    gaa_total: gaa_total,
+    gaa_total: project.gaa_total,
     disbursement_2016: project.disbursement_2016,
     disbursement_2017: project.disbursement_2017,
     disbursement_2018: project.disbursement_2018,
@@ -169,7 +118,7 @@ export const preparePayload = project => {
     // disbursement_2023: project.disbursement_2023,
     // disbursement_2024: project.disbursement_2024,
     // disbursement_2025: project.disbursement_2025,
-    disbursement_total: disbursement_total,
+    disbursement_total: project.disbursement_total,
     bases: {
       sync: project.selected_bases
     },

@@ -1,6 +1,7 @@
 <template>
   <div>
 		<pre>
+			{{project}}
 			{{investTotal}}
 			{{infraTotal}}
 		</pre>
@@ -1690,7 +1691,11 @@ export default {
     updateProject() {
       const project = this.project,
         investTotal = this.investTotal,
-        infraTotal = this.infraTotal;
+        infraTotal = this.infraTotal,
+      	nep_total = this.nep_total,
+				gaa_total = this.gaa_total,
+				disbursement_total = this.disbursement_total
+
       project.investment_target_2016 = investTotal.investment_target_2016;
       project.investment_target_2017 = investTotal.investment_target_2017;
       project.investment_target_2018 = investTotal.investment_target_2018;
@@ -1724,6 +1729,9 @@ export default {
         infraTotal.infrastructure_target_2025;
       project.infrastructure_target_total =
         infraTotal.infrastructure_target_total;
+      project.disbursement_total = disbursement_total
+	    project.gaa_total = gaa_total
+	    project.nep_total = nep_total
       // confirm submission
       this.$q
         .dialog({
