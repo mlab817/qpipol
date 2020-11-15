@@ -1,5 +1,10 @@
 <template>
   <div>
+		<pre>
+			{{project}}
+			{{investTotal}}
+			{{infraTotal}}
+		</pre>
     <!-- hide if project is finalized or endorsed and if the user is not a reviewer -->
     <q-banner
       class="bg-green-5 text-white col-xl-6 col-lg-6 col-md-8 col-sm-9 col-xs-12 q-mb-md"
@@ -1328,7 +1333,7 @@ export default {
     infraTotal() {
       const fsf = this.project.funding_source_infrastructures;
 
-      let investTotal = {
+      let infraTotal = {
         infrastructure_target_2016: 0,
         infrastructure_target_2017: 0,
         infrastructure_target_2018: 0,
@@ -1343,19 +1348,20 @@ export default {
       };
 
       if (fsf.length) {
-        investTotal = fsf.reduce((acc, val) => {
-          console.log(acc);
-          acc.infrastructure_target_2016 = val.infrastructure_target_2016;
-          acc.infrastructure_target_2017 = val.infrastructure_target_2017;
-          acc.infrastructure_target_2018 = val.infrastructure_target_2018;
-          acc.infrastructure_target_2019 = val.infrastructure_target_2019;
-          acc.infrastructure_target_2020 = val.infrastructure_target_2020;
-          acc.infrastructure_target_2021 = val.infrastructure_target_2021;
-          acc.infrastructure_target_2022 = val.infrastructure_target_2022;
-          acc.infrastructure_target_2023 = val.infrastructure_target_2023;
-          acc.infrastructure_target_2024 = val.infrastructure_target_2024;
-          acc.infrastructure_target_2025 = val.infrastructure_target_2025;
-          acc.infrastructure_target_total =
+        const totalInfra = fsf.reduce((acc, val) => {
+          console.log('infraTotal ', acc);
+	        console.log('infraTotal ', val);
+          acc.infrastructure_target_2016 += val.infrastructure_target_2016;
+          acc.infrastructure_target_2017 += val.infrastructure_target_2017;
+          acc.infrastructure_target_2018 += val.infrastructure_target_2018;
+          acc.infrastructure_target_2019 += val.infrastructure_target_2019;
+          acc.infrastructure_target_2020 += val.infrastructure_target_2020;
+          acc.infrastructure_target_2021 += val.infrastructure_target_2021;
+          acc.infrastructure_target_2022 += val.infrastructure_target_2022;
+          acc.infrastructure_target_2023 += val.infrastructure_target_2023;
+          acc.infrastructure_target_2024 += val.infrastructure_target_2024;
+          acc.infrastructure_target_2025 += val.infrastructure_target_2025;
+          acc.infrastructure_target_total +=
             val.infrastructure_target_2016 +
             val.infrastructure_target_2017 +
             val.infrastructure_target_2018 +
@@ -1367,42 +1373,44 @@ export default {
             val.infrastructure_target_2024 +
             val.infrastructure_target_2025;
           return acc;
-        }, investTotal);
+        }, infraTotal);
+
+	      return totalInfra;
       }
 
-      return investTotal;
+			return infraTotal
     },
     investTotal() {
       const fsf = this.project.funding_source_financials;
 
-      let investTotal = {
-        investment_target_2016: 0,
-        investment_target_2017: 0,
-        investment_target_2018: 0,
-        investment_target_2019: 0,
-        investment_target_2020: 0,
-        investment_target_2021: 0,
-        investment_target_2022: 0,
-        investment_target_2023: 0,
-        investment_target_2024: 0,
-        investment_target_2025: 0,
-        investment_target_total: 0
-      };
+      const investTotal = {
+	      investment_target_2016: 0,
+	      investment_target_2017: 0,
+	      investment_target_2018: 0,
+	      investment_target_2019: 0,
+	      investment_target_2020: 0,
+	      investment_target_2021: 0,
+	      investment_target_2022: 0,
+	      investment_target_2023: 0,
+	      investment_target_2024: 0,
+	      investment_target_2025: 0,
+	      investment_target_total: 0
+      }
 
       if (fsf.length) {
-        investTotal = fsf.reduce((acc, val) => {
-          console.log(acc);
-          acc.investment_target_2016 = val.investment_target_2016;
-          acc.investment_target_2017 = val.investment_target_2017;
-          acc.investment_target_2018 = val.investment_target_2018;
-          acc.investment_target_2019 = val.investment_target_2019;
-          acc.investment_target_2020 = val.investment_target_2020;
-          acc.investment_target_2021 = val.investment_target_2021;
-          acc.investment_target_2022 = val.investment_target_2022;
-          acc.investment_target_2023 = val.investment_target_2023;
-          acc.investment_target_2024 = val.investment_target_2024;
-          acc.investment_target_2025 = val.investment_target_2025;
-          acc.investment_target_total =
+        const totalInvest = fsf.reduce((acc, val) => {
+	        console.log('current acc ', acc);
+          acc.investment_target_2016 += val.investment_target_2016;
+          acc.investment_target_2017 += val.investment_target_2017;
+          acc.investment_target_2018 += val.investment_target_2018;
+          acc.investment_target_2019 += val.investment_target_2019;
+          acc.investment_target_2020 += val.investment_target_2020;
+          acc.investment_target_2021 += val.investment_target_2021;
+          acc.investment_target_2022 += val.investment_target_2022;
+          acc.investment_target_2023 += val.investment_target_2023;
+          acc.investment_target_2024 += val.investment_target_2024;
+          acc.investment_target_2025 += val.investment_target_2025;
+          acc.investment_target_total +=
             val.investment_target_2016 +
             val.investment_target_2017 +
             val.investment_target_2018 +
@@ -1415,6 +1423,8 @@ export default {
             val.investment_target_2025;
           return acc;
         }, investTotal);
+
+        return totalInvest
       }
 
       return investTotal;
@@ -1681,7 +1691,11 @@ export default {
     updateProject() {
       const project = this.project,
         investTotal = this.investTotal,
-        infraTotal = this.infraTotal;
+        infraTotal = this.infraTotal,
+      	nep_total = this.nep_total,
+				gaa_total = this.gaa_total,
+				disbursement_total = this.disbursement_total
+
       project.investment_target_2016 = investTotal.investment_target_2016;
       project.investment_target_2017 = investTotal.investment_target_2017;
       project.investment_target_2018 = investTotal.investment_target_2018;
@@ -1715,6 +1729,9 @@ export default {
         infraTotal.infrastructure_target_2025;
       project.infrastructure_target_total =
         infraTotal.infrastructure_target_total;
+      project.disbursement_total = disbursement_total
+	    project.gaa_total = gaa_total
+	    project.nep_total = nep_total
       // confirm submission
       this.$q
         .dialog({
