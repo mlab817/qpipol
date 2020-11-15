@@ -25,16 +25,17 @@
 				const value = this.value
 				let renderValue
 
-
 				// if value is not null or undefined
 				// return appropriate value
 				if (value !== null && value !== undefined) {
 					if (typeof value === 'string') {
 						renderValue = value
 					} else if (typeof value === 'object') {
-						renderValue =  value.name
+						renderValue =  value && value.name
 					} else if (typeof value === 'boolean') {
 						renderValue = !value ? 'No' : 'Yes'
+					} else if (typeof value === 'number') {
+						renderValue = value > 10000 ? value.toLocaleString() : value
 					}
 				} else {
 					renderValue = ''
