@@ -130,7 +130,8 @@
 					investment_target_2022: 0,
 					investment_target_2023: 0,
 					investment_target_2024: 0,
-					investment_target_2025: 0
+					investment_target_2025: 0,
+					investment_target_total: 0
 				},
 				funding_sources: []
 			}
@@ -139,11 +140,20 @@
 			handleSubmit() {
 				const investmentToSubmit = this.investmentToSubmit,
 					project_id = this.projectId;
-				console.log(investmentToSubmit)
 
 				this.$q.loading.show();
 
 				if (investmentToSubmit.id) {
+					investmentToSubmit.investment_target_total = (investmentToSubmit.investment_target_2016 +
+						investmentToSubmit.investment_target_2017 +
+						investmentToSubmit.investment_target_2018 +
+						investmentToSubmit.investment_target_2019 +
+						investmentToSubmit.investment_target_2020 +
+						investmentToSubmit.investment_target_2021 +
+						investmentToSubmit.investment_target_2022 +
+						investmentToSubmit.investment_target_2023 +
+						investmentToSubmit.investment_target_2024 +
+						investmentToSubmit.investment_target_2025)
 					// update
 					projectService
 						.updateFundingSourceFinancial(investmentToSubmit)
