@@ -144,6 +144,16 @@
 				this.$q.loading.show();
 
 				if (infrastructureToSubmit.id) {
+					infrastructureToSubmit.infrastructure_target_total = (infrastructureToSubmit.infrastructure_target_2016 +
+						infrastructureToSubmit.infrastructure_target_2017 +
+						infrastructureToSubmit.infrastructure_target_2018 +
+						infrastructureToSubmit.infrastructure_target_2019 +
+						infrastructureToSubmit.infrastructure_target_2020 +
+						infrastructureToSubmit.infrastructure_target_2021 +
+						infrastructureToSubmit.infrastructure_target_2022 +
+						infrastructureToSubmit.infrastructure_target_2023 +
+						infrastructureToSubmit.infrastructure_target_2024 +
+						infrastructureToSubmit.infrastructure_target_2025)
 					// update
 					projectService
 						.updateFundingSourceInfrastructure(infrastructureToSubmit)
