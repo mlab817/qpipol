@@ -1357,7 +1357,7 @@ export default {
           acc.infrastructure_target_2024 += val.infrastructure_target_2024;
           acc.infrastructure_target_2025 += val.infrastructure_target_2025;
           acc.infrastructure_target_total +=
-            val.infrastructure_target_2016 +
+						(val.infrastructure_target_2016 +
             val.infrastructure_target_2017 +
             val.infrastructure_target_2018 +
             val.infrastructure_target_2019 +
@@ -1366,7 +1366,7 @@ export default {
             val.infrastructure_target_2022 +
             val.infrastructure_target_2023 +
             val.infrastructure_target_2024 +
-            val.infrastructure_target_2025;
+            val.infrastructure_target_2025);
           return acc;
         }, infraTotal);
 
@@ -1406,7 +1406,7 @@ export default {
           acc.investment_target_2024 += val.investment_target_2024;
           acc.investment_target_2025 += val.investment_target_2025;
           acc.investment_target_total +=
-            val.investment_target_2016 +
+						(val.investment_target_2016 +
             val.investment_target_2017 +
             val.investment_target_2018 +
             val.investment_target_2019 +
@@ -1415,7 +1415,7 @@ export default {
             val.investment_target_2022 +
             val.investment_target_2023 +
             val.investment_target_2024 +
-            val.investment_target_2025;
+            val.investment_target_2025);
           return acc;
         }, investTotal);
 
@@ -1754,6 +1754,50 @@ export default {
       this.$refs.editForm.validate().then(success => {
         // if success, save data
         if (success) {
+	        const project = this.project,
+		        investTotal = this.investTotal,
+		        infraTotal = this.infraTotal,
+		        nep_total = this.nep_total,
+		        gaa_total = this.gaa_total,
+		        disbursement_total = this.disbursement_total
+
+	        project.investment_target_2016 = investTotal.investment_target_2016;
+	        project.investment_target_2017 = investTotal.investment_target_2017;
+	        project.investment_target_2018 = investTotal.investment_target_2018;
+	        project.investment_target_2019 = investTotal.investment_target_2019;
+	        project.investment_target_2020 = investTotal.investment_target_2020;
+	        project.investment_target_2021 = investTotal.investment_target_2021;
+	        project.investment_target_2022 = investTotal.investment_target_2022;
+	        project.investment_target_2023 = investTotal.investment_target_2023;
+	        project.investment_target_2024 = investTotal.investment_target_2024;
+	        project.investment_target_2025 = investTotal.investment_target_2025;
+	        project.investment_target_total = investTotal.investment_target_total;
+	        project.infrastructure_target_2016 =
+		        infraTotal.infrastructure_target_2016;
+	        project.infrastructure_target_2017 =
+		        infraTotal.infrastructure_target_2017;
+	        project.infrastructure_target_2018 =
+		        infraTotal.infrastructure_target_2018;
+	        project.infrastructure_target_2019 =
+		        infraTotal.infrastructure_target_2019;
+	        project.infrastructure_target_2020 =
+		        infraTotal.infrastructure_target_2020;
+	        project.infrastructure_target_2021 =
+		        infraTotal.infrastructure_target_2021;
+	        project.infrastructure_target_2022 =
+		        infraTotal.infrastructure_target_2022;
+	        project.infrastructure_target_2023 =
+		        infraTotal.infrastructure_target_2023;
+	        project.infrastructure_target_2024 =
+		        infraTotal.infrastructure_target_2024;
+	        project.infrastructure_target_2025 =
+		        infraTotal.infrastructure_target_2025;
+	        project.infrastructure_target_total =
+		        infraTotal.infrastructure_target_total;
+	        project.disbursement_total = disbursement_total
+	        project.gaa_total = gaa_total
+	        project.nep_total = nep_total
+
           this.$q
             .dialog({
               title: 'Confirm Finalization',
@@ -1772,7 +1816,7 @@ export default {
                 message: 'Saving project'
               });
               this.$store
-                .dispatch('projects/finalizeProject', this.project)
+                .dispatch('projects/finalizeProject', project)
                 .then(() => {
                   this.$q.loading.hide();
                   this.$q.notify({
