@@ -144,6 +144,16 @@
 				this.$q.loading.show();
 
 				if (investmentToSubmit.id) {
+					investmentToSubmit.investment_target_total = (investmentToSubmit.investment_target_2016 +
+						investmentToSubmit.investment_target_2017 +
+						investmentToSubmit.investment_target_2018 +
+						investmentToSubmit.investment_target_2019 +
+						investmentToSubmit.investment_target_2020 +
+						investmentToSubmit.investment_target_2021 +
+						investmentToSubmit.investment_target_2022 +
+						investmentToSubmit.investment_target_2023 +
+						investmentToSubmit.investment_target_2024 +
+						investmentToSubmit.investment_target_2025)
 					// update
 					projectService
 						.updateRegionFinancial(investmentToSubmit)
