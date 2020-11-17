@@ -25,7 +25,7 @@
           This project has been finalized. It cannot be edited. Upload a signed
           copy to endorse it to IPD.
           <template v-slot:action>
-            <q-btn flat color="white" label="Download" @click="downloadFile" />
+            <q-btn flat label="Changed my Mind" @click="revertToDraftProject" color="negative" />
             <q-btn
               flat
 							icon="upload"
@@ -216,7 +216,31 @@ export default {
 
     downloadDocx() {
 			generateDocx(this.project)
-		}
+		},
+
+    revertToDraftProject() {
+      this.$q.dialog({
+        title: 'Revert this Project to Draft',
+        message: 'Are you sure you want to revert this project to draft? Type <strong>YES</strong> to confirm.',
+        html: true,
+        prompt: {
+          model: '',
+          isValid: val => val && val.toLowerCase() === 'yes'
+        },
+        cancel: true
+      }).onOk(() => {
+        this.$q.loading.show()
+        projectService.revertToDraftProject({
+          id: this.project.id
+        })
+        .then(() => this.$q.loading.hide())
+        .catch(err => this.$q.notify({
+          type: 'negative',
+          message: err.message
+        }))
+        .finally(() => this.$q.loading.hide())
+      })
+    }
   }
 };
 </script>

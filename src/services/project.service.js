@@ -33,7 +33,8 @@ import {
   UPDATE_FUNDING_SOURCE_INFRASTRUCTURE,
   DELETE_FUNDING_SOURCE_INFRASTRUCTURE,
   UPLOAD_SIGNED_COPY,
-  EXPORT_PROJECT_DOCX_MUTATION
+  EXPORT_PROJECT_DOCX_MUTATION,
+  REVERT_TO_DRAFT_PROJECT
 } from '@/graphql';
 
 export const projectService = {
@@ -731,6 +732,37 @@ export const projectService = {
       .mutate({
         mutation: EXPORT_PROJECT_DOCX_MUTATION,
         variables: payload
+      })
+      .then(handleResponse)
+      .catch(handleError)
+  },
+
+  revertToDraftProject(payload) {
+    return client
+      .mutate({
+        mutation: REVERT_TO_DRAFT_PROJECT,
+        variables: payload,
+        update: (store, { data: { revertToDraftProject } }) => {
+          const data = store.readQuery({
+            query: ALL_PROJECTS
+          })
+
+          const index = data.projects.findIndex(project => project.id === revertToDraftProject.id)
+          data.projects.splice(index, 1, revertToDraftProject)
+
+          store.writeQuery({
+            query: ALL_PROJECTS,
+            data
+          })
+        },
+        refetchQueries: [
+          {
+            query: FETCH_PROJECT_QUERY,
+            variables: {
+              id: payload.id
+            }
+          }
+        ]
       })
       .then(handleResponse)
       .catch(handleError)
