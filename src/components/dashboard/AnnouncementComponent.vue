@@ -21,7 +21,7 @@
 					</template>
 					<template v-else>
 						<template v-if="announcements.length">
-							<q-item v-for="an in announcements" :key="an.id">
+							<q-item v-for="an in latestAnnouncements" :key="an.id">
 								<q-item-section>
 									<q-item-label>{{an.subject}}</q-item-label>
 									<q-item-label :lines="2" caption>{{an.message}}</q-item-label>
@@ -64,6 +64,13 @@
 		data() {
 			return {
 				announcements: []
+			}
+		},
+		computed: {
+			latestAnnouncements() {
+				const announcements = this.announcements
+
+				return announcements.sort((a, b) => (a.id > b.id) ? 1 : -1).slice(0,5)
 			}
 		},
 		methods: {
