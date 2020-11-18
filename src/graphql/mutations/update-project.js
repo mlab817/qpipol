@@ -5,6 +5,7 @@ export const UPDATE_PROJECT_MUTATION = gql`
   mutation updateProject(
     $id: ID!
     $title: String!
+    $banner_program_id: ID
     $type_id: ID
     $bases: UpdateBasesBelongsToMany
     $description: String
@@ -124,12 +125,14 @@ export const UPDATE_PROJECT_MUTATION = gql`
     $disbursement_2019: Float
     $disbursement_2020: Float
     $disbursement_total: Float
-    $version: Int
+    $prexc_program_id: ID
+    $prexc_subprogram_id: ID
   ) {
     updateProject(
       input: {
         id: $id
         title: $title
+        banner_program_id: $banner_program_id
         type_id: $type_id
         bases: $bases
         description: $description
@@ -249,7 +252,8 @@ export const UPDATE_PROJECT_MUTATION = gql`
         disbursement_2019: $disbursement_2019
         disbursement_2020: $disbursement_2020
         disbursement_total: $disbursement_total
-        version: $version
+        prexc_program_id: $prexc_program_id
+        prexc_subprogram_id: $prexc_subprogram_id
       }
     ) {
       ...projectFragment

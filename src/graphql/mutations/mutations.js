@@ -178,6 +178,7 @@ export const CREATE_PROJECT_MUTATION = gql`
   mutation createProject(
     $prexc_program_id: ID
     $prexc_subprogram_id: ID
+    $banner_program_id: ID
     $title: String!
     $operating_unit_id: ID
   ) {
@@ -185,6 +186,7 @@ export const CREATE_PROJECT_MUTATION = gql`
       input: {
         prexc_program_id: $prexc_program_id
         prexc_subprogram_id: $prexc_subprogram_id
+        banner_program_id: $banner_program_id
         title: $title
         operating_unit_id: $operating_unit_id
       }

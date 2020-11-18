@@ -25,10 +25,10 @@
           This project has been finalized. It cannot be edited. Upload a signed
           copy to endorse it to IPD.
           <template v-slot:action>
-            <q-btn flat label="Changed my Mind" @click="revertToDraftProject" color="negative" />
+            <!-- <q-btn flat label="Changed my Mind" @click="revertToDraftProject" color="negative" /> -->
+            <q-btn flat label="Download" @click="downloadFile" />
             <q-btn
               flat
-							icon="upload"
               color="white"
               label="Upload Signed Copy"
               @click="uploadSignedCopyDialog = true"

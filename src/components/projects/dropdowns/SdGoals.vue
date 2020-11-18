@@ -18,7 +18,7 @@
 				type="checkbox"
 				v-model="selected"
 				:options="sustainable_development_goals"
-				color="secondary"
+				color="primary"
 			/>
 		</template>
 	</div>

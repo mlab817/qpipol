@@ -8,23 +8,11 @@
     >
 			<q-card flat square>
 				<q-card-section class="q-gutter-sm">
-					<single-select
-						label="Program"
-						v-model="prexc_program_id"
-						:options="prexc_programs"
-						:loading="$apollo.queries.prexc_programs.loading"
-						with-refresh
-						@refetch="refetchPrexcPrograms"
-					></single-select>
+          <prexc-programs v-model="prexc_program_id" />
 
-					<single-select
-						label="Subprogram"
-						v-model="prexc_subprogram_id"
-						:options="filtered_prexc_subprograms"
-						:loading="$apollo.queries.prexc_subprograms.loading"
-						with-refresh
-						@refetch="refetchPrexcSubprograms"
-					></single-select>
+					<prexc-subprograms v-model="prexc_subprogram_id" :filter="prexc_program_id" />
+
+          <banner-program v-model="banner_program_id" />
 
 					<text-input
 						label="UACS Code"
@@ -33,7 +21,7 @@
 						with-na
 					/>
 
-					<div class="row">
+					<div class="column">
 						<text-input
 							label="Title"
 							v-model="title"
@@ -78,33 +66,29 @@
 import { mapGetters } from 'vuex';
 import TextInput from '@/ui/form-inputs/TextInput';
 import SingleSelect from '@/ui/form-inputs/SingleSelect';
+import BannerProgram from './dropdowns/BannerProgram'
+import PrexcPrograms from './dropdowns/PrexcPrograms'
+import PrexcSubprograms from './dropdowns/PrexcSubprograms'
 import {
-  PREXC_PROGRAMS,
-  PREXC_SUBPROGRAMS,
   PREXC_ACTIVITIES
 } from 'src/graphql/queries';
 import { showError } from '@/utils';
+
 export default {
   name: 'AddProject',
   components: {
-    SingleSelect,
-    TextInput
+    TextInput,
+    BannerProgram,
+    PrexcPrograms,
+    PrexcSubprograms
   },
   apollo: {
-    prexc_programs: {
-      query: PREXC_PROGRAMS
-    },
-    prexc_subprograms: {
-      query: PREXC_SUBPROGRAMS
-    },
     prexc_activities: {
       query: PREXC_ACTIVITIES
     }
   },
   data() {
     return {
-      prexc_programs: [],
-      prexc_subprograms: [],
       prexc_activities: [],
       rules: {
         required: [val => !!val || '* Required'],
@@ -119,20 +103,12 @@ export default {
       operating_unit_id: null,
       uacs_code: null,
       prexc_program_id: null,
-      prexc_subprogram_id: null
+      prexc_subprogram_id: null,
+      banner_program_id: null
     };
   },
   computed: {
     ...mapGetters('auth', ['user']),
-    filtered_prexc_subprograms() {
-      const subprograms = this.prexc_subprograms;
-      if (!this.prexc_program_id) {
-        return [{ id: null, name: 'Select program first' }];
-      }
-      return subprograms.filter(
-        x => x.prexc_program_id === this.prexc_program_id
-      );
-    },
     matches() {
       const title = this.title && this.title.toLowerCase();
       if (title && title.length > 3) {
@@ -171,7 +147,8 @@ export default {
         prexc_program_id: this.prexc_program_id,
         prexc_subprogram_id: this.prexc_subprogram_id,
         title: this.title,
-        operating_unit_id: this.operating_unit_id
+        operating_unit_id: this.operating_unit_id,
+        banner_program_id: this.banner_program_id
       };
       this.$q.loading.show({
         message: 'Saving project...'

@@ -1,6 +1,9 @@
 export const preparePayload = project => {
   const payload = {
     id: project.id,
+    prexc_program_id: project.prexc_program_id,
+    prexc_subprogram_id: project.prexc_subprogram_id,
+    banner_program_id: project.banner_program_id,
     pip: project.pip,
     cip: project.cip,
     trip: project.trip,
