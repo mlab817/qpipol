@@ -18,7 +18,7 @@
 				type="checkbox"
 				v-model="selected"
 				:options="ten_point_agenda"
-				color="secondary"
+				color="primary"
 			/>
 		</template>
 	</div>

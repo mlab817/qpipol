@@ -43,7 +43,20 @@
           <q-badge color="blue"> v. {{ project.version }} </q-badge>
         </div>
 
+        <section-header sectionTitle="Program Information"></section-header>
+
+        <q-card square bordered flat>
+          <q-card-section class="q-gutter-y-md">
+            <prexc-programs v-model="project.prexc_program_id" />
+
+  					<prexc-subprograms v-model="project.prexc_subprogram_id" :filter="project.prexc_program_id" />
+
+            <banner-program v-model="project.banner_program_id" />
+          </q-card-section>
+        </q-card>
+
         <section-header sectionTitle="General Information"></section-header>
+
         <q-card square bordered flat>
           <q-card-section class="q-gutter-y-md">
             <text-input
@@ -1203,8 +1216,11 @@ import CheckboxInput from '@/ui/form-inputs/CheckboxInput';
 import DateInput from '@/ui/form-inputs/DateInput';
 // dropdowns
 import ImplementingAgency from './dropdowns/ImplementingAgency';
+import PrexcPrograms from './dropdowns/PrexcPrograms';
+import PrexcSubprograms from './dropdowns/PrexcSubprograms';
+import BannerProgram from './dropdowns/BannerProgram';
 import ProjectStatus from './dropdowns/ProjectStatus';
-import {SectionHeader} from '@/ui';
+import { SectionHeader } from '@/ui';
 import EditButton from './shared/EditButton';
 import CardHeader from '@/ui/cards/CardHeader';
 import CheckboxItem from '@/ui/form-inputs/CheckboxItem';
@@ -1261,7 +1277,10 @@ export default {
     SdGoals,
     ProjectDocument,
     ImplementationBases,
-    Types
+    Types,
+    PrexcPrograms,
+    PrexcSubprograms,
+    BannerProgram
   },
 
   name: 'EditPipol',

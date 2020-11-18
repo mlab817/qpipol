@@ -5,6 +5,7 @@ export const FINALIZE_PROJECT_MUTATION = gql`
   mutation finalizeProject(
     $id: ID!
     $title: String!
+    $banner_program_id: ID
     $type_id: ID
     $bases: UpdateBasesBelongsToMany
     $description: String
@@ -126,11 +127,14 @@ export const FINALIZE_PROJECT_MUTATION = gql`
     $disbursement_total: Float
     $version: Int
     $finalized: Boolean
+    $prexc_program_id: ID
+    $prexc_subprogram_id: ID
   ) {
     finalizeProject(
       input: {
         id: $id
         title: $title
+        banner_program_id: $banner_program_id
         type_id: $type_id
         bases: $bases
         description: $description
@@ -252,6 +256,8 @@ export const FINALIZE_PROJECT_MUTATION = gql`
         disbursement_total: $disbursement_total
         version: $version
         finalized: $finalized
+        prexc_program_id: $prexc_program_id
+        prexc_subprogram_id: $prexc_subprogram_id
       }
     ) {
       ...projectFragment

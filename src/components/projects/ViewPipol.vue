@@ -25,12 +25,20 @@
 						<q-badge color="blue"> v. {{ project.version }} </q-badge>
 					</div>
 
-					<section-header sectionTitle="General Information"></section-header>
+					<section-header sectionTitle="Program Information"></section-header>
 					<q-card square bordered flat>
 						<q-card-section class="q-gutter-y-md">
 							<label-value label="Program" :value="project.prexc_program ? project.prexc_program.name : ''" />
 
 							<label-value label="Subprogram" :value="project.prexc_subprogram ? project.prexc_subprogram.name : ''" />
+
+							<label-value label="Banner Program" :value="project.banner_program ? project.banner_program.name : ''" />
+						</q-card-section>
+					</q-card>
+
+					<section-header sectionTitle="General Information"></section-header>
+					<q-card square bordered flat>
+						<q-card-section class="q-gutter-y-md">
 
 							<label-value label="PAP Title" :value="project.title" />
 
