@@ -65,12 +65,6 @@
       style="margin-bottom: 70px;"
        v-if="!isAc && !isAa"
     >
-			<template v-slot:top-left>
-				<div class="row text-caption">
-					{{ lastUpdatedPrograms ? `Last downloaded on ${lastUpdatedPrograms}` : null }}
-				</div>
-			</template>
-
       <template v-slot:top-right="props">
 				<search v-model="filter" />
 
