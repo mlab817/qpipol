@@ -4,10 +4,6 @@
       <page-title title="Review Programs"></page-title>
     </template>
 
-    <div class="text-h6" v-if="$apollo.loading">
-      Loading...
-    </div>
-
     <q-dialog
       v-model="addEditPrexcActivityDialog"
       maximized
@@ -48,14 +44,9 @@
       :selected.sync="selected"
       selection="multiple"
       style="margin-bottom: 70px;"
-      v-if="!$apollo.loading"
     >
       <template v-slot:top-right>
-        <q-input borderless v-model="filter" placeholder="Search">
-          <template v-slot:append>
-            <q-icon name="search" />
-          </template>
-        </q-input>
+				<search v-model="filter" />
         <q-btn flat round icon="refresh" @click="refetch"></q-btn>
         <q-btn flat round icon="archive" @click="download"></q-btn>
       </template>
@@ -138,9 +129,10 @@ import ViewActivity from '@/components/programs/ViewActivity.vue';
 import { wrapCsvValue } from 'src/utils';
 import { exportFile } from 'quasar';
 import gql from 'graphql-tag';
+import Search from '../ui/form-inputs/Search'
 
 export default {
-  components: { PageContainer, PageTitle, PrexcActivity, ViewActivity },
+  components: {Search, PageContainer, PageTitle, PrexcActivity, ViewActivity },
   name: 'PrexcActivities',
   apollo: {
     prexc_programs: {
@@ -245,6 +237,13 @@ export default {
           align: 'left',
           sortable: true
         },
+				{
+					name: 'banner_program',
+					label: 'Banner Program',
+					field: row => row.banner_program && row.banner_program.name,
+					align: 'left',
+					sortable: true
+				},
         {
           name: 'prexc_activity',
           label: 'Activity',
@@ -270,6 +269,7 @@ export default {
           name: 'nep_total',
           label: 'National Expenditure Program (PhP)',
           field: row => row.nep_total,
+					format: (val) => val && val.toLocaleString(),
           align: 'right',
           sortable: true
         },
@@ -277,6 +277,7 @@ export default {
           name: 'gaa_total',
           label: 'General Appropriations Act (PhP)',
           field: row => row.gaa_total,
+	        format: (val) => val && val.toLocaleString(),
           align: 'right',
           sortable: true
         },
@@ -284,6 +285,7 @@ export default {
           name: 'disbursement_total',
           label: 'Actual Disbursement (PhP)',
           field: row => row.disbursement_total,
+	        format: (val) => val && val.toLocaleString(),
           align: 'right',
           sortable: true
         },

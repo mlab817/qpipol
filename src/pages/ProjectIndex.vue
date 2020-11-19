@@ -24,11 +24,6 @@
       @row-click="rowClicked"
       style="margin-bottom: 70px;"
     >
-      <template v-slot:top-left>
-        <div class="row text-caption">
-          {{ lastUpdated ? `Last downloaded on ${lastUpdated}` : null }}
-        </div>
-      </template>
 
       <template v-slot:top-right="props">
         <div class="row q-gutter-sm">
@@ -42,6 +37,8 @@
           />
 
           <icon-button icon="refresh" tooltip="Re-download data from server" @click="refetch" />
+
+					<icon-button icon="cloud_download" tooltip="Download data from server" @click="exportProjects" v-if="isReviewer" />
 
 					<icon-button icon="table_chart" tooltip="Download table" @click="exportTable" />
 
@@ -71,32 +68,20 @@
 
       <template v-slot:body-cell-actions="props">
         <q-td :props="props">
-          <q-btn flat round icon="more_vert" @click.stop>
-            <q-menu
-              transition-show="jump-down"
-              transition-hide="jump-up"
-              auto-close
-              :offset="[0, 15]"
-              square
-            >
-              <project-menu
-                :owner="props.row.created_by"
-                :id="props.row.id"
-                :status="props.row.submission_status ? props.row.submission_status.name : ''"
-								:signed-copy="props.row.signed_copy_link"
-              ></project-menu>
-            </q-menu>
-          </q-btn>
+					<q-btn-dropdown color="primary" label="Menu" @click.stop>
+						<project-menu :project="props.row" />
+					</q-btn-dropdown>
         </q-td>
       </template>
 
       <template v-slot:item="props">
         <div class="q-pa-sm col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
           <q-card
-            class="fit q-pa-none"
+            class="fit q-pa-none cursor-pointer"
             :class="
               props.row.submission_status && props.row.submission_status.name === 'Finalized' ? 'bg-green' : ''
             "
+						@click="$router.push(`/projects/${props.row.id}`)"
           >
             <q-list>
               <q-item class="q-pa-sm">
@@ -128,26 +113,9 @@
                   </q-item-label>
                 </q-item-section>
                 <q-item-section side>
-                  <q-btn flat round icon="more_vert">
-                    <q-menu
-                      transition-show="jump-down"
-                      transition-hide="jump-up"
-                      auto-close
-                      :offset="[0, 15]"
-                      square
-                    >
-                      <project-menu
-                        :owner-id="props.row.creator ? props.row.creator.id : 0"
-                        :id="props.row.id"
-                        :status="
-                          props.row.submission_status
-                            ? props.row.submission_status.name
-                            : 'draft'
-                        "
-                        :finalized="!!props.row.finalized"
-                      ></project-menu>
-                    </q-menu>
-                  </q-btn>
+									<q-btn-dropdown color="primary" label="Menu" @click.stop>
+										<project-menu :project="props.row" />
+									</q-btn-dropdown>
                 </q-item-section>
               </q-item>
               <q-item>
@@ -179,7 +147,7 @@
 </template>
 
 <script>
-import { exportFile, LocalStorage, date } from 'quasar';
+import { exportFile, LocalStorage, date, openURL } from 'quasar';
 import ProjectMenu from '../components/projects/dropdowns/ProjectMenu.vue';
 import PageContainer from '@/ui/page/PageContainer.vue';
 import PageTitle from '@/ui/page/PageTitle.vue';
@@ -193,6 +161,7 @@ import {
 } from '@/ui'
 import IconButton from '../ui/buttons/IconButton'
 import HelpButton from '../ui/buttons/HelpButton'
+import {projectService} from '../services'
 
 export default {
   components: {
@@ -208,6 +177,9 @@ export default {
   name: 'ProjectsIndex',
 
   computed: {
+  	isReviewer() {
+  		return this.$store.getters['auth/isReviewer']
+		},
     isEncoder() {
       return this.$store.getters['auth/isEncoder'];
     },
@@ -271,6 +243,13 @@ export default {
           sortable: true,
           align: 'center'
         },
+	      {
+		      name: 'banner_program',
+		      label: 'Banner Program',
+		      field: row => row.banner_program && row.banner_program.name,
+		      align: 'left',
+		      sortable: true
+	      },
         {
           name: 'funding_source',
           label: 'Main Funding Source',
@@ -388,6 +367,36 @@ export default {
 				html: true,
 				cancel: true
 			})
+		},
+		exportProjects() {
+    	this.$q.loading.show()
+    	projectService.exportProjects()
+				.then(({ exportProjects }) => {
+					const { link } = exportProjects
+					if (!link) {
+						Promise.reject({
+							message: 'Failed to generate file from server'
+						})
+					} else {
+						this.$q.dialog({
+							title: 'Download File',
+							message: 'Click OK to download the file',
+							cancel: true
+						})
+						.onOk(() => {
+							openURL(link, null, {
+								target: '_blank'
+							})
+						})
+					}
+				})
+				.catch(err => {
+					this.$q.notify({
+						type: 'negative',
+						message: err.message
+					})
+				})
+				.finally(() => this.$q.loading.hide())
 		}
   },
   filters: {

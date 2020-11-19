@@ -40,7 +40,7 @@
 				} else {
 					renderValue = ''
 				}
-				console.info(`${value} : ${typeof value} render ${renderValue}`)
+				// console.info(`${value} : ${typeof value} render ${renderValue}`)
 				return renderValue
 			}
 		}
