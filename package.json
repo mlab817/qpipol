@@ -1,8 +1,8 @@
 {
-  "name": "qpipol",
-  "version": "0.0.1",
-  "description": "A Quasar Framework app",
-  "productName": "Quasar App",
+  "name": "IPMS",
+  "version": "1.5.0",
+  "description": "Investment Programming and Management System",
+  "productName": "IPMS",
   "author": "mlab817 <mlab817@gmail.com>",
   "private": true,
   "scripts": {

@@ -1,7 +1,7 @@
 <template>
   <page-container>
     <template v-slot:title>
-      <page-title title="Projects" icon="apps">
+      <page-title title="Projects" icon="fas fa-tasks">
         <q-btn
 					outline
           :label="$q.screen.lt.md ? void 0 : 'Add Project'"

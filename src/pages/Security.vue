@@ -1,7 +1,7 @@
 <template>
   <page-container>
     <template v-slot:title>
-      <page-title title="Security" icon="vpn_key"></page-title>
+      <page-title title="Security" icon="fas fa-fingerprint"></page-title>
     </template>
 
     <update-password></update-password>
