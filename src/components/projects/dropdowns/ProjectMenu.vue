@@ -4,53 +4,37 @@
 
     <menu-item
       @click="updateProject"
-      label="Update"
-      icon="update"
-      v-if="showUpdateItem"
+      label="Edit"
+      icon="edit"
+      v-if="isDraft"
       tooltip="Restricted to owner only"
     ></menu-item>
+
+		<menu-item
+			@click="handleTransferProject"
+			label="Transfer"
+			icon="subdirectory_arrow_right"
+			tooltip="Restricted to owner only"
+			:disable="!isOwner"
+		></menu-item>
+
+		<menu-item
+			@click="promptDelete(project.id)"
+			label="Delete"
+			icon="delete"
+			tooltip="Restricted to owner only"
+			:disable="!isOwner || !isDraft"
+		></menu-item>
+
+		<q-separator />
 
     <menu-item
       @click="validateProject"
       label="Validate"
       icon="fact_check"
-      v-if="isReviewer && status === 'Endorsed'"
+      v-if="isReviewer && isEndorsed"
     ></menu-item>
 
-    <q-separator />
-
-    <menu-item
-      @click="handleTransferProject"
-      label="Transfer"
-      icon="subdirectory_arrow_right"
-      tooltip="Restricted to owner only"
-      :disable="!isOwner && !isDraft"
-    ></menu-item>
-
-    <q-separator />
-
-    <menu-item
-      @click="promptDelete(id)"
-      label="Delete"
-      icon="delete"
-      tooltip="Restricted to owner only"
-      :disable="!isOwner || !isDraft"
-    ></menu-item>
-
-    <q-separator />
-
-		<menu-item
-			:to="signedCopy"
-			label="Download"
-			icon="save_alt"
-			v-if="signedCopy"/>
-
-    <menu-item
-      @click="downloadFile"
-      label="Download"
-      icon="save_alt"
-			v-else
-    ></menu-item>
   </q-list>
 </template>
 
@@ -69,10 +53,10 @@ export default {
   name: 'ProjectMenu',
 
   props: {
-    id: String,
-    status: String,
-    owner: [Number, String],
-		signedCopy: String
+    project: {
+    	type: Object,
+			required: true
+		}
   },
 
   apollo: {
@@ -100,52 +84,42 @@ export default {
   		return this.$store.getters['auth/isReviewer']
 		},
     isOwner() {
-      const owner = this.owner;
-      const isOwner = this.user.id === owner;
-      return isOwner;
+      return parseInt(this.user.id) === parseInt(this.project.created_by);
     },
     isDraft() {
-      return this.status === 'Draft'
+      return this.project.submission_status && this.project.submission_status.name === 'Draft'
     },
-	  showValidateItem() {
-		  const status = this.status;
-
-		  return this.isReviewer && status === 'endorsed';
+	  isEndorsed() {
+		  return this.project.submission_status && this.project.submission_status.name === 'Endorsed'
 	  },
-    showUpdateItem() {
-      const status = this.status;
-
-      return this.isOwner && (status === 'draft' || status === 'updated');
-    },
     showTransferItem() {
       return this.isOwner;
     }
   },
   data() {
     return {
-      fact_check: null,
-      project: {},
       encoders: [],
       transferProjectDialog: false
     };
   },
   methods: {
     validateProject() {
-      const id = this.$props.id;
+      const id = this.project.id;
       this.$router.push(`/projects/${id}/validate`);
     },
+
     viewProject() {
-      const id = this.$props.id;
-      this.$router.push(`/projects/${id}`, () => {});
+      const id = this.project.id;
+      if (id) {
+	      this.$router.push(`/projects/${id}`, () => {});
+			}
     },
-    reviewProject() {
-      const id = this.$props.id;
-      this.$router.push(`/projects/${id}/review`);
-    },
+
     updateProject() {
-      const id = this.$props.id;
+      const id = this.project.id;
       this.$router.push(`/projects/${id}/edit`);
     },
+
     promptDelete(id) {
       this.$q
         .dialog({
@@ -193,7 +167,7 @@ export default {
           persistent: true
         })
         .onOk(data => {
-          this.transferProject(this.$props.id, data);
+          this.transferProject(this.project.id, data);
         });
     },
 
@@ -215,7 +189,7 @@ export default {
       this.$q.loading.show('Generating file...');
 
       this.$store
-        .dispatch('projects/download', { id: this.$props.id })
+        .dispatch('projects/download', { id: this.project.id })
         .then(res => {
           return axios
             .post(process.env.REPORT_ENDPOINT, res.project, {

@@ -85,6 +85,13 @@ export default {
           align: 'left',
           sortable: true
         },
+				{
+					name: 'banner_program',
+					label: 'Banner Program',
+					field: row => row.banner_program && row.banner_program.name,
+					align: 'left',
+					sortable: true
+				},
         {
           name: 'activity',
           label: 'Activity',

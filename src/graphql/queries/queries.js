@@ -324,6 +324,11 @@ export const ALL_PROJECTS = gql`
         id
         name
       }
+	    banner_program_id
+	    banner_program {
+		    id
+		    name
+	    }
       operating_unit {
         id
         acronym

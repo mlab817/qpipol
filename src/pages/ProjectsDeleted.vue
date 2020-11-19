@@ -14,11 +14,6 @@
       wrap-cells
       style="margin-bottom: 70px;"
     >
-			<template v-slot:top-left>
-				<div class="row text-caption">
-					{{ lastDeleteProjectsUpdated ? `Last downloaded on ${lastDeleteProjectsUpdated}` : null }}
-				</div>
-			</template>
 
       <template v-slot:top-right="props">
         <div class="row q-gutter-sm">
@@ -63,8 +58,30 @@
 
       <template v-slot:body-cell-actions="props">
         <q-td :props="props" class="text-center">
-					<restore-button @click="promptRestore(props.row)" />
-					<delete-button @click="promptDelete(props.row)" />
+					<q-btn-dropdown color="primary" label="Menu" @click.stop>
+						<q-list>
+							<q-item clickable @click.stop="promptRestore(props.row)">
+								<q-item-section avatar>
+									<q-avatar>
+										<q-icon name="restore_from_trash" />
+									</q-avatar>
+								</q-item-section>
+								<q-item-section>
+									Restore Project
+								</q-item-section>
+							</q-item>
+							<q-item clickable @click.stop="promptDelete(props.row)">
+								<q-item-section avatar>
+									<q-avatar>
+										<q-icon name="delete" />
+									</q-avatar>
+								</q-item-section>
+								<q-item-section>
+									Permanent Delete
+								</q-item-section>
+							</q-item>
+						</q-list>
+					</q-btn-dropdown>
         </q-td>
       </template>
 
@@ -92,8 +109,30 @@
                   </q-item-label>
                 </q-item-section>
                 <q-item-section side>
-									<restore-button @click="promptRestore(props.row)" />
-									<delete-button @click="promptDelete(props.row)" />
+									<q-btn-dropdown color="primary" label="Menu" @click.stop>
+										<q-list>
+											<q-item clickable @click.stop="promptRestore(props.row)">
+												<q-item-section avatar>
+													<q-avatar>
+														<q-icon name="restore_from_trash" />
+													</q-avatar>
+												</q-item-section>
+												<q-item-section>
+													Restore Project
+												</q-item-section>
+											</q-item>
+											<q-item clickable @click.stop="promptDelete(props.row)">
+												<q-item-section avatar>
+													<q-avatar>
+														<q-icon name="delete" />
+													</q-avatar>
+												</q-item-section>
+												<q-item-section>
+													Permanent Delete
+												</q-item-section>
+											</q-item>
+										</q-list>
+									</q-btn-dropdown>
                 </q-item-section>
               </q-item>
               <q-item>
@@ -120,22 +159,20 @@
 </template>
 
 <script>
-import PageContainer from '@/ui/page/PageContainer';
-import PageTitle from '@/ui/page/PageTitle';
+import {
+	PageContainer,
+	PageTitle,
+	FullscreenButton,
+	IconButton,
+	Search
+} from '@/ui';
 import { DELETED_PROJECTS_QUERY } from '@/graphql';
 import { wrapCsvValue, timeAgo } from '@/utils';
 import { exportFile, date, LocalStorage } from 'quasar';
-import Search from '../ui/form-inputs/Search'
-import FullscreenButton from '../ui/buttons/FullscreenButton'
-import RestoreButton from '../ui/buttons/RestoreButton'
-import DeleteButton from '../ui/buttons/DeleteButton'
-import IconButton from '../ui/buttons/IconButton'
 
 export default {
   components: {
 	  IconButton,
-	  DeleteButton,
-	  RestoreButton,
 	  FullscreenButton,
 	  Search,
     PageContainer,
