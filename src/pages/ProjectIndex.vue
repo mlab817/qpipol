@@ -58,11 +58,13 @@
         </q-td>
       </template>
 
-      <template v-slot:body-cell-processing_status="props">
+      <template v-slot:body-cell-submission_status="props">
         <q-td :props="props">
+					<q-badge color="blue">
           {{
             props.row.submission_status ? props.row.submission_status.name : ''
           }}
+					</q-badge>
         </q-td>
       </template>
 
@@ -122,8 +124,8 @@
                 <q-item-section>
                   <q-item-label caption class="text-capitalize"
                     >{{
-                      props.row.processing_status
-                        ? props.row.processing_status.name
+                      props.row.submission_status
+                        ? props.row.submission_status.name
                         : ''
                     }}:</q-item-label
                   >
