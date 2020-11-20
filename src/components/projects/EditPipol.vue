@@ -1361,7 +1361,7 @@ export default {
         infrastructure_target_total: 0
       };
 
-      if (fsf.length) {
+      if (fsf && fsf.length) {
         const totalInfra = fsf.reduce((acc, val) => {
           console.log('infraTotal ', acc);
 	        console.log('infraTotal ', val);
@@ -1411,7 +1411,7 @@ export default {
 	      investment_target_total: 0
       }
 
-      if (fsf.length) {
+      if (fsf && fsf.length) {
         const totalInvest = fsf.reduce((acc, val) => {
 	        console.log('current acc ', acc);
           acc.investment_target_2016 += val.investment_target_2016;

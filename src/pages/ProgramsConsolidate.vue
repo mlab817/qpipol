@@ -22,7 +22,7 @@
       </template>
     </q-table>
 
-    <div class="row text-caption q-mt-sm" style="margin-bottom: 70px;">
+    <div class="row text-caption q-mt-sm text-italic" style="margin-bottom: 70px;">
       PREXC Activities inputted in the Program Module will appear here based on the tagged
       Banner Program. PREXC Activities from the Project Module will be added here once
       they are re-tagged and duplicated by the IPD focal person.

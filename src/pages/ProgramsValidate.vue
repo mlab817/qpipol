@@ -107,6 +107,13 @@
 								@click="reclassifyPrexcActivity(props.row)"
 								:disable="props.row.finalized"
 							></menu-item>
+
+							<menu-item
+								icon="fas fa-sync-alt"
+								label="Sync"
+								@click="syncActivityToProject(props.row.id)"
+								v-if="props.row.project_id"
+							></menu-item>
 						</q-list>
 					</q-btn-dropdown>
         </q-td>
@@ -387,7 +394,32 @@ export default {
 				})
 				.finally(() => this.$q.loading.hide())
 			})
-    }
+    },
+	  syncActivityToProject(id) {
+		  this.$q.dialog({
+			  title: 'Confirm Sync',
+			  message: 'Sync this PREXC activity with the origin project',
+			  cancel: true
+		  }).onOk(() => {
+			  this.$q.loading.show()
+			  programService.syncActivityToProject({
+				  id: id
+			  })
+				  .then(() => {
+					  this.$q.notify({
+						  type: 'positive',
+						  message: 'Success'
+					  })
+				  })
+				  .catch(err => {
+					  this.$q.notify({
+						  type: 'negative',
+						  message: 'Fail'
+					  })
+				  })
+				  .finally(() => this.$q.loading.hide())
+		  })
+	  }
   },
   filters: {
 		money(val) {
