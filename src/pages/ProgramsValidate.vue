@@ -214,7 +214,10 @@ export default {
       prexc_subprograms: [],
       prexc_activities: [],
       addEditPrexcActivityDialog: false,
-      operating_unit: {},
+      operating_unit: {
+        name: '',
+        acronym: ''
+      },
       columns: [
         // {
         //   name: 'id',

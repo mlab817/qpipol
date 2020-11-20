@@ -145,23 +145,24 @@
       <template v-slot:body-cell-actions="props">
         <q-td :props="props">
           <icon-button
-            icon="preview"
+            icon="fas fa-eye"
             size="sm"
 						tooltip="View activity"
             @click="viewPrexcActivity(props.row.id)"
           ></icon-button>
 
 					<icon-button
-							icon="edit"
+							icon="fas fa-edit"
 							size="sm"
 							tooltip="Edit activity"
 							color="blue"
 							@click="editPrexcActivity(props.row.id)"
 							:disabled="props.row.finalized"
+              v-if="!props.row.project_id"
 					></icon-button>
 
           <icon-button
-            icon="delete"
+            icon="fas fa-trash"
             size="sm"
             color="negative"
 						tooltip="Delete activity"
@@ -170,12 +171,21 @@
           ></icon-button>
 
           <icon-button
-            icon="done"
+            icon="fas fa-check"
             size="sm"
             color="green"
 						tooltip="Finalize activity"
             :disabled="props.row.finalized"
             @click="finalizePrexcActivity(props.row.id)"
+          ></icon-button>
+
+          <icon-button
+            icon="fas fa-sync-alt"
+            size="sm"
+            color="purple"
+						tooltip="Sync project to activity"
+            @click="syncActivityToProject(props.row.id)"
+            v-if="props.row.project_id"
           ></icon-button>
         </q-td>
       </template>
@@ -606,6 +616,29 @@ export default {
         message: this.helps,
         html: true,
         cancel: true
+      })
+    },
+    syncActivityToProject(id) {
+      this.$q.dialog({
+        title: 'Confirm Sync',
+        message: 'Sync this PREXC activity with the origin project',
+        cancel: true
+      }).onOk(() => {
+        this.$q.loading.show()
+        programService.syncActivityToProject({id: id})
+          .then(() => {
+            this.$q.notify({
+              type: 'positive',
+              message: 'Success'
+            })
+          })
+          .catch(err => {
+            this.$q.notify({
+              type: 'negative',
+              message: 'Fail'
+            })
+          })
+          .finally(() => this.$q.loading.hide())
       })
     }
   },

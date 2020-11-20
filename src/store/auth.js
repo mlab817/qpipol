@@ -238,28 +238,34 @@ const getters = {
     return null;
   },
   compact(state) {
-    if (state.user.setting) {
+    if (state.user && state.user.setting) {
       return state.user.setting.compact;
     }
     return false;
   },
   dark(state) {
-    if (state.user.setting) {
+    if (state.user && state.user.setting) {
       return state.user.setting.dark;
     }
     return false;
   },
   isAa(state) {
-    if (state.user.operating_unit && state.user.operating_unit.operating_unit_type) {
+    if (state.user && state.user.operating_unit && state.user.operating_unit.operating_unit_type) {
       return state.user.operating_unit.operating_unit_type.name === 'attached-agency'
     }
     return false
   },
   isAc(state) {
-    if (state.user.operating_unit && state.user.operating_unit.operating_unit_type) {
+    if (state.user && state.user.operating_unit && state.user.operating_unit.operating_unit_type) {
       return state.user.operating_unit.operating_unit_type.name === 'attached-corporation'
     }
     return false
+  },
+  consolidates(state) {
+    if (state.user && state.user.consolidates && state.user.consolidates.length) {
+      return state.user.consolidates.map(x => x.name).join(', ')
+    }
+    return null
   }
 };
 

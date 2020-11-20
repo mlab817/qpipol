@@ -9,7 +9,8 @@ import {
   FINALIZE_PREXC_ACTIVITIES,
   EXPORT_EXCEL,
   UPDATE_OPERATING_UNIT_PREXC_ACTIVITIES,
-  EXPORT_FOR_CONSOLIDATION
+  EXPORT_FOR_CONSOLIDATION,
+  SYNC_ACTIVITY_TO_PROJECT
 } from 'src/graphql';
 
 export const programService = {
@@ -151,6 +152,30 @@ export const programService = {
       .mutate({
         mutation: EXPORT_FOR_CONSOLIDATION,
         variables: null
+      })
+      .then(handleResponse)
+      .catch(handleError)
+  },
+  syncActivityToProject(payload) {
+    return client
+      .mutate({
+        mutation: SYNC_ACTIVITY_TO_PROJECT,
+        variables: payload,
+        update: (store, { data: { syncProjectToActivity } }) => {
+          const data = store.readQuery({
+            query: PREXC_ACTIVITIES
+          });
+
+          const index = data.prexc_activities.findIndex(
+            act => act.id === syncProjectToActivity.id
+          );
+          data.prexc_activities.splice(index, 1, syncProjectToActivity);
+
+          store.writeQuery({
+            query: PREXC_ACTIVITIES,
+            data
+          });
+        }
       })
       .then(handleResponse)
       .catch(handleError)

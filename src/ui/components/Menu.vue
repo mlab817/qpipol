@@ -1,8 +1,10 @@
 <template>
   <q-list dense>
     <menu-item label="Dashboard" to="/dashboard" icon="fas fa-tachometer-alt" />
-    <menu-item label="Programs" to="/programs" icon="fas fa-list" />
-    <menu-item label="Projects" to="/projects" icon="fas fa-tasks" />
+    <menu-item label="Programs" to="/programs" icon="fas fa-list" v-if="!isReviewer" />
+    <menu-item label="Projects" to="/projects" icon="fas fa-tasks" v-if="!isReviewer" />
+    <menu-item label="Review Programs" to="/review" icon="fas fa-list" v-if="isReviewer" />
+    <menu-item label="Review Projects" to="/projects" icon="fas fa-tasks" v-if="isReviewer" />
 		<menu-item label="Consolidators" to="/consolidates" icon="fas fa-layer-group" />
     <menu-item label="Deleted Projects" to="/projects/trash" icon="fas fa-trash-alt" />
 		<q-separator />
@@ -29,6 +31,11 @@
   export default {
     name: 'AppMenu',
     components: { MenuItem },
+    computed: {
+      isReviewer() {
+        return this.$store.getters['auth/isReviewer']
+      }
+    },
     methods: {
       handleSignoutUser() {
         this.$q
