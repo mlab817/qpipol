@@ -334,6 +334,7 @@ export const ALL_PROJECTS = gql`
         acronym
         image_url
       }
+	    prexc_activity_id
       updated_at
 	    created_by
       creator {
@@ -1200,6 +1201,39 @@ export const FETCH_ANNOUNCEMENTS = gql`
 			message
 			created_at
 			created_by
+		}
+	}
+`
+
+export const OU_PREXC_ACTIVITIES = gql`
+	query($id: ID!) {
+		operating_unit(id: $id) {
+			id
+			name
+			acronym
+			prexc_activities {
+				id
+				banner_program_id
+				banner_program {
+					id
+					name
+				}
+				prexc_program {
+					id
+					name
+				}
+				prexc_subprogram {
+					id
+					name
+				}
+				name
+				project_id
+				infrastructure_target_total
+				investment_target_total
+				gaa_total
+				nep_total
+				disbursement_total
+			}
 		}
 	}
 `

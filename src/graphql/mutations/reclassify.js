@@ -3,14 +3,10 @@ import gql from 'graphql-tag';
 export const RECLASSIFY_PROJECT = gql`
   mutation (
     $id: ID!
-    $prexc_program_id: ID
-    $prexc_subprogram_id: ID
     $banner_program_id: ID
   ) {
     reclassifyProject(
       id: $id
-      prexc_program_id: $prexc_program_id
-      prexc_subprogram_id: $prexc_subprogram_id
       banner_program_id: $banner_program_id
     ) {
       id
@@ -53,14 +49,10 @@ export const RECLASSIFY_PROJECT = gql`
 export const RECLASSIFY_PREXC_ACTIVITY = gql`
   mutation (
     $id: ID!
-    $prexc_program_id: ID
-    $prexc_subprogram_id: ID
     $banner_program_id: ID
   ) {
-    reclassifyProject(
+    reclassifyPrexcActivity(
       id: $id
-      prexc_program_id: $prexc_program_id
-      prexc_subprogram_id: $prexc_subprogram_id
       banner_program_id: $banner_program_id
     ) {
       id

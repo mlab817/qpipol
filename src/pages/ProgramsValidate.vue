@@ -16,6 +16,7 @@
         :prexc_subprograms="prexc_subprograms"
         :id="prexc_activity_id"
         @close="addEditPrexcActivityDialog = false"
+				:edit-mode="true"
       ></prexc-activity>
     </q-dialog>
 
@@ -68,35 +69,46 @@
         </q-td>
       </template>
 
+			<template v-slot:body-cell-project="props">
+				<q-td :props="props">
+					<a target="_blank" style="text-decoration: none;" v-if="props.row.project_id" :href="`/projects/${props.row.project_id}`">#{{props.row.project_id}}</a>
+				</q-td>
+			</template>
+
       <template v-slot:body-cell-actions="props">
         <q-td :props="props">
-          <q-btn
-            icon="visibility"
-            flat
-            round
-            size="sm"
-            @click="viewPrexcActivity(props.row.id)"
-          ></q-btn>
+					<q-btn-dropdown color="primary" label="Menu" @click.stop>
+						<q-list>
+							<menu-item
+								icon="fas fa-eye"
+								label="View"
+								@click="viewPrexcActivity(props.row.id)"
+							/>
 
-          <q-btn
-            icon="edit"
-            flat
-            round
-            size="sm"
-            v-if="props.row.project_id"
-            :disabled="props.row.finalized"
-            :to="`/projects/${props.row.project_id}`"
-          ></q-btn>
+							<menu-item
+								icon="edit"
+								label="Validate"
+								v-if="props.row.project_id"
+								:disable="props.row.finalized"
+								:to="`/projects/${props.row.project_id}`"
+							/>
 
-          <q-btn
-            icon="edit"
-            flat
-            round
-            size="sm"
-            @click="editPrexcActivity(props.row.id)"
-            :disabled="props.row.finalized"
-            v-else
-          ></q-btn>
+							<menu-item
+								icon="edit"
+								label="Validate"
+								@click="editPrexcActivity(props.row.id)"
+								:disable="props.row.finalized"
+								v-else
+							></menu-item>
+
+							<menu-item
+								icon="fas fa-tags"
+								label="Reclassify"
+								@click="reclassifyPrexcActivity(props.row)"
+								:disable="props.row.finalized"
+							></menu-item>
+						</q-list>
+					</q-btn-dropdown>
         </q-td>
       </template>
 
@@ -121,20 +133,24 @@
 </template>
 
 <script>
-import { PREXC_PROGRAMS, PREXC_SUBPROGRAMS } from '@/graphql';
+import { PREXC_PROGRAMS, PREXC_SUBPROGRAMS, OU_PREXC_ACTIVITIES, BANNER_PROGRAMS } from '@/graphql';
 import PageContainer from '@/ui/page/PageContainer.vue';
 import PageTitle from '@/ui/page/PageTitle.vue';
 import PrexcActivity from '@/components/programs/PrexcActivity.vue';
 import ViewActivity from '@/components/programs/ViewActivity.vue';
 import { wrapCsvValue } from 'src/utils';
 import { exportFile } from 'quasar';
-import gql from 'graphql-tag';
 import Search from '../ui/form-inputs/Search'
+import MenuItem from '../components/projects/dropdowns/MenuItem'
+import {programService} from '../services'
 
 export default {
-  components: {Search, PageContainer, PageTitle, PrexcActivity, ViewActivity },
+  components: { MenuItem, Search, PageContainer, PageTitle, PrexcActivity, ViewActivity },
   name: 'PrexcActivities',
   apollo: {
+  	banner_programs: {
+  		query: BANNER_PROGRAMS
+		},
     prexc_programs: {
       query: PREXC_PROGRAMS
     },
@@ -142,33 +158,7 @@ export default {
       query: PREXC_SUBPROGRAMS
     },
     operating_unit: {
-      query: gql`
-        query($id: ID!) {
-          operating_unit(id: $id) {
-            id
-            name
-            acronym
-            prexc_activities {
-              id
-              prexc_program {
-                id
-                name
-              }
-              prexc_subprogram {
-                id
-                name
-              }
-              name
-              project_id
-              infrastructure_target_total
-              investment_target_total
-              gaa_total
-              nep_total
-              disbursement_total
-            }
-          }
-        }
-      `,
+      query: OU_PREXC_ACTIVITIES,
       variables() {
         return {
           id: this.$route.params.id
@@ -294,6 +284,11 @@ export default {
           align: 'right',
           sortable: true
         },
+				{
+					name: 'project',
+					label: 'Project Link',
+					field: row => row.prexc_activity_id
+				},
         {
           name: 'actions',
           label: 'Actions'
@@ -302,7 +297,8 @@ export default {
       prexc_activity_id: null,
       operating_unit_id: null,
       selected: [],
-      viewPrexcActivityDialog: false
+      viewPrexcActivityDialog: false,
+	    banner_programs: []
     };
   },
   methods: {
@@ -355,8 +351,42 @@ export default {
         });
       }
     },
-    reviewPrexcActivities() {
-      console.log('review activities');
+    reclassifyPrexcActivity(row) {
+    	const bannerPrograms = this.banner_programs && this.banner_programs.map(x => {
+    		return {
+    			value: x.id,
+					label: x.name
+				}
+			})
+      this.$q.dialog({
+				title: `Reclassify: ${row.name}`,
+				message: 'Select which banner program to classify the activity',
+				options: {
+					items: bannerPrograms,
+					model: row.banner_program_id,
+					isValid: val => !!val
+				},
+				cancel: true,
+			}).onOk((bannerProgram) => {
+				this.$q.loading.show()
+				programService.reclassifyPrexcActivity({
+					id: row.id,
+					banner_program_id: bannerProgram
+				})
+				.then(() => {
+					this.$q.notify({
+						type: 'positive',
+						message: 'Success'
+					})
+				})
+				.catch(err => {
+					this.$q.notify({
+						type: 'negative',
+						message: err.message
+					})
+				})
+				.finally(() => this.$q.loading.hide())
+			})
     }
   },
   filters: {

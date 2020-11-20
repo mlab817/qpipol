@@ -38,39 +38,18 @@
     <q-separator />
 
     <menu-item
-      @click="reclassifyProjectDialog = true"
+      @click="reclassifyProject(project)"
       label="Reclassify"
       icon="fas fa-tags"
       v-if="isReviewer"
     ></menu-item>
 
     <menu-item
-      @click="createPrexcActivityFromProject"
+      @click="createPrexcActivityFromProject(project)"
       label="Create Activity"
       icon="fas fa-plus-square"
-      v-if="isReviewer"
+      v-if="isReviewer && !project.prexc_activity_id"
     ></menu-item>
-
-    <q-dialog v-model="reclassifyProjectDialog">
-      <q-card class="q-dialog-plugin">
-        <q-card-section>
-          <div class="text-h6">{{project.title}}</div>
-        </q-card-section>
-        <!--
-          ...content
-          ... use q-card-section for it?
-        -->
-        <q-card-section>
-          <banner-program v-model="banner_program_id" />
-        </q-card-section>
-
-        <!-- buttons example -->
-        <q-card-actions align="right">
-          <q-btn flat color="primary" label="Cancel" v-close-popup />
-          <q-btn flat color="primary" label="OK" @click="reclassifyProject" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
 
   </q-list>
 </template>
@@ -86,11 +65,11 @@ import BannerProgram from './BannerProgram'
 import {
   projectService
 } from '@/services'
+import {BANNER_PROGRAMS} from '../../../graphql/queries'
 
 export default {
   components: {
-    MenuItem,
-    BannerProgram
+    MenuItem
   },
 
   name: 'ProjectMenu',
@@ -116,7 +95,10 @@ export default {
           };
         });
       }
-    }
+    },
+		banner_programs: {
+    	query: BANNER_PROGRAMS
+		}
   },
 
   computed: {
@@ -144,7 +126,8 @@ export default {
       encoders: [],
       transferProjectDialog: false,
       reclassifyProjectDialog: false,
-      banner_program_id: this.project.banner_program_id
+      banner_program_id: this.project.banner_program_id,
+	    banner_programs: []
     };
   },
   methods: {
@@ -261,31 +244,64 @@ export default {
         .finally(() => this.$q.loading.hide());
     },
 
-    reclassifyProject() {
-      this.$q.loading.show()
+    reclassifyProject(project) {
+    	const banner_programs = this.banner_programs && this.banner_programs.map(x => {
+    		return {
+    			value: x.id,
+					label: x.name
+				}
+			})
+    	this.$q.dialog({
+				title: `${project.title}`,
+				message: 'Select banner program to classify',
+				options: {
+					items: banner_programs,
+					model: project.banner_program_id
+				},
+				cancel: true
+			})
+			.onOk(bannerProgram => {
+		    this.$q.loading.show()
+				const payload = {
+		    	id: this.project.id,
+					banner_program_id: bannerProgram
+				}
+		    projectService.reclassifyProject(payload)
+			    .then(() => {
+			    	this.$q.notify({
+							type: 'positive',
+							message: 'Success'
+						})
+					})
+			    .catch(err => {
+						this.$q.notify({
+							type: 'negative',
+							message: err.message
+						})
+					})
+			    .finally(() => {
+				    this.$q.loading.hide()
+			    })
+			})
+
       const payload = {
         id: this.project.id,
         banner_program_id: this.banner_program_id
       }
 
-      projectService.reclassifyProject(payload)
-        .then(res => console.log(res))
-        .catch(err => console.log(err.message))
-        .finally(() => {
-          this.reclassifyProjectDialog = false
-          this.$q.loading.hide()
-        })
+
     },
 
-    createPrexcActivityFromProject() {
+    createPrexcActivityFromProject(project) {
       this.$q.dialog({
-        title: 'Create Project',
-        message: 'Are you sure you want to create a prexc activity entry from this project?',
+        title: 'Create Activity',
+        message: `Are you sure you want to create a prexc activity entry from this project: <strong>${project.title}</strong>?`,
+				html: true,
         cancel: true
       }).onOk(() => {
         this.$q.loading.show()
         projectService.createPrexcActivityFromProject({
-          id: this.project.id
+          id: project.id
         })
         .then(() => this.$q.notify({
           type: 'positive',

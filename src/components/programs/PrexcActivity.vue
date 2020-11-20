@@ -408,7 +408,7 @@ export default {
 		prexc_programs: Array,
   	prexc_subprograms: Array,
 		prexc_activities: Array,
-		id: Number,
+		id: [Number,String],
 		mode: {
 			type: String,
 			validator: (value) => {
@@ -433,7 +433,6 @@ export default {
       result({ data }) {
         if (data.prexc_activity) {
           this.investmentToSubmit = data.prexc_activity;
-          this.editMode = true;
         }
       }
     },

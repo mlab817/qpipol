@@ -38,7 +38,7 @@ import {
 	EXPORT_PROJECTS,
   RECLASSIFY_PROJECT
 } from '@/graphql';
-import {CREATE_PREXC_ACTIVITY_FROM_PROJECT, PREXC_ACTIVITIES} from 'src/graphql'
+import {CREATE_PREXC_ACTIVITY_FROM_PROJECT, OU_PREXC_ACTIVITIES, PREXC_ACTIVITIES} from 'src/graphql'
 
 export const projectService = {
 	index() {
@@ -788,14 +788,34 @@ export const projectService = {
 				variables: payload,
 				update: (store, {data: { createPrexcActivityFromProject } }) => {
 					const data = store.readQuery({
-						query: PREXC_ACTIVITIES
+						query: OU_PREXC_ACTIVITIES,
+						variables: {
+							id: createPrexcActivityFromProject.operating_unit_id
+						}
 					})
 
-					data.prexc_activities.push(createPrexcActivityFromProject)
+					data.operating_unit.prexc_activities.push(createPrexcActivityFromProject)
 
 					store.writeQuery({
-						query: PREXC_ACTIVITIES,
+						query: OU_PREXC_ACTIVITIES,
+						variables: {
+							id: createPrexcActivityFromProject.operating_unit_id
+						},
 						data
+					})
+					
+					const data2 = store.readQuery({
+						query: ALL_PROJECTS
+					})
+					
+					console.log(data2)
+					
+					const projectToUpdate = data2.allProjects.find(ap => ap.id === createPrexcActivityFromProject.project_id)
+					projectToUpdate.prexc_activity_id = createPrexcActivityFromProject.id
+					
+					store.writeQuery({
+						query: ALL_PROJECTS,
+						data2
 					})
 				}
 			})

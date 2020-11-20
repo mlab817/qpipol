@@ -1,17 +1,19 @@
 import { client } from 'boot/apollo';
 import { handleResponse, handleError } from 'src/utils';
 import {
-  PREXC_ACTIVITIES,
-  CREATE_PREXC_ACTIVITY,
-  DELETE_PREXC_ACTIVITY,
-  UPDATE_PREXC_ACTIVITY,
-  FINALIZE_PREXC_ACTIVITY,
-  FINALIZE_PREXC_ACTIVITIES,
-  EXPORT_EXCEL,
-  UPDATE_OPERATING_UNIT_PREXC_ACTIVITIES,
-  EXPORT_FOR_CONSOLIDATION,
-  SYNC_ACTIVITY_TO_PROJECT
-} from 'src/graphql';
+	PREXC_ACTIVITIES,
+	CREATE_PREXC_ACTIVITY,
+	DELETE_PREXC_ACTIVITY,
+	UPDATE_PREXC_ACTIVITY,
+	FINALIZE_PREXC_ACTIVITY,
+	FINALIZE_PREXC_ACTIVITIES,
+	EXPORT_EXCEL,
+	UPDATE_OPERATING_UNIT_PREXC_ACTIVITIES,
+	EXPORT_FOR_CONSOLIDATION,
+	SYNC_ACTIVITY_TO_PROJECT,
+	RECLASSIFY_PREXC_ACTIVITY,
+	OU_PREXC_ACTIVITIES
+} from 'src/graphql'
 
 export const programService = {
   createPrexcActivity(payload) {
@@ -179,5 +181,34 @@ export const programService = {
       })
       .then(handleResponse)
       .catch(handleError)
-  }
+  },
+	reclassifyPrexcActivity(payload) {
+  	return client
+		  .mutate({
+			  mutation: RECLASSIFY_PREXC_ACTIVITY,
+			  variables: payload,
+			  update: (store, { data: { reclassifyPrexcActivity } }) => {
+			  	console.log(reclassifyPrexcActivity)
+			    const data = store.readQuery({
+				    query: OU_PREXC_ACTIVITIES,
+				    variables: {
+				    	id: reclassifyPrexcActivity.operating_unit_id
+				    }
+			    })
+				  
+				  const index = data.operating_unit.prexc_activities.findIndex(x => x.id === reclassifyPrexcActivity.id)
+				  data.operating_unit.prexc_activities.splice(index, 1, reclassifyPrexcActivity)
+				  
+				  store.writeQuery({
+					  query: OU_PREXC_ACTIVITIES,
+					  variables: {
+						  id: reclassifyPrexcActivity.operating_unit_id
+					  },
+					  data
+				  })
+			  }
+		  })
+		  .then(handleResponse)
+		  .catch(handleError)
+	}
 };
