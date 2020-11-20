@@ -8,6 +8,39 @@
       </page-title>
     </template>
 
+    <test-chart />
+
+    <div class="row q-col-gutter-sm q-mb-md">
+      <div class="col-md-3 col-sm-12 col-xs-12">
+        <score-card
+          :value="activitiesLength"
+          label="Total Items"
+          icon="fas fa-list"
+          color="indigo" />
+      </div>
+      <div class="col-md-3 col-sm-12 col-xs-12">
+        <score-card
+          :value="done"
+          label="Finalized"
+          icon="fas fa-check"
+          color="teal" />
+      </div>
+      <div class="col-md-3 col-sm-12 col-xs-12">
+        <score-card
+          :value="infraBillion"
+          label="Infrastructure Target"
+          icon="fas fa-dollar-sign"
+          color="green-6" />
+      </div>
+      <div class="col-md-3 col-sm-12 col-xs-12">
+        <score-card
+          :value="totalBillion"
+          label="Total Investment Target"
+          icon="fas fa-dollar-sign"
+          color="orange-8" />
+      </div>
+    </div>
+
     <q-banner v-if="isAc || isAa" class="bg-grey-3 text-accent q-my-md">
       <template v-slot:avatar>
         <q-icon name="priority_high" />
@@ -51,6 +84,12 @@
       ></view-activity>
     </q-dialog>
 
+    <!-- <q-tree
+      :nodes="ou_prexc_programs"
+      node-key="id"
+      label-key="name"
+      accordion></q-tree> -->
+
     <q-table
       title="Programs"
       :data="prexc_activities"
@@ -65,11 +104,6 @@
       style="margin-bottom: 70px;"
        v-if="!isAc && !isAa"
     >
-			<template v-slot:top-left>
-				<div class="row text-caption">
-					{{ lastUpdatedPrograms ? `Last downloaded on ${lastUpdatedPrograms}` : null }}
-				</div>
-			</template>
 
       <template v-slot:top-right="props">
 				<search v-model="filter" />
@@ -99,6 +133,12 @@
           "
         >
           {{ props.value }}
+        </q-td>
+      </template>
+
+      <template v-slot:body-cell-project="props">
+        <q-td :props="props">
+          <a target="_blank" style="text-decoration: none;" v-if="props.row.project_id" :href="`/projects/${props.row.project_id}`">#{{props.row.project_id}}</a>
         </q-td>
       </template>
 
@@ -166,16 +206,32 @@ import ViewActivity from '@/components/programs/ViewActivity.vue';
 import { wrapCsvValue } from 'src/utils';
 import { exportFile, openURL, date, LocalStorage } from 'quasar';
 import { programService } from 'src/services';
+import {
+  ScoreCard
+} from '@/ui'
+import gql from 'graphql-tag'
 
 import {
 	Search,
-	FullscreenButton
+	FullscreenButton,
+  IconButton,
+  HelpButton
 } from '@/ui'
-import IconButton from '../ui/buttons/IconButton'
-import HelpButton from '../ui/buttons/HelpButton'
+import TestChart from '@/ui/components/TestChart'
 
 export default {
-  components: {HelpButton, IconButton, Search, PageContainer, PageTitle, PrexcActivity, ViewActivity, FullscreenButton },
+  components: {
+    HelpButton,
+    IconButton,
+    Search,
+    PageContainer,
+    PageTitle,
+    PrexcActivity,
+    ViewActivity,
+    FullscreenButton,
+    ScoreCard,
+    TestChart
+  },
   name: 'PrexcActivities',
   apollo: {
     prexc_programs: {
@@ -185,14 +241,40 @@ export default {
       query: PREXC_SUBPROGRAMS
     },
     prexc_activities: {
-      query: PREXC_ACTIVITIES,
-	    result() {
-		    const now = Date.now();
-		    const dateNow = date.formatDate(now, 'MMM D YYYY / HH:mm:ss A');
-		    LocalStorage.set('lastUpdatedPrograms', dateNow);
-		    this.lastUpdatedPrograms = dateNow;
-	    }
-    }
+      query: PREXC_ACTIVITIES
+    },
+    // operating_unit: {
+    //   query: gql`
+    //     query ($id: ID!) {
+    //       operating_unit (id: $id) {
+    //         id
+    //         name
+    //         prexc_programs {
+    //           id
+    //           name
+    //           children {
+    //             id
+    //             name
+    //             children {
+    //               id
+    //               name
+    //               investment_target_total
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
+    //   `,
+    //   variables() {
+    //     return {
+    //       id: this.operating_unit_id
+    //     }
+    //   },
+    //   result({ data }) {
+    //     const { prexc_programs } = data.operating_unit
+    //     this.ou_prexc_programs = prexc_programs
+    //   }
+    // }
   },
   computed: {
     totalRow() {
@@ -224,6 +306,31 @@ export default {
     },
     isAa() {
       return this.$store.getters['auth/isAa']
+    },
+    done() {
+      const finalized = this.prexc_activities.filter(x => {
+          console.log(x)
+          return x.submission_status && x.submission_status.name === 'Finalized'
+      })
+      return finalized.length
+    },
+    activitiesLength() {
+      return this.prexc_activities && this.prexc_activities.length
+    },
+    infraBillion() {
+      if (this.totalRow.infrastructure_target_total) {
+        return ((this.totalRow.infrastructure_target_total) / 1000000000).toLocaleString() + ' B'
+      }
+      return 0.00
+    },
+    totalBillion() {
+      if (this.totalRow.investment_target_total) {
+        return ((this.totalRow.investment_target_total) / 1000000000).toLocaleString() + ' B'
+      }
+      return 0.00
+    },
+    operating_unit_id() {
+      return this.$store.getters['auth/operatingUnitId']
     }
   },
   data() {
@@ -236,6 +343,7 @@ export default {
       prexc_subprograms: [],
       prexc_activities: [],
       addEditPrexcActivityDialog: false,
+      ou_prexc_programs: [],
       columns: [
         // {
         //   name: 'id',
@@ -313,12 +421,18 @@ export default {
           sortable: true
         },
         {
+          name: 'project',
+          label: 'Project Link',
+          field: row => row.project_id,
+          sortable: true
+        },
+        {
           name: 'actions',
           label: 'Actions'
         }
       ],
       prexc_activity_id: null,
-      operating_unit_id: null,
+      // operating_unit_id: null,
       selected: [],
       viewPrexcActivityDialog: false,
       helps:
@@ -501,7 +615,13 @@ export default {
 				return val.toLocaleString('en-US', {maximumFractionDigits:2})
 			}
 			return 0.00
-		}
+		},
+    billion(val) {
+      if (val) {
+        return (parseFloat(val) / 1000000000).toLocaleString() + ' B'
+      }
+      return 0.00
+    }
 	}
 };
 </script>

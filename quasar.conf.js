@@ -13,7 +13,9 @@ module.exports = function(ctx) {
       'router-auth',
       'v-money',
       'papaparse',
-      'error-handler'
+      'error-handler',
+      'echarts',
+      'apex'
     ],
 
     css: ['app.styl'],

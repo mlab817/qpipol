@@ -100,7 +100,7 @@
         </q-td>
       </template>
 
-      <template v-slot:bottom-row v-if="operating_unit.prexc_activities.length">
+      <template v-slot:bottom-row v-if="operating_unit.prexc_activities && operating_unit.prexc_activities.length">
         <q-tr class="text-weight-bold">
           <q-td>TOTAL</q-td>
           <q-td></q-td>
@@ -255,6 +255,7 @@ export default {
           name: 'infrastructure_target_total',
           label: 'Infrastructure Investment (PhP)',
           field: row => row.infrastructure_target_total,
+          format: (val) => val && val.toLocaleString(),
           align: 'right',
           sortable: true
         },
@@ -262,6 +263,7 @@ export default {
           name: 'investment_target_total',
           label: 'Total Investment (PhP)',
           field: row => row.investment_target_total,
+          format: (val) => val && val.toLocaleString(),
           align: 'right',
           sortable: true
         },

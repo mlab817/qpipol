@@ -1102,6 +1102,11 @@ export const PREXC_ACTIVITIES = gql`
       disbursement_total
       finalized
       reviewed
+      submission_status_id
+      submission_status {
+        id
+        name
+      }
     }
   }
 `;

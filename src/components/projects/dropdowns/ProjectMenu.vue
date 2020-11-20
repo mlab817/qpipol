@@ -35,20 +35,63 @@
       v-if="isReviewer && isEndorsed"
     ></menu-item>
 
+    <q-separator />
+
+    <menu-item
+      @click="reclassifyProjectDialog = true"
+      label="Reclassify"
+      icon="fas fa-tags"
+      v-if="isReviewer"
+    ></menu-item>
+
+    <menu-item
+      @click="createPrexcActivityFromProject"
+      label="Create Activity"
+      icon="fas fa-plus-square"
+      v-if="isReviewer"
+    ></menu-item>
+
+    <q-dialog v-model="reclassifyProjectDialog">
+      <q-card class="q-dialog-plugin">
+        <q-card-section>
+          <div class="text-h6">{{project.title}}</div>
+        </q-card-section>
+        <!--
+          ...content
+          ... use q-card-section for it?
+        -->
+        <q-card-section>
+          <banner-program v-model="banner_program_id" />
+        </q-card-section>
+
+        <!-- buttons example -->
+        <q-card-actions align="right">
+          <q-btn flat color="primary" label="Cancel" v-close-popup />
+          <q-btn flat color="primary" label="OK" @click="reclassifyProject" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
   </q-list>
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex';
-import MenuItem from './MenuItem';
-
-import { validateEmail } from '@/utils';
+import { validateEmail, showError } from '@/utils';
 import { SHARE_PROJECT, FETCH_ENCODERS_QUERY } from '@/graphql';
-import { showError } from '@/utils';
 import axios from 'axios';
+import { Dialog } from 'quasar'
+import MenuItem from './MenuItem';
+import BannerProgram from './BannerProgram'
+import {
+  projectService
+} from '@/services'
 
 export default {
-  components: { MenuItem },
+  components: {
+    MenuItem,
+    BannerProgram
+  },
 
   name: 'ProjectMenu',
 
@@ -99,7 +142,9 @@ export default {
   data() {
     return {
       encoders: [],
-      transferProjectDialog: false
+      transferProjectDialog: false,
+      reclassifyProjectDialog: false,
+      banner_program_id: this.project.banner_program_id
     };
   },
   methods: {
@@ -214,6 +259,44 @@ export default {
         })
         .catch(err => console.log(err.message))
         .finally(() => this.$q.loading.hide());
+    },
+
+    reclassifyProject() {
+      this.$q.loading.show()
+      const payload = {
+        id: this.project.id,
+        banner_program_id: this.banner_program_id
+      }
+
+      projectService.reclassifyProject(payload)
+        .then(res => console.log(res))
+        .catch(err => console.log(err.message))
+        .finally(() => {
+          this.reclassifyProjectDialog = false
+          this.$q.loading.hide()
+        })
+    },
+
+    createPrexcActivityFromProject() {
+      this.$q.dialog({
+        title: 'Create Project',
+        message: 'Are you sure you want to create a prexc activity entry from this project?',
+        cancel: true
+      }).onOk(() => {
+        this.$q.loading.show()
+        projectService.createPrexcActivityFromProject({
+          id: this.project.id
+        })
+        .then(() => this.$q.notify({
+          type: 'positive',
+          message: 'Success'
+        }))
+        .catch(err => this.$q.notify({
+          type: 'negative',
+          message: err.message
+        }))
+        .finally(() => this.$q.loading.hide())
+      })
     }
   }
 };
