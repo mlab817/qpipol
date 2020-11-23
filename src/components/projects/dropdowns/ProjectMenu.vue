@@ -66,6 +66,7 @@ import {
   projectService
 } from '@/services'
 import {BANNER_PROGRAMS} from '../../../graphql/queries'
+import { openURL } from 'quasar'
 
 export default {
   components: {
@@ -131,6 +132,7 @@ export default {
     };
   },
   methods: {
+    openURL,
     validateProject() {
       const id = this.project.id;
       this.$router.push(`/projects/${id}/validate`);
@@ -139,7 +141,8 @@ export default {
     viewProject() {
       const id = this.project.id;
       if (id) {
-	      this.$router.push(`/projects/${id}`, () => {});
+	      // this.$router.push(`/projects/${id}`, () => {});
+        openURL(`/projects/${id}`)
 			}
     },
 
