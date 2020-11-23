@@ -11,6 +11,8 @@
       </template>
     </q-banner>
 
+    <projects-summary />
+
     <div class="row q-pa-md q-gutter-y-md q-col-gutter-md">
       <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-sm-12">
         <short-cuts></short-cuts>
@@ -35,6 +37,8 @@ import UsefulLinks from '../components/dashboard/UsefulLinks'
 import { openURL } from 'quasar'
 import AnnouncementComponent from '../components/dashboard/AnnouncementComponent'
 
+import ProjectsSummary from 'src/components/charts/ProjectsSummary'
+
 export default {
   name: 'PageIndex',
 
@@ -44,8 +48,8 @@ export default {
 	  ReleasesComponent,
     PageContainer,
     PageTitle,
-
-    ShortCuts
+    ShortCuts,
+    ProjectsSummary
   },
 
   computed: {
@@ -60,7 +64,7 @@ export default {
 
   data() {
     return {
-      env: process.env.APP_ENV
+      env: process.env.APP_ENV,
     }
   },
 

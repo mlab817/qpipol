@@ -11,12 +11,14 @@ export default async ({ Vue }) => {
   });
 
   Vue.config.errorHandler = (err, vm, info) => {
-    vm.$rollbar.error(err);
-    Notify.create({
-      type: 'warning',
-      message: err.message
-    })
-    throw err; // rethrow
+    if (process.env.PRODUCTION) {
+      vm.$rollbar.error(err);
+      Notify.create({
+        type: 'warning',
+        message: err.message
+      })
+      throw err; // rethrow
+    }
 
     // err: error trace
     // vm: component in which error occured

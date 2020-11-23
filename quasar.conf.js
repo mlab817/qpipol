@@ -15,7 +15,8 @@ module.exports = function(ctx) {
       'papaparse',
       'error-handler',
       'echarts',
-      'apex'
+      'apex',
+      'lodash'
     ],
 
     css: ['app.styl'],
