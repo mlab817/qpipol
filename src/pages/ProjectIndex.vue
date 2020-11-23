@@ -83,7 +83,7 @@
             :class="
               props.row.submission_status && props.row.submission_status.name === 'Finalized' ? 'bg-green' : ''
             "
-						@click="$router.push(`/projects/${props.row.id}`)"
+						@click="openURL(`/projects/${props.row.id}`, null, {target: '_blank'})"
           >
             <q-list>
               <q-item class="q-pa-sm">
@@ -301,12 +301,13 @@ export default {
     };
   },
   methods: {
+    openURL,
     refetch() {
       this.$apollo.queries.allProjects.refetch();
     },
     rowClicked(evt, row) {
-      console.log(row.id);
-      this.$router.push('/projects/' + row.id);
+      // this.$router.push('/projects/' + row.id);
+      openURL('/projects/' + row.id, null, { target: '_blank' })
     },
     exportTable() {
       const content = [this.columns.map(col => wrapCsvValue(col.label))]

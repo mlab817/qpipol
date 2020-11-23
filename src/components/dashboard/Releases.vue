@@ -98,7 +98,7 @@
 			latestReleases() {
 				const releases = this.releases
 
-				return releases.sort((a, b) => (a.id > b.id) ? 1 : -1).slice(0,5)
+				return releases.sort((a, b) => (a.id < b.id) ? 1 : -1).slice(0,5)
 			}
 		}
 	}
