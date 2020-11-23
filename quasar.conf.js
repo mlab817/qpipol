@@ -13,7 +13,9 @@ module.exports = function(ctx) {
       'router-auth',
       'v-money',
       'papaparse',
-      'error-handler'
+      'error-handler',
+      'echarts',
+      'apex'
     ],
 
     css: ['app.styl'],
@@ -21,7 +23,7 @@ module.exports = function(ctx) {
     extras: [
       // 'ionicons-v4',
       // 'mdi-v3',
-      // 'fontawesome-v5',
+      'fontawesome-v5',
       // 'eva-icons',
       // 'themify',
       // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!

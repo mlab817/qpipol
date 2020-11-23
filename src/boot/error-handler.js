@@ -17,7 +17,7 @@ export default async ({ Vue }) => {
       message: err.message
     })
     throw err; // rethrow
-    
+
     // err: error trace
     // vm: component in which error occured
     // info: Vue specific error information such as lifecycle hooks, events etc.

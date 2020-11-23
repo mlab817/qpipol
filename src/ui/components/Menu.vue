@@ -1,18 +1,20 @@
 <template>
   <q-list dense>
-    <menu-item label="Dashboard" to="/dashboard" icon="dashboard" />
-    <menu-item label="Programs" to="/programs" icon="view_module" />
-    <menu-item label="Consolidators" to="/consolidates" icon="pageview" />
-    <menu-item label="Projects" to="/projects" icon="list" />
-    <menu-item label="Deleted Projects" to="/projects/trash" icon="delete" />
-    <menu-item label="Profile" to="/profile" icon="tune" />
-    <q-separator />
-    <menu-item label="Security" to="/security" icon="vpn_key" />
-    <menu-item label="Settings" to="/settings" icon="settings" />
-    <q-separator />
+    <menu-item label="Dashboard" to="/dashboard" icon="fas fa-tachometer-alt" />
+    <menu-item label="Programs" to="/programs" icon="fas fa-list" v-if="!isReviewer" />
+    <menu-item label="Projects" to="/projects" icon="fas fa-tasks" v-if="!isReviewer" />
+    <menu-item label="Review Programs" to="/review" icon="fas fa-list" v-if="isReviewer" />
+    <menu-item label="Review Projects" to="/projects" icon="fas fa-tasks" v-if="isReviewer" />
+		<menu-item label="Consolidators" to="/consolidates" icon="fas fa-layer-group" />
+    <menu-item label="Deleted Projects" to="/projects/trash" icon="fas fa-trash-alt" />
+		<q-separator />
+    <menu-item label="Profile" to="/profile" icon="fas fa-id-card" />
+    <menu-item label="Security" to="/security" icon="fas fa-fingerprint" />
+    <menu-item label="Settings" to="/settings" icon="fas fa-cog" />
+		<q-separator />
     <menu-item
       label="#AskHelp"
-      icon="help"
+      icon="fab fa-slack"
       @click="openURL('https://ipmsglobal.slack.com')"
       type="a"
       target="_blank"
@@ -29,6 +31,11 @@
   export default {
     name: 'AppMenu',
     components: { MenuItem },
+    computed: {
+      isReviewer() {
+        return this.$store.getters['auth/isReviewer']
+      }
+    },
     methods: {
       handleSignoutUser() {
         this.$q

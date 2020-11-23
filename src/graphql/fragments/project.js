@@ -196,6 +196,7 @@ export const PROJECT_FRAGMENT = gql`
 			name
 		}
     pip
+	  prexc_activity_id
     prexc_program_id
     prexc_program {
       id

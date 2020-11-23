@@ -1,7 +1,7 @@
 <template>
   <page-container>
     <template v-slot:title>
-      <page-title title="Dashboard" icon="dashboard"></page-title>
+      <page-title title="Dashboard" icon="fas fa-tachometer-alt"></page-title>
     </template>
 
     <q-banner class="bg-red-1" v-if="env === 'STAGING'">

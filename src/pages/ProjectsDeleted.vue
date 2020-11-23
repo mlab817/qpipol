@@ -1,7 +1,7 @@
 <template>
   <page-container>
     <template v-slot:title>
-      <page-title title="Trash" icon="delete" />
+      <page-title title="Trash" icon="fas fa-trash-alt" />
     </template>
 
     <q-table

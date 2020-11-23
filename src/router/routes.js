@@ -113,7 +113,31 @@ const routes = [
           requiresAuth: true,
           isReviewer: true
         }
-      }
+      },
+      {
+        path: 'banner-programs',
+        name: 'banner-programs',
+        component: () =>
+          import(
+            /* webpackChunkName: 'BannerPrograms' */ '@/pages/BannerPrograms.vue'
+          ),
+        meta: {
+          requiresAuth: true,
+          isEncoder: true
+        }
+      },
+      {
+        path: 'prexc-programs',
+        name: 'prexc-programs',
+        component: () =>
+          import(
+            /* webpackChunkName: 'PrexcPrograms' */ '@/pages/PrexcPrograms.vue'
+          ),
+        meta: {
+          requiresAuth: true,
+          isEncoder: true
+        }
+      },
     ]
   },
   ProjectsRoutes,

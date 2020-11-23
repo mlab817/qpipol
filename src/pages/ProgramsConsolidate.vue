@@ -1,7 +1,7 @@
 <template>
   <page-container>
     <template v-slot:title>
-      <page-title icon="pageview" title="Banner Programs: For Consolidation" />
+      <page-title icon="fas fa-layer-group" title="Banner Programs: For Consolidation" />
     </template>
 
     <q-table
@@ -9,8 +9,10 @@
       :filter="filter"
       :columns="columns"
       :loading="$apollo.loading"
-      style="margin-bottom: 70px;"
       wrap-cells>
+      <template v-slot:top-left>
+        <div class="row">{{consolidates}}</div>
+      </template>
       <template v-slot:top-right="props">
         <search v-model="filter" />
         <icon-button icon="cloud_download" @click="exportForConsolidation" tooltip="Download annual data from server" />
@@ -19,6 +21,12 @@
         <fullscreen-button @click="props.toggleFullscreen" :in-fullscreen="props.inFullscreen"></fullscreen-button>
       </template>
     </q-table>
+
+    <div class="row text-caption q-mt-sm text-italic" style="margin-bottom: 70px;">
+      PREXC Activities inputted in the Program Module will appear here based on the tagged
+      Banner Program. PREXC Activities from the Project Module will be added here once
+      they are re-tagged and duplicated by the IPD focal person.
+    </div>
   </page-container>
 </template>
 
@@ -57,6 +65,11 @@ export default {
   apollo: {
     consolidatedActivities: {
       query: CONSOLIDATED_ACTIVITIES
+    }
+  },
+  computed: {
+    consolidates() {
+      return this.$store.getters['auth/consolidates']
     }
   },
   data() {

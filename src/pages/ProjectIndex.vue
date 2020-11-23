@@ -1,7 +1,7 @@
 <template>
   <page-container>
     <template v-slot:title>
-      <page-title title="Projects" icon="apps">
+      <page-title title="Projects" icon="fas fa-tasks">
         <q-btn
 					outline
           :label="$q.screen.lt.md ? void 0 : 'Add Project'"
@@ -58,11 +58,13 @@
         </q-td>
       </template>
 
-      <template v-slot:body-cell-processing_status="props">
+      <template v-slot:body-cell-submission_status="props">
         <q-td :props="props">
+					<q-badge color="blue">
           {{
             props.row.submission_status ? props.row.submission_status.name : ''
           }}
+					</q-badge>
         </q-td>
       </template>
 
@@ -122,8 +124,8 @@
                 <q-item-section>
                   <q-item-label caption class="text-capitalize"
                     >{{
-                      props.row.processing_status
-                        ? props.row.processing_status.name
+                      props.row.submission_status
+                        ? props.row.submission_status.name
                         : ''
                     }}:</q-item-label
                   >
@@ -147,7 +149,7 @@
 </template>
 
 <script>
-import { exportFile, LocalStorage, date, openURL } from 'quasar';
+import { exportFile, date, openURL } from 'quasar';
 import ProjectMenu from '../components/projects/dropdowns/ProjectMenu.vue';
 import PageContainer from '@/ui/page/PageContainer.vue';
 import PageTitle from '@/ui/page/PageTitle.vue';
@@ -203,13 +205,7 @@ export default {
 
   apollo: {
     allProjects: {
-      query: ALL_PROJECTS,
-      result() {
-        const now = Date.now();
-        const dateNow = date.formatDate(now, 'MMM D YYYY / HH:mm:ss A');
-        LocalStorage.set('lastUpdated', dateNow);
-        this.lastUpdated = dateNow;
-      }
+      query: ALL_PROJECTS
     },
     submission_statuses: {
       query: SUBMISSION_STATUSES
@@ -218,7 +214,6 @@ export default {
 
   data() {
     return {
-      lastUpdated: LocalStorage.getItem('lastUpdated') || null,
       filter: '',
       allProjects: [],
       processing_statuses: [],
@@ -262,12 +257,21 @@ export default {
           name: 'cost',
           label: 'Total Project Cost',
           field: row => row.investment_target_total,
-					format: (val) => val && val.toLocaleString()
+					format: (val) => val && val.toLocaleString(),
+					sortable: true
         },
+				{
+					name: 'prexc_activity',
+					label: 'PREXC Activity',
+					field: row => row.prexc_activity_id,
+					format: val => val && `#${val}`,
+					sortable: true
+				},
         {
           name: 'created_by',
           label: 'Added By',
-          field: row => (row.creator ? row.creator.nickname : '')
+          field: row => (row.creator ? row.creator.nickname : ''),
+	        sortable: true
         },
         {
           name: 'last_updated',

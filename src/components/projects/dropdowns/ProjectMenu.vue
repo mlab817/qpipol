@@ -35,20 +35,42 @@
       v-if="isReviewer && isEndorsed"
     ></menu-item>
 
+    <q-separator />
+
+    <menu-item
+      @click="reclassifyProject(project)"
+      label="Reclassify"
+      icon="fas fa-tags"
+      v-if="isReviewer"
+    ></menu-item>
+
+    <menu-item
+      @click="createPrexcActivityFromProject(project)"
+      label="Create Activity"
+      icon="fas fa-plus-square"
+      v-if="isReviewer && !project.prexc_activity_id"
+    ></menu-item>
+
   </q-list>
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex';
-import MenuItem from './MenuItem';
-
-import { validateEmail } from '@/utils';
+import { validateEmail, showError } from '@/utils';
 import { SHARE_PROJECT, FETCH_ENCODERS_QUERY } from '@/graphql';
-import { showError } from '@/utils';
 import axios from 'axios';
+import { Dialog } from 'quasar'
+import MenuItem from './MenuItem';
+import BannerProgram from './BannerProgram'
+import {
+  projectService
+} from '@/services'
+import {BANNER_PROGRAMS} from '../../../graphql/queries'
 
 export default {
-  components: { MenuItem },
+  components: {
+    MenuItem
+  },
 
   name: 'ProjectMenu',
 
@@ -73,7 +95,10 @@ export default {
           };
         });
       }
-    }
+    },
+		banner_programs: {
+    	query: BANNER_PROGRAMS
+		}
   },
 
   computed: {
@@ -99,7 +124,10 @@ export default {
   data() {
     return {
       encoders: [],
-      transferProjectDialog: false
+      transferProjectDialog: false,
+      reclassifyProjectDialog: false,
+      banner_program_id: this.project.banner_program_id,
+	    banner_programs: []
     };
   },
   methods: {
@@ -214,6 +242,77 @@ export default {
         })
         .catch(err => console.log(err.message))
         .finally(() => this.$q.loading.hide());
+    },
+
+    reclassifyProject(project) {
+    	const banner_programs = this.banner_programs && this.banner_programs.map(x => {
+    		return {
+    			value: x.id,
+					label: x.name
+				}
+			})
+    	this.$q.dialog({
+				title: `${project.title}`,
+				message: 'Select banner program to classify',
+				options: {
+					items: banner_programs,
+					model: project.banner_program_id
+				},
+				cancel: true
+			})
+			.onOk(bannerProgram => {
+		    this.$q.loading.show()
+				const payload = {
+		    	id: this.project.id,
+					banner_program_id: bannerProgram
+				}
+		    projectService.reclassifyProject(payload)
+			    .then(() => {
+			    	this.$q.notify({
+							type: 'positive',
+							message: 'Success'
+						})
+					})
+			    .catch(err => {
+						this.$q.notify({
+							type: 'negative',
+							message: err.message
+						})
+					})
+			    .finally(() => {
+				    this.$q.loading.hide()
+			    })
+			})
+
+      const payload = {
+        id: this.project.id,
+        banner_program_id: this.banner_program_id
+      }
+
+
+    },
+
+    createPrexcActivityFromProject(project) {
+      this.$q.dialog({
+        title: 'Create Activity',
+        message: `Are you sure you want to create a prexc activity entry from this project: <strong>${project.title}</strong>?`,
+				html: true,
+        cancel: true
+      }).onOk(() => {
+        this.$q.loading.show()
+        projectService.createPrexcActivityFromProject({
+          id: project.id
+        })
+        .then(() => this.$q.notify({
+          type: 'positive',
+          message: 'Success'
+        }))
+        .catch(err => this.$q.notify({
+          type: 'negative',
+          message: err.message
+        }))
+        .finally(() => this.$q.loading.hide())
+      })
     }
   }
 };

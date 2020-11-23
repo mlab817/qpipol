@@ -590,7 +590,7 @@
 					infrastructure_target_total: 0
 				};
 
-				if (fsf.length) {
+				if (fsf && fsf.length) {
 					investTotal = fsf.reduce((acc, val) => {
 						console.log(acc);
 						acc.infrastructure_target_2016 = val.infrastructure_target_2016;
@@ -637,7 +637,7 @@
 					investment_target_total: 0
 				};
 
-				if (fsf.length) {
+				if (fsf && fsf.length) {
 					investTotal = fsf.reduce((acc, val) => {
 						console.log(acc);
 						acc.investment_target_2016 = val.investment_target_2016;
@@ -696,7 +696,7 @@
 				const ib = this.project.implementation_bases
 					? this.project.implementation_bases
 					: [];
-				if (ib.length) {
+				if (ib && ib.length) {
 					let ib_values = ib.map(x => x.name);
 					return ib_values.join(', ');
 				}

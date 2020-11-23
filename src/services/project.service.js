@@ -35,9 +35,10 @@ import {
   UPLOAD_SIGNED_COPY,
   EXPORT_PROJECT_DOCX_MUTATION,
   REVERT_TO_DRAFT_PROJECT,
-	EXPORT_PROJECTS
+	EXPORT_PROJECTS,
+  RECLASSIFY_PROJECT
 } from '@/graphql';
-import {CREATE_PREXC_ACTIVITY_FROM_PROJECT, PREXC_ACTIVITIES} from 'src/graphql'
+import {CREATE_PREXC_ACTIVITY_FROM_PROJECT, OU_PREXC_ACTIVITIES, PREXC_ACTIVITIES} from 'src/graphql'
 
 export const projectService = {
 	index() {
@@ -49,7 +50,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	show(payload) {
 		// get based on id
 		return client
@@ -60,7 +61,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	create(payload) {
 		return client
 			.mutate({
@@ -70,9 +71,9 @@ export const projectService = {
 					const data = store.readQuery({
 						query: ALL_PROJECTS
 					});
-					
+
 					data.allProjects.push(createProject);
-					
+
 					store.writeQuery({
 						query: ALL_PROJECTS,
 						data
@@ -82,7 +83,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	delete(payload) {
 		return client
 			.mutate({
@@ -93,32 +94,32 @@ export const projectService = {
 					const deletedId = deleteProject
 						? deleteProject.project.id
 						: payload.id;
-					
+
 					// retrieve the paginated query
 					// variables are required
 					const data = store.readQuery({
 						query: ALL_PROJECTS
 					});
-					
+
 					// console.log('is store being run?');
-					
+
 					// filter out the deleted id from the list
 					data.allProjects = data.allProjects.filter(
 						project => project.id !== deletedId
 					);
-					
+
 					// save the query
 					store.writeQuery({
 						query: ALL_PROJECTS,
 						data
 					});
-					
+
 					const data2 = store.readQuery({
 						query: DELETED_PROJECTS_QUERY
 					})
-					
+
 					data2.allProjects.push(deleteProject)
-					
+
 					store.writeQuery({
 						query: DELETED_PROJECTS_QUERY,
 						data2
@@ -128,7 +129,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	restore(id) {
 		return client
 			.mutate({
@@ -140,22 +141,22 @@ export const projectService = {
 					const data = store.readQuery({
 						query: ALL_PROJECTS
 					});
-					
+
 					console.log(data);
-					
+
 					data.allProjects.push(restoreProject);
-					
+
 					store.writeQuery({
 						query: ALL_PROJECTS,
 						data
 					});
-					
+
 					const data2 = store.readQuery({
 						query: DELETED_PROJECTS_QUERY
 					});
-					
+
 					data2.filter(project => project.id !== id);
-					
+
 					data2.allProjects.writeQuery({
 						query: DELETED_PROJECTS_QUERY,
 						data2
@@ -165,7 +166,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	update(payload) {
 		return client
 			.mutate({
@@ -175,13 +176,13 @@ export const projectService = {
 					const data = store.readQuery({
 						query: ALL_PROJECTS
 					});
-					
+
 					const index = data.allProjects.findIndex(
 						project => project.id === updateProject.id
 					);
-					
+
 					data.allProjects.splice(index, 1, updateProject);
-					
+
 					store.writeQuery({
 						query: ALL_PROJECTS,
 						data
@@ -191,7 +192,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	finalize(payload) {
 		return client
 			.mutate({
@@ -205,9 +206,9 @@ export const projectService = {
 							id: finalizeProject.id
 						}
 					});
-					
+
 					data.finalized = true;
-					
+
 					store.writeQuery({
 						query: FETCH_PROJECT_QUERY,
 						variables: {
@@ -220,7 +221,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	return(payload) {
 		return client
 			.mutate({
@@ -230,7 +231,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	validate(payload) {
 		return client
 			.mutate({
@@ -240,7 +241,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	review(payload) {
 		return client
 			.mutate({
@@ -250,7 +251,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	accept(payload) {
 		return client
 			.mutate({
@@ -260,7 +261,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	approve(payload) {
 		return client
 			.mutate({
@@ -270,7 +271,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	saveReviewAsDraft(payload) {
 		return client
 			.mutate({
@@ -280,7 +281,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	deleteAttachment(payload) {
 		return client
 			.mutate({
@@ -295,12 +296,12 @@ export const projectService = {
 							id: payload.project_id
 						}
 					});
-					
+
 					const index = data.project.attachments.findIndex(
 						x => x.id === deleteAttachment.id
 					);
 					data.project.attachments.splice(index, 1);
-					
+
 					cache.writeQuery({
 						query: FETCH_PROJECT_QUERY,
 						variables: {
@@ -312,7 +313,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	uploadAttachment(payload) {
 		return client
 			.mutate({
@@ -325,11 +326,11 @@ export const projectService = {
 							id: payload.project_id
 						}
 					});
-					
+
 					// const attachments = data.project.attachments
 					const attachments = data.project.attachments;
 					attachments.push(uploadAttachment);
-					
+
 					cache.writeQuery({
 						query: FETCH_PROJECT_QUERY,
 						variables: {
@@ -342,7 +343,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	search(payload) {
 		return client
 			.query({
@@ -354,7 +355,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	transfer(payload) {
 		return client
 			.mutate({
@@ -364,7 +365,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	download(payload) {
 		return client
 			.query({
@@ -374,7 +375,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	uploadSignedCopy(payload) {
 		return client
 			.mutate({
@@ -387,9 +388,9 @@ export const projectService = {
 							id: uploadSignedCopy.id
 						}
 					});
-					
+
 					data.project.signed_copy_link = uploadSignedCopy.signed_copy_link;
-					
+
 					store.writeQuery({
 						query: FETCH_PROJECT_QUERY,
 						variables: {
@@ -402,7 +403,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	submitReview(payload) {
 		return client
 			.mutate({
@@ -412,7 +413,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	forceDelete(payload) {
 		return client
 			.mutate({
@@ -422,11 +423,11 @@ export const projectService = {
 					const data = store.readQuery({
 						query: DELETED_PROJECTS_QUERY
 					});
-					
+
 					data.allProjects = data.allProjects.filter(
 						x => x.id !== forceDeleteProject.id
 					);
-					
+
 					store.writeQuery({
 						query: DELETED_PROJECTS_QUERY,
 						data
@@ -436,7 +437,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	createFundingSourceFinancial(payload) {
 		return client
 			.mutate({
@@ -449,11 +450,11 @@ export const projectService = {
 							id: payload.project_id
 						}
 					});
-					
+
 					data.project.funding_source_financials.push(
 						createFundingSourceFinancial
 					);
-					
+
 					store.writeQuery({
 						query: FETCH_PROJECT_QUERY,
 						variables: {
@@ -466,7 +467,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	updateFundingSourceFinancial(payload) {
 		return client
 			.mutate({
@@ -479,7 +480,7 @@ export const projectService = {
 							id: payload.project_id
 						}
 					});
-					
+
 					const index = data.project.funding_source_financials.findIndex(
 						x => x.id === updateFundingSourceFinancial.id
 					);
@@ -488,7 +489,7 @@ export const projectService = {
 						1,
 						updateFundingSourceFinancial
 					);
-					
+
 					store.writeQuery({
 						query: FETCH_PROJECT_QUERY,
 						variables: {
@@ -501,7 +502,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	deleteFundingSourceFinancial(payload) {
 		return client
 			.mutate({
@@ -514,7 +515,7 @@ export const projectService = {
 							id: deleteFundingSourceFinancial.project_id
 						}
 					});
-					
+
 					const index = data.project.funding_source_financials.findIndex(
 						x => x.id === deleteFundingSourceFinancial.id
 					);
@@ -522,7 +523,7 @@ export const projectService = {
 						index,
 						1
 					);
-					
+
 					store.writeQuery({
 						query: FETCH_PROJECT_QUERY,
 						variables: {
@@ -535,7 +536,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	createRegionFinancial(payload) {
 		return client
 			.mutate({
@@ -548,9 +549,9 @@ export const projectService = {
 							id: payload.project_id
 						}
 					});
-					
+
 					data.project.region_financials.push(createRegionFinancial);
-					
+
 					store.writeQuery({
 						query: FETCH_PROJECT_QUERY,
 						variables: {
@@ -563,7 +564,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	updateRegionFinancial(payload) {
 		return client
 			.mutate({
@@ -576,7 +577,7 @@ export const projectService = {
 							id: payload.project_id
 						}
 					});
-					
+
 					const index = data.project.region_financials.findIndex(
 						x => x.id === updateRegionFinancial.id
 					);
@@ -585,7 +586,7 @@ export const projectService = {
 						1,
 						updateRegionFinancial
 					);
-					
+
 					store.writeQuery({
 						query: FETCH_PROJECT_QUERY,
 						variables: {
@@ -598,7 +599,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	deleteRegionFinancial(payload) {
 		return client
 			.mutate({
@@ -611,12 +612,12 @@ export const projectService = {
 							id: deleteRegionFinancial.project_id
 						}
 					});
-					
+
 					const index = data.project.region_financials.findIndex(
 						x => x.id === deleteRegionFinancial.id
 					);
 					data.project.region_financials.splice(index, 1);
-					
+
 					store.writeQuery({
 						query: FETCH_PROJECT_QUERY,
 						variables: {
@@ -629,7 +630,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	createFundingSourceInfrastructure(payload) {
 		return client
 			.mutate({
@@ -642,13 +643,13 @@ export const projectService = {
 							id: payload.project_id
 						}
 					});
-					
+
 					console.log('before save: ', data)
-					
+
 					data.project.funding_source_infrastructures.push(
 						createFundingSourceInfrastructure
 					);
-					
+
 					store.writeQuery({
 						query: FETCH_PROJECT_QUERY,
 						variables: {
@@ -656,14 +657,14 @@ export const projectService = {
 						},
 						data
 					});
-					
+
 					console.log('after save: ', data)
 				}
 			})
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	updateFundingSourceInfrastructure(payload) {
 		return client
 			.mutate({
@@ -676,7 +677,7 @@ export const projectService = {
 							id: payload.project_id
 						}
 					});
-					
+
 					const index = data.project.funding_source_infrastructures.findIndex(
 						x => x.id === updateFundingSourceInfrastructure.id
 					);
@@ -685,7 +686,7 @@ export const projectService = {
 						1,
 						updateFundingSourceInfrastructure
 					);
-					
+
 					store.writeQuery({
 						query: FETCH_PROJECT_QUERY,
 						variables: {
@@ -698,7 +699,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	deleteFundingSourceInfrastructure(payload) {
 		return client
 			.mutate({
@@ -711,12 +712,12 @@ export const projectService = {
 							id: deleteFundingSourceInfrastructure.project_id
 						}
 					});
-					
+
 					const index = data.project.funding_source_infrastructures.findIndex(
 						x => x.id === deleteFundingSourceInfrastructure.id
 					);
 					data.project.funding_source_infrastructures.splice(index, 1);
-					
+
 					store.writeQuery({
 						query: FETCH_PROJECT_QUERY,
 						variables: {
@@ -729,7 +730,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError);
 	},
-	
+
 	exportProjectDocx(payload) {
 		return client
 			.mutate({
@@ -739,7 +740,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError)
 	},
-	
+
 	exportProjects() {
 		return client
 			.mutate({
@@ -748,7 +749,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError)
 	},
-	
+
 	revertToDraftProject(payload) {
 		return client
 			.mutate({
@@ -758,10 +759,10 @@ export const projectService = {
 					const data = store.readQuery({
 						query: ALL_PROJECTS
 					})
-					
+
 					const index = data.projects.findIndex(project => project.id === revertToDraftProject.id)
 					data.projects.splice(index, 1, revertToDraftProject)
-					
+
 					store.writeQuery({
 						query: ALL_PROJECTS,
 						data
@@ -779,7 +780,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError)
 	},
-	
+
 	createPrexcActivityFromProject(payload) {
 		return client
 			.mutate({
@@ -787,18 +788,61 @@ export const projectService = {
 				variables: payload,
 				update: (store, {data: { createPrexcActivityFromProject } }) => {
 					const data = store.readQuery({
-						query: PREXC_ACTIVITIES
+						query: OU_PREXC_ACTIVITIES,
+						variables: {
+							id: createPrexcActivityFromProject.operating_unit_id
+						}
+					})
+
+					data.operating_unit.prexc_activities.push(createPrexcActivityFromProject)
+
+					store.writeQuery({
+						query: OU_PREXC_ACTIVITIES,
+						variables: {
+							id: createPrexcActivityFromProject.operating_unit_id
+						},
+						data
 					})
 					
-					data.prexc_activities.push(createPrexcActivityFromProject)
+					const data2 = store.readQuery({
+						query: ALL_PROJECTS
+					})
+					
+					console.log(data2)
+					
+					const projectToUpdate = data2.allProjects.find(ap => ap.id === createPrexcActivityFromProject.project_id)
+					projectToUpdate.prexc_activity_id = createPrexcActivityFromProject.id
 					
 					store.writeQuery({
-						query: PREXC_ACTIVITIES,
-						data
+						query: ALL_PROJECTS,
+						data2
 					})
 				}
 			})
 			.then(handleResponse)
 			.catch(handleError)
-	}
+	},
+  
+  reclassifyProject(payload) {
+    return client
+      .mutate({
+        mutation: RECLASSIFY_PROJECT,
+        variables: payload,
+        update: (store, { data: { reclassifyProject } }) => {
+          const data = store.readQuery({
+            query: ALL_PROJECTS
+          })
+
+          const index = data.allProjects.findIndex(x => x.id === reclassifyProject.id)
+          data.allProjects.splice(index, 1, reclassifyProject)
+
+          store.writeQuery({
+            query: ALL_PROJECTS,
+            data
+          })
+        }
+      })
+      .then(handleResponse)
+      .catch(handleError)
+  }
 }

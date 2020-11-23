@@ -1,7 +1,7 @@
 <template>
   <page-container>
     <template v-slot:title>
-      <page-title title="Settings" icon="settings"></page-title>
+      <page-title title="Settings" icon="fas fa-cog"></page-title>
     </template>
 
     <div class="row q-pa-sm">
