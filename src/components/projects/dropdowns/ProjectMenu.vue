@@ -142,7 +142,7 @@ export default {
       const id = this.project.id;
       if (id) {
 	      // this.$router.push(`/projects/${id}`, () => {});
-        openURL(`/projects/${id}`)
+        openURL(`/projects/${id}`, null, { target: '_blank' })
 			}
     },
 
