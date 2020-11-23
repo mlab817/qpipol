@@ -1,0 +1,2721 @@
+type Query {
+  project_processing_statuses: [ProjectProcessingStatus]
+  announcements: [Announcement]
+
+  # Get current user
+  getCurrentUser: User
+  activities(
+    first: Int!
+    page: Int
+    orderBy: [ActivitiesOrderByOrderByClause!]
+  ): ActivityPaginator
+
+  # Get all implementation basis
+  bases: [Basis]
+
+  # Get all Core Investment Program/Project Types
+  cip_types: [CipType]
+
+  # Get all cities and municipalities
+  city_municipalities: [CityMunicipality]
+
+  # Get all legislative districts
+  districts: [District]
+
+  # Get all funding institutions
+  funding_institutions: [FundingInstitution]
+
+  # Get all funding sources
+  funding_sources: [FundingSource]
+
+  # Get all GADs
+  gads: [Gad]
+
+  # Get all implementation modes
+  implementation_modes: [ImplementationMode]
+
+  # Get all infrastructure_sectors
+  infrastructure_sectors: [InfrastructureSector]
+
+  # Get all operating unit types
+  operating_unit_types: [OperatingUnitType]
+
+  # Get all paradigms
+  paradigms: [Paradigm]
+
+  # Get all project preparation documents
+  project_preparation_documents: [ProjectPreparationDocument]
+
+  # Get all sustainable development goals
+  sustainable_development_goals: [SustainableDevelopmentGoal]
+  project_statuses: [ProjectStatus]
+
+  # Get all provinces
+  provinces: [Province]
+
+  # Get all readinesses
+  readinesses: [Readiness]
+  regions: [Region]
+  region(id: ID!): Region
+
+  # Get all spatial coverages
+  spatial_coverages: [SpatialCoverage]
+
+  # Get all technical readiness
+  technical_readinesses: [TechnicalReadiness]
+
+  # Get all the ten point agenda
+  ten_point_agenda: [TenPointAgenda]
+
+  # Get all budget tiers
+  tiers: [Tier!]!
+
+  # Get all pap types
+  types: [Type]
+
+  # Get all typologies
+  typologies: [Typology]
+
+  # Get all years
+  years: [Year]
+
+  # Get paginated user list
+  paginatedUsers(
+    # Limits number of fetched elements.
+    first: Int = 10
+
+    # The offset from which elements are returned.
+    page: Int
+  ): UserPaginator
+
+  # Get all users in a single list
+  users: [User!]!
+
+  # Get all reviewers
+  reviewers: [User]
+  checkEmailAvailability(email: String!): CheckEmailAvailabilityResponse!
+
+  # Get all encoders
+  encoders: [User]
+  roles: [Role!]!
+
+  # Get paginated list of projects. Accepts page argument
+  paginatedProjects(
+    # Limits number of fetched elements.
+    first: Int = 25
+
+    # The offset from which elements are returned.
+    page: Int
+
+    # Allows to filter if trashed elements should be fetched.
+    trashed: Trashed
+  ): ProjectPaginator
+
+  # Get paginated list of projects based on relay
+  relayProjects(
+    # Limits number of fetched elements.
+    first: Int = 25
+
+    # A cursor after which elements are returned.
+    after: String
+
+    # Allows to filter if trashed elements should be fetched.
+    trashed: Trashed
+  ): ProjectConnection
+  draftProjects(
+    # Limits number of fetched elements.
+    first: Int!
+
+    # The offset from which elements are returned.
+    page: Int
+  ): ProjectPaginator
+  finalizedProjects: [Project]
+  endorsedProjects(
+    # Limits number of fetched elements.
+    first: Int!
+
+    # The offset from which elements are returned.
+    page: Int
+  ): ProjectPaginator
+  returnedProjects(
+    # Limits number of fetched elements.
+    first: Int!
+
+    # The offset from which elements are returned.
+    page: Int
+  ): ProjectPaginator
+  validatedProjects(
+    # Limits number of fetched elements.
+    first: Int!
+
+    # The offset from which elements are returned.
+    page: Int
+  ): ProjectPaginator
+  reviewedProjects(
+    # Limits number of fetched elements.
+    first: Int!
+
+    # The offset from which elements are returned.
+    page: Int
+  ): ProjectPaginator
+  acceptedProjects(
+    # Limits number of fetched elements.
+    first: Int!
+
+    # The offset from which elements are returned.
+    page: Int
+  ): ProjectPaginator
+  approvedProjects(
+    # Limits number of fetched elements.
+    first: Int!
+
+    # The offset from which elements are returned.
+    page: Int
+  ): ProjectPaginator
+  encodedProjects(
+    # Limits number of fetched elements.
+    first: Int!
+
+    # The offset from which elements are returned.
+    page: Int
+  ): ProjectPaginator
+  projects(
+    processing_status_id: ID!
+
+    # Limits number of fetched elements. Maximum allowed value: 25.
+    first: Int = 10
+
+    # The offset from which elements are returned.
+    page: Int
+  ): ProjectPaginator
+
+  # Gets project information based on id
+  project(id: ID!): Project
+  allProjects(
+    # Allows to filter if trashed elements should be fetched.
+    trashed: Trashed
+  ): [Project]
+  operating_units: [OperatingUnit]
+  operating_unit(id: ID!): OperatingUnit
+
+  # Get all contacts.
+  contacts(
+    # Allows to filter if trashed elements should be fetched.
+    trashed: Trashed
+  ): [Contact]
+
+  # Find contact by ID.
+  contact(id: ID): Contact
+  processing_statuses: [ProcessingStatus]
+  processing_status(id: ID!): ProcessingStatus
+  submission_statuses: [SubmissionStatus]
+  notifications: [Notification]
+  unreadNotifications: [Notification]
+  pdp_chapters: [PdpChapter]
+  pdp_outcomes: [PdpOutcome]
+  pdp_suboutcomes: [PdpSuboutcome]
+  pdp_indicators: [PdpIndicator]
+
+  # Search projects using their title
+  searchProjects(search: String!): [Project]
+  images: [Image]
+  image(id: ID!): Image
+  appVersions: [AppVersion]
+  appVersion(id: ID!): AppVersion
+  currentAppVersion: AppVersion
+  viewSharedProject(id: ID!, token: String!): Project
+  attachments: [Attachment]
+  attachment(id: ID!): Attachment
+  attachment_types: [AttachmentType]
+  permissions: [Permission]
+  cost_structures: [CostStructure]
+  prexc_programs: [PrexcProgram]
+  prexc_program(id: ID!): PrexcProgram
+  prexc_subprograms: [PrexcSubprogram]
+  prexc_subprogram(id: ID!): PrexcSubprogram
+  prexc_activities: [PrexcActivity]
+  prexc_activity(id: ID!): PrexcActivity
+  paginatedPrexcActivities(
+    # Limits number of fetched elements. Maximum allowed value: 25.
+    first: Int = 10
+
+    # The offset from which elements are returned.
+    page: Int
+
+    # Allows to filter if trashed elements should be fetched.
+    trashed: Trashed
+  ): PrexcActivityPaginator
+  banner_programs: [BannerProgram]
+  region_financials(project_id: ID!): [RegionFinancial]
+  funding_source_financials(project_id: ID!): [FundingSourceFinancial]
+  release(id: ID!): Release
+  releases: [Release]
+  useful_links: [UsefulLink]
+  consolidatedActivities: [PrexcActivity]
+}
+
+type ProjectProcessingStatus {
+  id: ID
+  project_id: ID!
+  project: Project
+  processing_status_id: ID!
+  processing_status: ProcessingStatus
+  processed_by: ID!
+  processor: User
+  remarks: String
+  processed_at: String
+  created_at: String
+  updated_at: String
+  deleted_at: String
+}
+
+type Project {
+  id: ID!
+  prexc_program_id: ID
+  prexc_program: PrexcProgram
+  prexc_subprogram_id: ID
+  prexc_subprogram: PrexcSubprogram
+  prexc_activity_id: ID
+  prexc_activity: PrexcActivity
+  banner_program_id: ID
+  banner_program: BannerProgram
+  pipol_code: String
+  uuid: String
+  pip: Boolean
+  cip: Boolean
+  trip: Boolean
+  rdip: Boolean
+  pcip: Boolean
+  afmip: Boolean
+  infrastructure: Boolean
+  title: String!
+  slug: String
+  operating_unit: OperatingUnit
+  main_funding_source_id: ID
+  main_funding_source: FundingSource
+  funding_institution_id: ID
+  funding_institution: FundingInstitution
+  operating_unit_id: ID
+  spatial_coverage_id: ID
+  bases: [Basis]
+  selected_bases: [ID]
+  description: String
+  components: String
+  goals: String
+  outcomes: String
+  purpose: String
+  expected_outputs: String
+  iccable: Boolean
+  clearinghouse: Boolean
+  clearinghouse_date: Date
+  target_start_year: Int
+  target_end_year: Int
+  implementation_start_date: String
+  implementation_end_date: String
+  typology: Typology
+  typology_id: ID
+  gad_id: ID
+  gad: Gad
+  type: Type
+  type_id: ID
+  regular: Boolean
+  spatial_coverage: SpatialCoverage
+  region_id: ID
+  region: Region
+  province_id: ID
+  province: Province
+  district_id: ID
+  district: District
+  city_municipality_id: ID
+  city_municipality: CityMunicipality
+  districts: [District]
+  selected_districts: [ID]
+  cities_municipalities: String
+  total_project_cost: Float
+  updates: String
+  updates_date: String
+  project_status_id: ID
+  project_status: ProjectStatus
+  tier_id: ID
+  tier: Tier
+  estimated_project_life: String
+  financial_benefit_cost_ratio: Float
+  financial_internal_rate_return: Float
+  financial_net_present_value: Float
+  economic_benefit_cost_ratio: Float
+  economic_internal_rate_return: Float
+  economic_net_present_value: Float
+  technical_readinesses: [TechnicalReadiness]
+  selected_technical_readinesses: [ID]
+  implementation_mode_id: ID
+  implementation_mode: ImplementationMode
+  paradigms: [Paradigm]
+  ten_point_agenda: [TenPointAgenda]
+  sustainable_development_goals: [SustainableDevelopmentGoal]
+  regions: [Region]
+  selected_regions: [ID]
+  provinces: [Province]
+  selected_provinces: [ID]
+  has_row: Boolean
+  has_rap: Boolean
+  has_fs: Boolean
+  neda_submission: Boolean
+  neda_submission_date: Date
+  neda_secretariat_review: Boolean
+  neda_secretariat_review_date: Date
+  neda_board: Boolean
+  neda_board_date: Date
+  rdc_required: Boolean
+  rdc_endorsed: Boolean
+  rdc_endorsed_date: Date
+  icc_endorsed: Boolean
+  icc_endorsed_date: Date
+  icc_approved: Boolean
+  icc_approved_date: Date
+  fs_target_2017: Float
+  fs_target_2018: Float
+  fs_target_2019: Float
+  fs_target_2020: Float
+  fs_target_2021: Float
+  fs_target_2022: Float
+  fs_target_2023: Float
+  fs_target_2024: Float
+  fs_target_2025: Float
+  fs_target_total: Float
+  row_target_2017: Float
+  row_target_2018: Float
+  row_target_2019: Float
+  row_target_2020: Float
+  row_target_2021: Float
+  row_target_2022: Float
+  row_target_2023: Float
+  row_target_2024: Float
+  row_target_2025: Float
+  row_target_total: Float
+  row_affected: String
+  rap_target_2017: Float
+  rap_target_2018: Float
+  rap_target_2019: Float
+  rap_target_2020: Float
+  rap_target_2021: Float
+  rap_target_2022: Float
+  rap_target_total: Float
+  rap_affected: String
+  investment_target_2016: Float
+  investment_target_2017: Float
+  investment_target_2018: Float
+  investment_target_2019: Float
+  investment_target_2020: Float
+  investment_target_2021: Float
+  investment_target_2022: Float
+  investment_target_2023: Float
+  investment_target_2024: Float
+  investment_target_2025: Float
+  investment_target_total: Float
+  infrastructure_target_2016: Float
+  infrastructure_target_2017: Float
+  infrastructure_target_2018: Float
+  infrastructure_target_2019: Float
+  infrastructure_target_2020: Float
+  infrastructure_target_2021: Float
+  infrastructure_target_2022: Float
+  infrastructure_target_2023: Float
+  infrastructure_target_2024: Float
+  infrastructure_target_2025: Float
+  infrastructure_target_total: Float
+  nep_2016: Float
+  nep_2017: Float
+  nep_2018: Float
+  nep_2019: Float
+  nep_2020: Float
+  nep_2021: Float
+  nep_2022: Float
+  nep_2023: Float
+  nep_total: Float
+  gaa_2016: Float
+  gaa_2017: Float
+  gaa_2018: Float
+  gaa_2019: Float
+  gaa_2020: Float
+  gaa_2021: Float
+  gaa_2022: Float
+  gaa_2023: Float
+  gaa_2024: Float
+  gaa_2025: Float
+  gaa_total: Float
+  disbursement_2016: Float
+  disbursement_2017: Float
+  disbursement_2018: Float
+  disbursement_2019: Float
+  disbursement_2020: Float
+  disbursement_2021: Float
+  disbursement_2022: Float
+  disbursement_2023: Float
+  disbursement_2024: Float
+  disbursement_2025: Float
+  disbursement_total: Float
+  image_url: String
+  priority_ranking: Int
+  income_increase: String
+  beneficiaries: String
+  employment_generated: String
+  implementation_risk: String
+  mitigation_strategy: String
+  created_by: ID
+  creator: User
+  updated_by: ID
+  updater: User
+  deleted_by: ID
+  deleter: User
+  can_update: Boolean
+  processing_statuses: [ProcessingStatus]
+  activities: [Activity]
+  endorsed_by: ID
+  endorser: User
+  endorsed_at: String
+  endorsement: Endorsement
+  endorsement_id: ID
+  reviewer: User
+  reviewed_by: ID
+  reviewed_at: String
+  created_at: String
+  updated_at: String
+  finalized_by: ID
+  finalizer: User
+  finalized_at: String
+  approved_by: ID
+  approved_at: String
+  createdAt: String
+  updatedAt: String
+  finalizedAt: String
+  reviewedAt: String
+  endorsedAt: String
+  deleted_at: String
+  deletedAt: String
+  project_processing_statuses: [ProjectProcessingStatus]
+  latest_processing_status: ProjectProcessingStatus
+  region_financials: [RegionFinancial]
+  funding_source_financials: [FundingSourceFinancial]
+  pdp_chapter_id: ID
+  pdp_chapter: PdpChapter
+  pdp_chapters: [PdpChapter]
+  selected_sustainable_development_goals: [ID]
+  selected_ten_point_agenda: [ID]
+  selected_paradigms: [ID]
+  selected_pdp_chapters: [ID]
+  selected_pdp_indicators: [ID]
+  pdp_indicators: [PdpIndicator]
+  latest_status: String
+  processing_status: ProcessingStatus
+  attachments: [Attachment]
+  funding_sources: [FundingSource]
+  uacs_code: String
+  signed_copy: String
+  validation_data: Boolean
+  validation_signed: Boolean
+  finalized: Boolean
+  endorsed: Boolean
+  reviewed: Boolean
+  approved: Boolean
+  encoded: Boolean
+  version: Int
+  signed_copy_link: String
+  funding_source_infrastructures: [FundingSourceInfrastructure]
+  infrastructure_subsectors: [InfrastructureSubsector]
+  selected_infrastructure_subsectors: [ID]
+  project_preparation_document_id: ID
+  project_preparation_document: ProjectPreparationDocument
+  project_preparation_document_others: String
+  selected_funding_sources: [ID]
+  cip_type_id: ID
+  cip_type: CipType
+  validated: Boolean
+  submission_status: SubmissionStatus
+  submission_status_id: ID
+  pipol: Boolean
+  pipol_status_id: ID
+  pipol_status: PipolStatus
+}
+
+type PrexcProgram {
+  id: ID!
+  name: String
+  acronym: String
+  uacs_code: String
+  cost_structure_id: ID
+  title: String
+  organizational_outcome: String
+  objective_statement: String
+  program_strategy: String
+  value: ID!
+  label: String
+  cost_structure: CostStructure
+  prexc_subprograms: [PrexcSubprogram]
+  children: [PrexcSubprogram]
+  operating_units: [OperatingUnit]
+  prexc_activities: [PrexcActivity]
+  count_prexc_activity: Int
+}
+
+type CostStructure {
+  id: ID!
+  name: String
+  acronym: String
+  value: ID!
+  label: String
+  prexc_programs: [PrexcProgram]
+  children: [PrexcProgram]
+}
+
+type PrexcSubprogram {
+  id: ID!
+  name: String
+  acronym: String
+  uacs_code: String
+  prexc_program_id: ID
+  title: String
+  organizational_outcome: String
+  objective_statement: String
+  program_strategy: String
+  outcome_indicators: String
+  output_indicators: String
+  value: ID!
+  label: String
+  prexc_program: PrexcProgram
+  prexc_activities: [PrexcActivity]
+  children: [PrexcActivity]
+  operating_units: [OperatingUnit]
+}
+
+type PrexcActivity {
+  id: ID!
+  name: String
+  acronym: String
+  operating_unit_id: ID
+  operating_unit: OperatingUnit
+  prexc_program_id: ID
+  prexc_program: PrexcProgram
+  prexc_subprogram_id: ID
+  prexc_subprogram: PrexcSubprogram
+  banner_program_id: ID
+  banner_program: BannerProgram
+  project_id: ID
+  trip: Boolean
+  uacs_code: String
+  investment_target_2016: Float
+  investment_target_2017: Float
+  investment_target_2018: Float
+  investment_target_2019: Float
+  investment_target_2020: Float
+  investment_target_2021: Float
+  investment_target_2022: Float
+  investment_target_2023: Float
+  investment_target_2024: Float
+  investment_target_2025: Float
+  investment_target_total: Float
+  infrastructure_target_2016: Float
+  infrastructure_target_2017: Float
+  infrastructure_target_2018: Float
+  infrastructure_target_2019: Float
+  infrastructure_target_2020: Float
+  infrastructure_target_2021: Float
+  infrastructure_target_2022: Float
+  infrastructure_target_2023: Float
+  infrastructure_target_2024: Float
+  infrastructure_target_2025: Float
+  infrastructure_target_total: Float
+  gaa_2016: Float
+  gaa_2017: Float
+  gaa_2018: Float
+  gaa_2019: Float
+  gaa_2020: Float
+  gaa_2021: Float
+  gaa_2022: Float
+  gaa_2023: Float
+  gaa_2024: Float
+  gaa_2025: Float
+  gaa_total: Float
+  nep_2016: Float
+  nep_2017: Float
+  nep_2018: Float
+  nep_2019: Float
+  nep_2020: Float
+  nep_2021: Float
+  nep_2022: Float
+  nep_2023: Float
+  nep_2024: Float
+  nep_2025: Float
+  nep_total: Float
+  disbursement_2016: Float
+  disbursement_2017: Float
+  disbursement_2018: Float
+  disbursement_2019: Float
+  disbursement_2020: Float
+  disbursement_2021: Float
+  disbursement_2022: Float
+  disbursement_2023: Float
+  disbursement_2024: Float
+  disbursement_2025: Float
+  disbursement_total: Float
+  created_by: ID
+  creator: User
+  updated_by: ID
+  updater: User
+  created_at: String
+  updated_at: String
+  finalized: Boolean
+  reviewed: Boolean
+  submission_status_id: ID
+  submission_status: SubmissionStatus
+  project: Project
+  tier: Tier
+}
+
+type OperatingUnit {
+  id: ID
+  name: String
+  acronym: String
+  image: String
+  image_url: String
+  address: String
+  agency_head_name: String
+  agency_head_designation: String
+  telephone_number: String
+  fax_number: String
+  email: String
+  focals: [User]
+  operating_unit_type_id: ID
+  operating_unit_type: OperatingUnitType
+  projects(
+    # Limits number of fetched elements. Maximum allowed value: 25.
+    first: Int = 10
+
+    # A cursor after which elements are returned.
+    after: String
+  ): ProjectConnection
+  count_project: Int
+  total_investment: Float
+  reviewers: [User]
+  viewers: [User]
+  investment_target_total: Float
+  investment_target_2016: Float
+  investment_target_2017: Float
+  investment_target_2018: Float
+  investment_target_2019: Float
+  investment_target_2020: Float
+  investment_target_2021: Float
+  investment_target_2022: Float
+  investment_target_2023: Float
+  project_count: Int
+  prexc_activities: [PrexcActivity]
+  prexc_programs: [PrexcProgram]
+  prexc_subprograms: [PrexcSubprogram]
+  consolidates: [BannerProgram]
+}
+
+type User {
+  id: ID!
+  name: String!
+  nickname: String
+  email: String!
+  verified: Boolean!
+  role_id: ID
+  role: Role
+  projects(
+    # Limits number of fetched elements.
+    first: Int!
+
+    # The offset from which elements are returned.
+    page: Int
+  ): ProjectPaginator
+  image_url: String
+  contact_number: String
+  position: String
+  operating_unit_id: ID
+  operating_unit: OperatingUnit
+  active: Boolean!
+  notifications: [Notification]
+  unreadNotifications: [Notification]
+  reviews: [OperatingUnit]
+  views: [OperatingUnit]
+  activities(
+    # Limits number of fetched elements.
+    first: Int!
+
+    # The offset from which elements are returned.
+    page: Int
+  ): ActivityPaginator
+  created_at: DateTime
+  reviewed: [Project!]!
+  project_processing_statuses: [ProjectProcessingStatus]
+  images: [Image]
+  image: Image
+  avatar: String
+  user_avatar: String
+  project_count: Int
+  tokens: [Token]
+  token: Token
+}
+
+type Role {
+  id: ID!
+  name: String!
+  ident: String!
+  color: String
+  description: String
+  active: Boolean
+  users: [User]
+  permissions: [Permission]
+}
+
+type Permission {
+  id: ID!
+  name: String!
+  guard_name: String
+  roles: [Role]
+}
+
+# A paginated list of Project items.
+type ProjectPaginator {
+  # Pagination information about the list of items.
+  paginatorInfo: PaginatorInfo!
+
+  # A list of Project items.
+  data: [Project!]!
+}
+
+# Pagination information about the corresponding list of items.
+type PaginatorInfo {
+  # Total count of available items in the page.
+  count: Int!
+
+  # Current pagination page.
+  currentPage: Int!
+
+  # Index of first item in the current page.
+  firstItem: Int
+
+  # If collection has more pages.
+  hasMorePages: Boolean!
+
+  # Index of last item in the current page.
+  lastItem: Int
+
+  # Last page number of the collection.
+  lastPage: Int!
+
+  # Number of items per page in the collection.
+  perPage: Int!
+
+  # Total items available in the collection.
+  total: Int!
+}
+
+type Notification {
+  id: String
+  type: String
+  notifiable: User
+  notifiable_id: ID
+  notifiable_type: String
+  data: NotificationData
+  read_at: String
+  created_at: String
+  updated_at: String
+}
+
+type NotificationData {
+  type: String
+  from: String
+  title: String
+  body: String
+  actionUrl: String
+  actionText: String
+}
+
+type ActivityPaginator {
+  data: [Activity!]!
+  paginatorInfo: PaginatorInfo!
+}
+
+type Activity {
+  id: ID
+  description: String
+  subject: Subject
+  causer: Causer
+  properties: String
+  created_at: String
+  updated_at: String
+}
+
+type Subject {
+  id: ID
+  name: String
+  title: String
+}
+
+type Causer {
+  id: ID
+  name: String
+}
+
+# A datetime string with format `Y-m-d H:i:s`, e.g. `2018-01-01 13:00:00`.
+scalar DateTime
+
+type Image {
+  id: ID
+  name: String
+  type: String
+  size: Int
+  dropbox_path: String
+  dropbox_link: String
+  uploader_id: ID
+  uploader: User
+  mime_type: String
+  extension: String
+}
+
+type Token {
+  id: String
+  user_id: ID
+  client_id: ID
+  name: String
+  scopes: String
+  revoked: Boolean
+  created_at: String
+  updated_at: String
+  expires_at: String
+}
+
+type OperatingUnitType {
+  id: ID
+  name: String
+  operating_units: [OperatingUnit]
+}
+
+# A paginated list of Project edges.
+type ProjectConnection {
+  # Pagination information about the list of edges.
+  pageInfo: PageInfo!
+
+  # A list of Project edges.
+  edges: [ProjectEdge]
+}
+
+# Pagination information about the corresponding list of items.
+type PageInfo {
+  # When paginating forwards, are there more items?
+  hasNextPage: Boolean!
+
+  # When paginating backwards, are there more items?
+  hasPreviousPage: Boolean!
+
+  # When paginating backwards, the cursor to continue.
+  startCursor: String
+
+  # When paginating forwards, the cursor to continue.
+  endCursor: String
+
+  # Total number of node in connection.
+  total: Int
+
+  # Count of nodes in current request.
+  count: Int
+
+  # Current page of request.
+  currentPage: Int
+
+  # Last page in connection.
+  lastPage: Int
+}
+
+# An edge that contains a node of type Project and a cursor.
+type ProjectEdge {
+  # The Project node.
+  node: Project
+
+  # A unique cursor that can be used for pagination.
+  cursor: String!
+}
+
+type BannerProgram {
+  id: ID
+  name: String
+  acronym: String
+  prexc_activities: [PrexcActivity]
+  consolidators: [OperatingUnit]
+}
+
+type SubmissionStatus {
+  id: ID!
+  name: String!
+  projects: [Project]
+}
+
+type Tier {
+  id: ID!
+  name: String
+  projects: [Project]
+  prexc_activities: [PrexcActivity]
+}
+
+type FundingSource {
+  id: ID!
+  name: String
+  projects: [Project]
+}
+
+type FundingInstitution {
+  id: ID!
+  name: String!
+  projects: [Project]
+}
+
+type Basis {
+  id: ID!
+  name: String!
+  projects: [Project!]!
+}
+
+# A date string with format `Y-m-d`, e.g. `2011-05-23`.
+scalar Date
+
+type Typology {
+  id: ID!
+  name: String!
+  projects: [Project!]!
+}
+
+type Gad {
+  id: ID!
+  name: String
+}
+
+type Type {
+  id: ID
+  name: String
+  projects: [Project]
+}
+
+type SpatialCoverage {
+  id: ID!
+  name: String!
+  projects: [Project]
+}
+
+type Region {
+  id: ID
+  name: String
+  label: String
+  provinces: [Province!]!
+  projects: [Project!]!
+}
+
+type Province {
+  id: ID
+  name: String
+  label: String
+  region_id: ID
+  region: Region
+  projects: [Project]
+}
+
+type District {
+  id: ID!
+  name: String!
+  province_id: ID
+  province: Province!
+  projects: [Project!]
+}
+
+type CityMunicipality {
+  id: ID!
+  name: String!
+  city_municipality_name: String
+  population_2015: Float
+  area_km2: Float
+  population_density: Float
+  barangay: Float
+  province_id: ID
+  province: Province
+  class: String
+}
+
+type ProjectStatus {
+  id: ID
+  name: String
+  projects: [Project]
+}
+
+type TechnicalReadiness {
+  id: ID!
+  name: String!
+  projects: [Project]
+}
+
+type ImplementationMode {
+  id: ID
+  name: String
+  projects: [Project!]!
+}
+
+type Paradigm {
+  id: ID
+  name: String
+  projects: [Project!]!
+}
+
+type TenPointAgenda {
+  id: ID!
+  name: String
+  projects: [Project]
+}
+
+type SustainableDevelopmentGoal {
+  id: ID
+  name: String
+  description: String
+  projects: [Project]
+}
+
+type ProcessingStatus {
+  id: ID
+  name: String
+  project_processing_statuses: [ProjectProcessingStatus]
+  projects: [Project]
+  count_projects: Int
+}
+
+type Endorsement {
+  id: ID!
+  uuid: String
+  file_name: String
+  file_path: String
+  file_size: String
+  file_extension: String
+  file_type: String
+  dropbox_link: String
+  remarks: String
+  uploaded_by: String
+  uploader: User
+  deleted_by: String
+  deleter: User
+  created_at: String
+  updated_at: String
+  deleted_at: String
+  projects: [Project]
+  link: String
+}
+
+type RegionFinancial {
+  id: ID!
+  project_id: ID!
+  region_id: ID!
+  region: Region
+  investment_target_2016: Float
+  investment_target_2017: Float
+  investment_target_2018: Float
+  investment_target_2019: Float
+  investment_target_2020: Float
+  investment_target_2021: Float
+  investment_target_2022: Float
+  investment_target_2023: Float
+  investment_target_2024: Float
+  investment_target_2025: Float
+  investment_target_total: Float
+  infrastructure_target_2016: Float
+  infrastructure_target_2017: Float
+  infrastructure_target_2018: Float
+  infrastructure_target_2019: Float
+  infrastructure_target_2020: Float
+  infrastructure_target_2021: Float
+  infrastructure_target_2022: Float
+  infrastructure_target_2023: Float
+  infrastructure_target_2024: Float
+  infrastructure_target_2025: Float
+  infrastructure_target_total: Float
+  nep_2016: Float
+  nep_2017: Float
+  nep_2018: Float
+  nep_2019: Float
+  nep_2020: Float
+  nep_2021: Float
+  nep_2022: Float
+  nep_2023: Float
+  nep_2024: Float
+  nep_2025: Float
+  nep_total: Float
+  gaa_2016: Float
+  gaa_2017: Float
+  gaa_2018: Float
+  gaa_2019: Float
+  gaa_2020: Float
+  gaa_2021: Float
+  gaa_2022: Float
+  gaa_2023: Float
+  gaa_2024: Float
+  gaa_2025: Float
+  gaa_total: Float
+  disbursement_2016: Float
+  disbursement_2017: Float
+  disbursement_2018: Float
+  disbursement_2019: Float
+  disbursement_2020: Float
+  disbursement_2021: Float
+  disbursement_2022: Float
+  disbursement_2023: Float
+  disbursement_2024: Float
+  disbursement_2025: Float
+  disbursement_total: Float
+}
+
+type FundingSourceFinancial {
+  id: ID!
+  project_id: ID!
+  funding_source_id: ID!
+  funding_source: FundingSource
+  investment_target_2016: Float
+  investment_target_2017: Float
+  investment_target_2018: Float
+  investment_target_2019: Float
+  investment_target_2020: Float
+  investment_target_2021: Float
+  investment_target_2022: Float
+  investment_target_2023: Float
+  investment_target_2024: Float
+  investment_target_2025: Float
+  investment_target_total: Float
+  infrastructure_target_2016: Float
+  infrastructure_target_2017: Float
+  infrastructure_target_2018: Float
+  infrastructure_target_2019: Float
+  infrastructure_target_2020: Float
+  infrastructure_target_2021: Float
+  infrastructure_target_2022: Float
+  infrastructure_target_2023: Float
+  infrastructure_target_2024: Float
+  infrastructure_target_2025: Float
+  infrastructure_target_total: Float
+  nep_2016: Float
+  nep_2017: Float
+  nep_2018: Float
+  nep_2019: Float
+  nep_2020: Float
+  nep_2021: Float
+  nep_2022: Float
+  nep_2023: Float
+  nep_2024: Float
+  nep_2025: Float
+  nep_total: Float
+  gaa_2016: Float
+  gaa_2017: Float
+  gaa_2018: Float
+  gaa_2019: Float
+  gaa_2020: Float
+  gaa_2021: Float
+  gaa_2022: Float
+  gaa_2023: Float
+  gaa_2024: Float
+  gaa_2025: Float
+  gaa_total: Float
+  disbursement_2016: Float
+  disbursement_2017: Float
+  disbursement_2018: Float
+  disbursement_2019: Float
+  disbursement_2020: Float
+  disbursement_2021: Float
+  disbursement_2022: Float
+  disbursement_2023: Float
+  disbursement_2024: Float
+  disbursement_2025: Float
+  disbursement_total: Float
+}
+
+type PdpChapter {
+  id: ID!
+  name: String
+  projects: [Project]
+  children: [PdpOutcome]
+  value: ID!
+  label: String
+}
+
+type PdpOutcome {
+  id: ID!
+  name: String
+  pdp_chapter_id: ID
+  children: [PdpSuboutcome]
+  value: ID!
+  label: String
+}
+
+type PdpSuboutcome {
+  id: ID!
+  name: String
+  pdp_outcome_id: ID
+  children: [PdpIndicator]
+  value: ID!
+  label: String
+}
+
+type PdpIndicator {
+  id: ID!
+  name: String
+  pdp_suboutcome_id: ID
+  value: ID!
+  label: String
+}
+
+type Attachment {
+  id: ID!
+  uuid: String
+  project_id: ID
+  attachment_type_id: ID
+  attachment_type: AttachmentType
+  file_name: String
+  file_size: String
+  file_extension: String
+  file_type: String
+  file_path: String
+  dropbox_link: String
+  uploaded_by: ID
+  deleted_by: ID
+}
+
+type AttachmentType {
+  id: ID!
+  name: String!
+}
+
+type FundingSourceInfrastructure {
+  id: ID!
+  project_id: ID!
+  funding_source_id: ID!
+  funding_source: FundingSource
+  infrastructure_target_2016: Float
+  infrastructure_target_2017: Float
+  infrastructure_target_2018: Float
+  infrastructure_target_2019: Float
+  infrastructure_target_2020: Float
+  infrastructure_target_2021: Float
+  infrastructure_target_2022: Float
+  infrastructure_target_2023: Float
+  infrastructure_target_2024: Float
+  infrastructure_target_2025: Float
+  infrastructure_target_total: Float
+}
+
+type InfrastructureSubsector {
+  id: ID
+  name: String
+  infrastructure_sector: InfrastructureSector
+  value: ID
+  label: String
+}
+
+type InfrastructureSector {
+  id: ID
+  name: String
+  infrastructure_subsectors: [InfrastructureSubsector]
+  value: ID
+  label: String
+  children: [InfrastructureSubsector]
+}
+
+type ProjectPreparationDocument {
+  id: ID
+  name: String
+}
+
+type CipType {
+  id: ID!
+  name: String
+  projects: [Project]
+}
+
+type PipolStatus {
+  id: ID
+  name: String
+  slug: String
+  projects: [Project]
+}
+
+type Announcement {
+  id: ID!
+  subject: String
+  message: String
+  created_at: String
+  created_by: ID
+  creator: User
+}
+
+# Order by clause for the `orderBy` argument on the query `activities`.
+input ActivitiesOrderByOrderByClause {
+  # The column that is used for ordering.
+  field: ActivitiesOrderByColumn!
+
+  # The direction that is used for ordering.
+  order: SortOrder!
+}
+
+# Allowed column names for the `orderBy` argument on the query `activities`.
+enum ActivitiesOrderByColumn {
+  CREATED_AT
+}
+
+# The available directions for ordering a list of records.
+enum SortOrder {
+  # Sort records in ascending order.
+  ASC
+
+  # Sort records in descending order.
+  DESC
+}
+
+type Readiness {
+  id: ID
+  name: String
+}
+
+type Year {
+  id: Int!
+  name: String
+  projects: [Project]
+}
+
+# A paginated list of User items.
+type UserPaginator {
+  # Pagination information about the list of items.
+  paginatorInfo: PaginatorInfo!
+
+  # A list of User items.
+  data: [User!]!
+}
+
+type CheckEmailAvailabilityResponse {
+  status: String!
+  message: String!
+}
+
+# Specify if you want to include or exclude trashed results from a query.
+enum Trashed {
+  # Only return trashed results.
+  ONLY
+
+  # Return both trashed and non-trashed results.
+  WITH
+
+  # Only return non-trashed results.
+  WITHOUT
+}
+
+type Contact {
+  id: ID!
+  name: String
+  email: String
+  designation: String
+  operating_unit_id: ID
+  operating_unit: OperatingUnit
+  user_id: ID
+  user: User
+  phone_number: String
+  fax_number: String
+}
+
+type AppVersion {
+  id: ID!
+  version: String
+  change_type: String
+  change_log: String
+  notes: String
+  user: User
+  created_at: String
+  updated_at: String
+}
+
+# A paginated list of PrexcActivity items.
+type PrexcActivityPaginator {
+  # Pagination information about the list of items.
+  paginatorInfo: PaginatorInfo!
+
+  # A list of PrexcActivity items.
+  data: [PrexcActivity!]!
+}
+
+type Release {
+  id: ID
+  version: String
+  summary: String
+  change_log: String
+  notes: String
+  user_id: ID
+  user: User
+  created_at: String
+  updated_at: String
+}
+
+type UsefulLink {
+  id: ID
+  title: String
+  description: String
+  to: String
+  user_id: ID
+  user: User
+  created_at: String
+  updated_at: String
+}
+
+type Mutation {
+  createAnnouncement(input: CreateAnnouncementInput): Announcement
+  updateAnnouncement(input: UpdateAnnouncementInput): Announcement
+  deleteAnnouncement(id: ID!): Announcement
+  resendEmailVerification(
+    input: EmailInput
+  ): RESEND_EMAIL_VERIFICATION_RESPONSE!
+  requestAccount(input: RequestAccountInput): REQUEST_ACCOUNT_RESPONSE!
+  createAccount(input: CreateAccountInput!): CREATE_ACCOUNT_RESPONSE!
+
+  # Mark a specific notification as read
+  markAsRead(id: ID!): Notification!
+
+  # Mark all unread notifications as read
+  markAllAsRead: NotificationResponse!
+
+  # Update user information
+  updateUser(input: UpdateUserInput): User
+  updateOu(id: ID!, operating_unit_id: ID!): User
+
+  # Assign operating unit to review
+  assignOperatingUnitToReview(user_id: ID!, operating_units: [ID]!): User
+
+  # Assign role to user
+  assignRole(user_id: ID!, role_id: ID): User!
+
+  # Upload avatar for the user
+  uploadUserAvatar(image: Upload!): User
+  chooseAvatar(image_id: ID!): User
+  createRole(input: CreateRoleInput!): Role
+  updateRole(input: UpdateRoleInput!): Role
+  deleteRole(id: ID!): Role
+  attachPermissions(input: AttachPermissionsInput!): Role
+
+  # Create a new operating unit
+  createOperatingUnit(input: CreateOperatingUnitInput!): OperatingUnit
+
+  # Update operating unit
+  updateOperatingUnit(input: UpdateOperatingUnitInput!): OperatingUnit
+
+  # Delete operating unit
+  deleteOperatingUnit(id: ID!): OperatingUnit
+  updateOperatingUnitImage(id: ID!, image: Upload!): OperatingUnit
+  assignReviewer(input: AssignReviewerInput!): AssignReviewerResponse
+
+  # Creates new project.
+  createProject(input: CreateProjectInput!): Project
+
+  # Updates existing project.
+  updateProject(input: UpdateProjectInput!): Project
+  deleteProject(id: ID!): DeleteProjectResponse!
+  forceDeleteProject(id: ID!): Project
+  restoreProject(id: ID!): Project
+
+  # Add a contact.
+  createContact(input: CreateContactInput!): Contact
+  createContacts(input: CreateContactsInput): CreateContactsResponse
+
+  # Update a contact.
+  updateContact(input: UpdateContactInput!): Contact
+
+  # Delete a contact.
+  deleteContact(id: ID!): Contact
+  createSubmissionStatus(name: String!): SubmissionStatus
+  updateSubmissionStatus(id: ID!, name: String!): SubmissionStatus
+  deleteSubmissionStatus(id: ID!): SubmissionStatus
+  restoreSubmissionStatus(id: ID!): SubmissionStatus
+
+  # Deprecated
+  endorseProjects(projects: [ID!]!, file: Upload!): Endorsement
+  finalizeProject(input: UpdateProjectInput!): Project
+  revertToDraftProject(id: ID!): Project
+  uploadSignedCopy(id: ID!, signed_copy: Upload, remarks: String): Project
+  validateProject(
+    id: ID!
+    validation_data: Boolean
+    validation_signed: Boolean
+    remarks: String
+  ): Project
+  returnProject(project_id: ID!, remarks: String): Project
+  encodeProject(input: EncodeProjectInput!): Project
+  updatePipolStatus(id: ID!, pipol_status_id: ID!): Project
+  reclassifyProject(id: ID!, banner_program_id: ID): Project
+
+  # Transfer ownership of project to another user
+  transferProject(project_id: ID!, user_id: ID!): TransferProjectResponse!
+  createAppVersion(input: CreateAppVersionInput!): AppVersion
+  updateAppVersion(input: UpdateAppVersionInput!): AppVersion
+  deleteAppVersion(id: ID!): AppVersion
+  shareProject(input: ShareProjectInput!): ShareProjectResponse
+  uploadAttachment(
+    project_id: ID!
+    attachment_type_id: ID!
+    file: Upload!
+  ): Attachment
+  deleteAttachment(id: ID!): Attachment
+  acceptProject(id: ID!, remarks: String!): Project
+  approveProject(id: ID!, remarks: String!): Project
+  createPermission(input: CreatePermissionInput!): Permission
+  updatePermission(input: UpdatePermissionInput!): Permission
+  deletePermission(id: ID!): Permission
+  createBannerProgram(input: CreateBannerProgramInput!): BannerProgram
+  updateBannerProgram(input: UpdateBannerProgramInput!): BannerProgram
+  deleteBannerProgram(id: ID!): BannerProgram
+  createPrexcProgram(input: CreatePrexcProgramInput!): PrexcProgram
+  updatePrexcProgram(input: UpdatePrexcProgramInput!): PrexcProgram
+  deletePrexcProgram(id: ID!): PrexcProgram
+  createPrexcSubprogram(input: CreatePrexcSubprogramInput!): PrexcSubprogram
+  updatePrexcSubprogram(input: UpdatePrexcSubprogramInput!): PrexcSubprogram
+  deletePrexcSubprogram(id: ID!): PrexcSubprogram
+  createPrexcActivity(input: CreatePrexcActivityInput!): PrexcActivity
+  updatePrexcActivity(input: UpdatePrexcActivityInput!): PrexcActivity
+  deletePrexcActivity(id: ID!): PrexcActivity
+  createPrexcActivityFromProject(id: ID!): PrexcActivity
+  syncActivityToProject(id: ID!): PrexcActivity
+  assignActivityToOus(id: ID!, operating_units: [ID]): PrexcActivity
+  assignProgramToOus(id: ID!, operating_units: [ID]): PrexcProgram
+  assignSubprogramToOus(id: ID!, operating_units: [ID]): PrexcSubprogram
+
+  # Finalize a single activity
+  finalizePrexcActivity(id: ID!): PrexcActivity
+
+  # Finalize multiple activities at once
+  finalizePrexcActivities(id: [ID]!): [PrexcActivity]
+
+  # Review a single activity
+  reviewPrexcActivity(id: ID!): [PrexcActivity]
+
+  # Review multiple activities at once
+  reviewPrexcActivities(id: [ID]!): [PrexcActivity]
+  exportExcel(operating_unit_id: ID): Link
+  reclassifyPrexcActivity(id: ID!, banner_program_id: ID): PrexcActivity
+  createRegionFinancial(input: CreateRegionFinancialInput!): RegionFinancial
+  updateRegionFinancial(input: UpdateRegionFinancialInput!): RegionFinancial
+  deleteRegionFinancial(id: ID!): RegionFinancial
+  createFundingSourceFinancial(
+    input: CreateFundingSourceFinancialInput!
+  ): FundingSourceFinancial
+  updateFundingSourceFinancial(
+    input: UpdateFundingSourceFinancialInput!
+  ): FundingSourceFinancial
+  deleteFundingSourceFinancial(id: ID!): FundingSourceFinancial
+  createFundingSourceInfrastructure(
+    input: CreateFundingSourceInfrastructureInput!
+  ): FundingSourceInfrastructure
+  updateFundingSourceInfrastructure(
+    input: UpdateFundingSourceInfrastructureInput!
+  ): FundingSourceInfrastructure
+  deleteFundingSourceInfrastructure(id: ID!): FundingSourceInfrastructure
+  createRelease(input: CreateReleaseInput!): Release
+  updateRelease(input: UpdateReleaseInput!): Release
+  deleteRelease(id: ID!): Release
+  createUsefulLink(input: CreateUsefulLinkInput!): UsefulLink
+  updateUsefulLink(input: UpdateUsefulLinkInput!): UsefulLink
+  deleteUsefulLink(id: ID!): Release
+  exportProjectDocx(id: ID!): DocxLink
+  exportProjects: ProjectExportsLink
+  assignBannerProgramToOu(
+    operating_unit_id: ID!
+    banner_programs: [ID!]!
+  ): OperatingUnit
+  exportForConsolidation: ConsolidatedFile
+  login(input: LoginInput): AuthPayload!
+  refreshToken(input: RefreshTokenInput): RefreshTokenPayload!
+  logout: LogoutResponse!
+  forgotPassword(input: ForgotPasswordInput!): ForgotPasswordResponse!
+  updateForgottenPassword(
+    input: NewPasswordWithCodeInput
+  ): ForgotPasswordResponse!
+  register(input: RegisterInput): RegisterResponse!
+  socialLogin(input: SocialLoginInput!): AuthPayload!
+  verifyEmail(input: VerifyEmailInput!): AuthPayload!
+  updatePassword(input: UpdatePassword!): UpdatePasswordResponse!
+  revokeToken(token: String!): Token
+  revokeAllTokens: String
+}
+
+input CreateAnnouncementInput {
+  subject: String
+  message: String
+}
+
+input UpdateAnnouncementInput {
+  id: ID!
+  subject: String
+  message: String
+}
+
+input EmailInput {
+  email: String!
+}
+
+type RESEND_EMAIL_VERIFICATION_RESPONSE {
+  message: String!
+}
+
+input RequestAccountInput {
+  name: String!
+  email: String!
+  operating_unit: ID!
+  contact_number: String!
+  message: String
+}
+
+type REQUEST_ACCOUNT_RESPONSE {
+  status: String
+  message: String
+}
+
+input CreateAccountInput {
+  email: String!
+  name: String!
+  password: String!
+  operating_unit_id: ID!
+  contact_number: String!
+  role_id: ID!
+  notify: Boolean
+}
+
+type CREATE_ACCOUNT_RESPONSE {
+  user: User
+  status: String
+  message: String
+}
+
+type NotificationResponse {
+  status: String
+}
+
+input UpdateUserInput {
+  name: String
+  nickname: String
+  operating_unit_id: ID
+  unit: String
+  position: String
+  image_url: String
+  contact_number: String
+}
+
+# Can be used as an argument to upload files using https://github.com/jaydenseric/graphql-multipart-request-spec
+scalar Upload
+
+input CreateRoleInput {
+  name: String!
+  ident: String!
+  color: String
+  description: String
+  active: Boolean
+}
+
+input UpdateRoleInput {
+  id: ID!
+  name: String!
+  ident: String!
+  color: String
+  description: String
+  active: Boolean
+}
+
+input AttachPermissionsInput {
+  id: ID!
+  permissions: SyncPermissions
+}
+
+input SyncPermissions {
+  sync: [ID!]
+}
+
+input CreateOperatingUnitInput {
+  name: String!
+  acronym: String!
+  address: String
+  image: String
+  agency_head_name: String
+  agency_head_designation: String
+  telephone_number: String
+  fax_number: String
+  email: String
+  operating_unit_type_id: ID
+}
+
+input UpdateOperatingUnitInput {
+  id: ID!
+  name: String
+  acronym: String
+  address: String
+  image: String
+  agency_head_name: String
+  agency_head_designation: String
+  telephone_number: String
+  fax_number: String
+  email: String
+  operating_unit_type_id: ID
+  prexc_activities: UpdatePrexcActivitiesHasMany
+  prexc_programs: UpdatePrexcProgramsBelongsToMany
+  prexc_subprograms: UpdatePrexcSubprogramsBelongsToMany
+}
+
+input UpdatePrexcActivitiesHasMany {
+  update: [UpdatePrexcActivityInput]
+}
+
+input UpdatePrexcActivityInput {
+  id: ID!
+  name: String
+  acronym: String
+  operating_unit_id: ID
+  prexc_program_id: ID
+  prexc_subprogram_id: ID
+  banner_program_id: ID
+  trip: Boolean
+  uacs_code: String
+  investment_target_2016: Float
+  investment_target_2017: Float
+  investment_target_2018: Float
+  investment_target_2019: Float
+  investment_target_2020: Float
+  investment_target_2021: Float
+  investment_target_2022: Float
+  investment_target_2023: Float
+  investment_target_2024: Float
+  investment_target_2025: Float
+  investment_target_total: Float
+  infrastructure_target_2016: Float
+  infrastructure_target_2017: Float
+  infrastructure_target_2018: Float
+  infrastructure_target_2019: Float
+  infrastructure_target_2020: Float
+  infrastructure_target_2021: Float
+  infrastructure_target_2022: Float
+  infrastructure_target_2023: Float
+  infrastructure_target_2024: Float
+  infrastructure_target_2025: Float
+  infrastructure_target_total: Float
+  gaa_2016: Float
+  gaa_2017: Float
+  gaa_2018: Float
+  gaa_2019: Float
+  gaa_2020: Float
+  gaa_2021: Float
+  gaa_2022: Float
+  gaa_2023: Float
+  gaa_2024: Float
+  gaa_2025: Float
+  gaa_total: Float
+  nep_2016: Float
+  nep_2017: Float
+  nep_2018: Float
+  nep_2019: Float
+  nep_2020: Float
+  nep_2021: Float
+  nep_2022: Float
+  nep_2023: Float
+  nep_2024: Float
+  nep_2025: Float
+  nep_total: Float
+  disbursement_2016: Float
+  disbursement_2017: Float
+  disbursement_2018: Float
+  disbursement_2019: Float
+  disbursement_2020: Float
+  disbursement_2021: Float
+  disbursement_2022: Float
+  disbursement_2023: Float
+  disbursement_2024: Float
+  disbursement_2025: Float
+  disbursement_total: Float
+  submission_status_id: ID
+  tier_id: ID
+}
+
+input UpdatePrexcProgramsBelongsToMany {
+  connect: [ID]
+}
+
+input UpdatePrexcSubprogramsBelongsToMany {
+  connect: [ID]
+}
+
+input AssignReviewerInput {
+  operating_unit_id: ID!
+  users: [ID]!
+}
+
+type AssignReviewerResponse {
+  status: String
+  message: String
+  operating_unit: OperatingUnit
+}
+
+# Input to create a new project.
+input CreateProjectInput {
+  prexc_program_id: ID
+  prexc_subprogram_id: ID
+  banner_program_id: ID
+  title: String!
+  uacs_code: String
+  operating_unit_id: ID
+}
+
+input UpdateProjectInput {
+  id: ID!
+  prexc_program_id: ID
+  prexc_subprogram_id: ID
+  prexc_activity_id: ID
+  banner_program_id: ID
+  pipol_url: String
+  pipol_code: String
+  pip: Boolean
+  cip: Boolean
+  trip: Boolean
+  rdip: Boolean
+  pcip: Boolean
+  afmip: Boolean
+  title: String
+  type_id: ID
+  infrastructure: Boolean
+  operating_unit_id: ID
+  main_funding_source_id: ID
+  funding_institution_id: ID
+  implementation_mode_id: ID
+  priority_ranking: Int
+  project_status_id: ID
+  typology_id: ID
+  tier_id: ID
+  spatial_coverage_id: ID
+  cities_municipalities: String
+  description: String
+  components: String
+  goals: String
+  outcomes: String
+  purpose: String
+  expected_outputs: String
+  beneficiaries: String
+  employment_generated: String
+  target_start_year: Int
+  target_end_year: Int
+  implementation_start_date: String
+  implementation_end_date: String
+  clearinghouse: Boolean
+  clearinghouse_date: String
+  neda_submission: Boolean
+  neda_submission_date: String
+  neda_secretariat_review: Boolean
+  neda_secretariat_review_date: String
+  icc_endorsed: Boolean
+  icc_endorsed_date: String
+  icc_approved: Boolean
+  icc_approved_date: String
+  neda_board: Boolean
+  neda_board_date: String
+  total_project_cost: Float
+  currency_id: ID
+  implementation_risk: String
+  mitigation_strategy: String
+  income_increase: String
+  gad_id: ID
+  estimated_project_life: String
+  financial_benefit_cost_ratio: Float
+  financial_internal_rate_return: Float
+  financial_net_present_value: Float
+  economic_benefit_cost_ratio: Float
+  economic_internal_rate_return: Float
+  economic_net_present_value: Float
+  has_fs: Boolean
+  fs_target_2017: Float
+  fs_target_2018: Float
+  fs_target_2019: Float
+  fs_target_2020: Float
+  fs_target_2021: Float
+  fs_target_2022: Float
+  fs_target_2023: Float
+  fs_target_2024: Float
+  fs_target_2025: Float
+  fs_target_total: Float
+  has_row: Boolean
+  row_target_2017: Float
+  row_target_2018: Float
+  row_target_2019: Float
+  row_target_2020: Float
+  row_target_2021: Float
+  row_target_2022: Float
+  row_target_2023: Float
+  row_target_2024: Float
+  row_target_2025: Float
+  row_target_total: Float
+  row_affected: String
+  has_rap: Boolean
+  rap_target_2017: Float
+  rap_target_2018: Float
+  rap_target_2019: Float
+  rap_target_2020: Float
+  rap_target_2021: Float
+  rap_target_2022: Float
+  rap_target_2023: Float
+  rap_target_2024: Float
+  rap_target_2025: Float
+  rap_target_total: Float
+  rap_affected: String
+  investment_target_2016: Float
+  investment_target_2017: Float
+  investment_target_2018: Float
+  investment_target_2019: Float
+  investment_target_2020: Float
+  investment_target_2021: Float
+  investment_target_2022: Float
+  investment_target_2023: Float
+  investment_target_2024: Float
+  investment_target_2025: Float
+  investment_target_total: Float
+  infrastructure_target_2016: Float
+  infrastructure_target_2017: Float
+  infrastructure_target_2018: Float
+  infrastructure_target_2019: Float
+  infrastructure_target_2020: Float
+  infrastructure_target_2021: Float
+  infrastructure_target_2022: Float
+  infrastructure_target_2023: Float
+  infrastructure_target_2024: Float
+  infrastructure_target_2025: Float
+  infrastructure_target_total: Float
+  nep_2016: Float
+  nep_2017: Float
+  nep_2018: Float
+  nep_2019: Float
+  nep_2020: Float
+  nep_2021: Float
+  nep_2022: Float
+  nep_2023: Float
+  nep_2024: Float
+  nep_2025: Float
+  nep_total: Float
+  gaa_2016: Float
+  gaa_2017: Float
+  gaa_2018: Float
+  gaa_2019: Float
+  gaa_2020: Float
+  gaa_2021: Float
+  gaa_2022: Float
+  gaa_2023: Float
+  gaa_2024: Float
+  gaa_2025: Float
+  gaa_total: Float
+  disbursement_2016: Float
+  disbursement_2017: Float
+  disbursement_2018: Float
+  disbursement_2019: Float
+  disbursement_2020: Float
+  disbursement_2021: Float
+  disbursement_2022: Float
+  disbursement_2023: Float
+  disbursement_2024: Float
+  disbursement_2025: Float
+  disbursement_total: Float
+  uacs_code: String
+  updates: String
+  updates_date: String
+  region_id: ID
+  province_id: ID
+  district_id: ID
+  city_municipality_id: ID
+  version: Int
+  finalized: Boolean
+  cip_type_id: ID
+  iccable: Boolean
+  pdp_chapter_id: ID
+  project_preparation_document_id: ID
+  project_preparation_document_others: String
+  rdc_endorsed: Boolean
+  rdc_endorsed_date: String
+  rdc_required: Boolean
+  ten_point_agenda: UpdateTenPointAgendaBelongsToMany
+  sustainable_development_goals: UpdateSustainableDevelopmentGoalsBelongsToMany
+  technical_readinesses: UpdateTechnicalReadinessesBelongsToMany
+  regions: UpdateRegionsBelongsToMany
+  funding_sources: UpdateFundingSourcesBelongsToMany
+  pdp_chapters: UpdatePdpChaptersBelongsToMany
+  pdp_indicators: UpdatePdpIndicatorsBelongsToMany
+  paradigms: [ID]
+  infrastructure_subsectors: UpdateInfrastructureSubsectorsBelongsToMany
+  provinces: [ID]
+  districts: [ID]
+  bases: UpdateBasesBelongsToMany
+  submission_status_id: ID
+}
+
+input UpdateTenPointAgendaBelongsToMany {
+  sync: [ID]
+}
+
+input UpdateSustainableDevelopmentGoalsBelongsToMany {
+  sync: [ID]
+}
+
+input UpdateTechnicalReadinessesBelongsToMany {
+  sync: [ID]
+}
+
+input UpdateRegionsBelongsToMany {
+  sync: [ID]
+}
+
+input UpdateFundingSourcesBelongsToMany {
+  sync: [ID]
+}
+
+input UpdatePdpChaptersBelongsToMany {
+  sync: [ID]
+}
+
+input UpdatePdpIndicatorsBelongsToMany {
+  sync: [ID]
+}
+
+input UpdateInfrastructureSubsectorsBelongsToMany {
+  sync: [ID]
+}
+
+input UpdateBasesBelongsToMany {
+  sync: [ID]
+}
+
+type DeleteProjectResponse {
+  project: Project
+  status: String
+  message: String
+}
+
+input CreateContactInput {
+  name: String
+  email: String
+  designation: String
+  operating_unit_id: ID
+  user_id: ID
+  phone_number: String
+  fax_number: String
+}
+
+input CreateContactsInput {
+  contacts: [CreateContactInput!]
+}
+
+type CreateContactsResponse {
+  contacts: [Contact]
+  failed: [Contact]
+}
+
+input UpdateContactInput {
+  id: ID!
+  name: String
+  email: String
+  designation: String
+  operating_unit_id: ID
+  user_id: ID
+  phone_number: String
+  fax_number: String
+}
+
+input EncodeProjectInput {
+  id: ID!
+  pipol_code: String
+  pipol_status_id: ID
+}
+
+type TransferProjectResponse {
+  project: Project
+  status: String
+  message: String
+}
+
+input CreateAppVersionInput {
+  version: String
+  change_type: String
+  change_log: String
+  notes: String
+}
+
+input UpdateAppVersionInput {
+  id: ID!
+  version: String
+  change_type: String
+  change_log: String
+  notes: String
+}
+
+input ShareProjectInput {
+  project_id: ID!
+  email: String!
+}
+
+type ShareProjectResponse {
+  message: String
+  status: String
+}
+
+input CreatePermissionInput {
+  name: String!
+  guard_name: String
+}
+
+input UpdatePermissionInput {
+  id: ID!
+  name: String!
+  guard_name: String
+}
+
+input CreateBannerProgramInput {
+  name: String
+  acronym: String
+}
+
+input UpdateBannerProgramInput {
+  id: ID!
+  name: String
+  acronym: String
+}
+
+input CreatePrexcProgramInput {
+  name: String!
+  acronym: String!
+  uacs_code: String
+  cost_structure_id: ID
+  title: String
+  organizational_outcome: String
+  objective_statement: String
+  program_strategy: String
+}
+
+input UpdatePrexcProgramInput {
+  id: ID!
+  name: String!
+  acronym: String!
+  uacs_code: String
+  cost_structure_id: ID
+  title: String
+  organizational_outcome: String
+  objective_statement: String
+  program_strategy: String
+}
+
+input CreatePrexcSubprogramInput {
+  name: String!
+  acronym: String!
+  uacs_code: String
+  prexc_program_id: ID!
+  title: String
+  organizational_outcome: String
+  objective_statement: String
+  program_strategy: String
+  outcome_indicators: String
+  output_indicators: String
+}
+
+input UpdatePrexcSubprogramInput {
+  id: ID!
+  name: String
+  acronym: String
+  uacs_code: String
+  prexc_program_id: ID
+  title: String
+  organizational_outcome: String
+  objective_statement: String
+  program_strategy: String
+  outcome_indicators: String
+  output_indicators: String
+}
+
+input CreatePrexcActivityInput {
+  name: String
+  acronym: String
+  operating_unit_id: ID
+  prexc_program_id: ID
+  prexc_subprogram_id: ID
+  banner_program_id: ID
+  trip: Boolean
+  uacs_code: String
+  investment_target_2016: Float
+  investment_target_2017: Float
+  investment_target_2018: Float
+  investment_target_2019: Float
+  investment_target_2020: Float
+  investment_target_2021: Float
+  investment_target_2022: Float
+  investment_target_2023: Float
+  investment_target_2024: Float
+  investment_target_2025: Float
+  investment_target_total: Float
+  infrastructure_target_2016: Float
+  infrastructure_target_2017: Float
+  infrastructure_target_2018: Float
+  infrastructure_target_2019: Float
+  infrastructure_target_2020: Float
+  infrastructure_target_2021: Float
+  infrastructure_target_2022: Float
+  infrastructure_target_2023: Float
+  infrastructure_target_2024: Float
+  infrastructure_target_2025: Float
+  infrastructure_target_total: Float
+  gaa_2016: Float
+  gaa_2017: Float
+  gaa_2018: Float
+  gaa_2019: Float
+  gaa_2020: Float
+  gaa_2021: Float
+  gaa_2022: Float
+  gaa_2023: Float
+  gaa_2024: Float
+  gaa_2025: Float
+  gaa_total: Float
+  nep_2016: Float
+  nep_2017: Float
+  nep_2018: Float
+  nep_2019: Float
+  nep_2020: Float
+  nep_2021: Float
+  nep_2022: Float
+  nep_2023: Float
+  nep_2024: Float
+  nep_2025: Float
+  nep_total: Float
+  disbursement_2016: Float
+  disbursement_2017: Float
+  disbursement_2018: Float
+  disbursement_2019: Float
+  disbursement_2020: Float
+  disbursement_2021: Float
+  disbursement_2022: Float
+  disbursement_2023: Float
+  disbursement_2024: Float
+  disbursement_2025: Float
+  disbursement_total: Float
+  tier_id: ID
+}
+
+type Link {
+  link: String
+}
+
+input CreateRegionFinancialInput {
+  project_id: ID!
+  region_id: ID!
+  investment_target_2016: Float
+  investment_target_2017: Float
+  investment_target_2018: Float
+  investment_target_2019: Float
+  investment_target_2020: Float
+  investment_target_2021: Float
+  investment_target_2022: Float
+  investment_target_2023: Float
+  investment_target_2024: Float
+  investment_target_2025: Float
+  investment_target_total: Float
+  infrastructure_target_2016: Float
+  infrastructure_target_2017: Float
+  infrastructure_target_2018: Float
+  infrastructure_target_2019: Float
+  infrastructure_target_2020: Float
+  infrastructure_target_2021: Float
+  infrastructure_target_2022: Float
+  infrastructure_target_2023: Float
+  infrastructure_target_2024: Float
+  infrastructure_target_2025: Float
+  infrastructure_target_total: Float
+  nep_2016: Float
+  nep_2017: Float
+  nep_2018: Float
+  nep_2019: Float
+  nep_2020: Float
+  nep_2021: Float
+  nep_2022: Float
+  nep_2023: Float
+  nep_2024: Float
+  nep_2025: Float
+  nep_total: Float
+  gaa_2016: Float
+  gaa_2017: Float
+  gaa_2018: Float
+  gaa_2019: Float
+  gaa_2020: Float
+  gaa_2021: Float
+  gaa_2022: Float
+  gaa_2023: Float
+  gaa_2024: Float
+  gaa_2025: Float
+  gaa_total: Float
+  disbursement_2016: Float
+  disbursement_2017: Float
+  disbursement_2018: Float
+  disbursement_2019: Float
+  disbursement_2020: Float
+  disbursement_2021: Float
+  disbursement_2022: Float
+  disbursement_2023: Float
+  disbursement_2024: Float
+  disbursement_2025: Float
+  disbursement_total: Float
+}
+
+input UpdateRegionFinancialInput {
+  id: ID!
+  project_id: ID!
+  region_id: ID!
+  investment_target_2016: Float
+  investment_target_2017: Float
+  investment_target_2018: Float
+  investment_target_2019: Float
+  investment_target_2020: Float
+  investment_target_2021: Float
+  investment_target_2022: Float
+  investment_target_2023: Float
+  investment_target_2024: Float
+  investment_target_2025: Float
+  investment_target_total: Float
+  infrastructure_target_2016: Float
+  infrastructure_target_2017: Float
+  infrastructure_target_2018: Float
+  infrastructure_target_2019: Float
+  infrastructure_target_2020: Float
+  infrastructure_target_2021: Float
+  infrastructure_target_2022: Float
+  infrastructure_target_2023: Float
+  infrastructure_target_2024: Float
+  infrastructure_target_2025: Float
+  infrastructure_target_total: Float
+  nep_2016: Float
+  nep_2017: Float
+  nep_2018: Float
+  nep_2019: Float
+  nep_2020: Float
+  nep_2021: Float
+  nep_2022: Float
+  nep_2023: Float
+  nep_2024: Float
+  nep_2025: Float
+  nep_total: Float
+  gaa_2016: Float
+  gaa_2017: Float
+  gaa_2018: Float
+  gaa_2019: Float
+  gaa_2020: Float
+  gaa_2021: Float
+  gaa_2022: Float
+  gaa_2023: Float
+  gaa_2024: Float
+  gaa_2025: Float
+  gaa_total: Float
+  disbursement_2016: Float
+  disbursement_2017: Float
+  disbursement_2018: Float
+  disbursement_2019: Float
+  disbursement_2020: Float
+  disbursement_2021: Float
+  disbursement_2022: Float
+  disbursement_2023: Float
+  disbursement_2024: Float
+  disbursement_2025: Float
+  disbursement_total: Float
+}
+
+input CreateFundingSourceFinancialInput {
+  project_id: ID!
+  funding_source_id: ID!
+  investment_target_2016: Float
+  investment_target_2017: Float
+  investment_target_2018: Float
+  investment_target_2019: Float
+  investment_target_2020: Float
+  investment_target_2021: Float
+  investment_target_2022: Float
+  investment_target_2023: Float
+  investment_target_2024: Float
+  investment_target_2025: Float
+  investment_target_total: Float
+  infrastructure_target_2016: Float
+  infrastructure_target_2017: Float
+  infrastructure_target_2018: Float
+  infrastructure_target_2019: Float
+  infrastructure_target_2020: Float
+  infrastructure_target_2021: Float
+  infrastructure_target_2022: Float
+  infrastructure_target_2023: Float
+  infrastructure_target_2024: Float
+  infrastructure_target_2025: Float
+  infrastructure_target_total: Float
+  nep_2016: Float
+  nep_2017: Float
+  nep_2018: Float
+  nep_2019: Float
+  nep_2020: Float
+  nep_2021: Float
+  nep_2022: Float
+  nep_2023: Float
+  nep_2024: Float
+  nep_2025: Float
+  nep_total: Float
+  gaa_2016: Float
+  gaa_2017: Float
+  gaa_2018: Float
+  gaa_2019: Float
+  gaa_2020: Float
+  gaa_2021: Float
+  gaa_2022: Float
+  gaa_2023: Float
+  gaa_2024: Float
+  gaa_2025: Float
+  gaa_total: Float
+  disbursement_2016: Float
+  disbursement_2017: Float
+  disbursement_2018: Float
+  disbursement_2019: Float
+  disbursement_2020: Float
+  disbursement_2021: Float
+  disbursement_2022: Float
+  disbursement_2023: Float
+  disbursement_2024: Float
+  disbursement_2025: Float
+  disbursement_total: Float
+}
+
+input UpdateFundingSourceFinancialInput {
+  id: ID!
+  project_id: ID!
+  funding_source_id: ID!
+  investment_target_2016: Float
+  investment_target_2017: Float
+  investment_target_2018: Float
+  investment_target_2019: Float
+  investment_target_2020: Float
+  investment_target_2021: Float
+  investment_target_2022: Float
+  investment_target_2023: Float
+  investment_target_2024: Float
+  investment_target_2025: Float
+  investment_target_total: Float
+  infrastructure_target_2016: Float
+  infrastructure_target_2017: Float
+  infrastructure_target_2018: Float
+  infrastructure_target_2019: Float
+  infrastructure_target_2020: Float
+  infrastructure_target_2021: Float
+  infrastructure_target_2022: Float
+  infrastructure_target_2023: Float
+  infrastructure_target_2024: Float
+  infrastructure_target_2025: Float
+  infrastructure_target_total: Float
+  nep_2016: Float
+  nep_2017: Float
+  nep_2018: Float
+  nep_2019: Float
+  nep_2020: Float
+  nep_2021: Float
+  nep_2022: Float
+  nep_2023: Float
+  nep_2024: Float
+  nep_2025: Float
+  nep_total: Float
+  gaa_2016: Float
+  gaa_2017: Float
+  gaa_2018: Float
+  gaa_2019: Float
+  gaa_2020: Float
+  gaa_2021: Float
+  gaa_2022: Float
+  gaa_2023: Float
+  gaa_2024: Float
+  gaa_2025: Float
+  gaa_total: Float
+  disbursement_2016: Float
+  disbursement_2017: Float
+  disbursement_2018: Float
+  disbursement_2019: Float
+  disbursement_2020: Float
+  disbursement_2021: Float
+  disbursement_2022: Float
+  disbursement_2023: Float
+  disbursement_2024: Float
+  disbursement_2025: Float
+  disbursement_total: Float
+}
+
+input CreateFundingSourceInfrastructureInput {
+  project_id: ID!
+  funding_source_id: ID!
+  infrastructure_target_2016: Float
+  infrastructure_target_2017: Float
+  infrastructure_target_2018: Float
+  infrastructure_target_2019: Float
+  infrastructure_target_2020: Float
+  infrastructure_target_2021: Float
+  infrastructure_target_2022: Float
+  infrastructure_target_2023: Float
+  infrastructure_target_2024: Float
+  infrastructure_target_2025: Float
+  infrastructure_target_total: Float
+}
+
+input UpdateFundingSourceInfrastructureInput {
+  id: ID!
+  project_id: ID!
+  funding_source_id: ID!
+  infrastructure_target_2016: Float
+  infrastructure_target_2017: Float
+  infrastructure_target_2018: Float
+  infrastructure_target_2019: Float
+  infrastructure_target_2020: Float
+  infrastructure_target_2021: Float
+  infrastructure_target_2022: Float
+  infrastructure_target_2023: Float
+  infrastructure_target_2024: Float
+  infrastructure_target_2025: Float
+  infrastructure_target_total: Float
+}
+
+input CreateReleaseInput {
+  version: String
+  summary: String
+  change_log: String
+  notes: String
+}
+
+input UpdateReleaseInput {
+  id: ID!
+  version: String
+  summary: String
+  change_log: String
+  notes: String
+}
+
+input CreateUsefulLinkInput {
+  title: String
+  description: String
+  to: String
+}
+
+input UpdateUsefulLinkInput {
+  id: ID!
+  title: String
+  description: String
+  to: String
+}
+
+type DocxLink {
+  link: String
+}
+
+type ProjectExportsLink {
+  link: String
+}
+
+type ConsolidatedFile {
+  link: String
+}
+
+input LoginInput {
+  username: String!
+  password: String!
+}
+
+type AuthPayload {
+  access_token: String
+  refresh_token: String
+  expires_in: Int
+  token_type: String
+  user: User
+}
+
+input RefreshTokenInput {
+  refresh_token: String
+}
+
+type RefreshTokenPayload {
+  access_token: String!
+  refresh_token: String!
+  expires_in: Int!
+  token_type: String!
+}
+
+type LogoutResponse {
+  status: String!
+  message: String
+}
+
+input ForgotPasswordInput {
+  email: String!
+}
+
+type ForgotPasswordResponse {
+  status: String!
+  message: String
+}
+
+input NewPasswordWithCodeInput {
+  email: String!
+  token: String!
+  password: String!
+  password_confirmation: String!
+}
+
+input RegisterInput {
+  name: String!
+  email: String!
+  password: String!
+  password_confirmation: String!
+}
+
+type RegisterResponse {
+  tokens: AuthPayload
+  status: RegisterStatuses!
+}
+
+enum RegisterStatuses {
+  MUST_VERIFY_EMAIL
+  SUCCESS
+}
+
+input SocialLoginInput {
+  provider: String!
+  token: String!
+}
+
+input VerifyEmailInput {
+  token: String!
+}
+
+input UpdatePassword {
+  old_password: String!
+  password: String!
+  password_confirmation: String!
+}
+
+type UpdatePasswordResponse {
+  status: String!
+  message: String
+}
+
+type Subscription {
+  assignedRole(user_id: ID): User
+  assignedOperatingUnitToReview(user_id: ID): User
+  transferredProject(user_id: ID): Project
+}
+
+type CanUpdateResponse {
+  userId: ID
+  created_by: ID
+  check: Boolean
+}
+
+# Allows ordering a list of records.
+input OrderByClause {
+  # The column that is used for ordering.
+  field: String!
+
+  # The direction that is used for ordering.
+  order: SortOrder!
+}
