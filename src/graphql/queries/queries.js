@@ -332,7 +332,6 @@ export const ALL_PROJECTS = gql`
       operating_unit {
         id
         acronym
-        image_url
       }
 	    prexc_activity_id
       updated_at
@@ -352,6 +351,12 @@ export const ALL_PROJECTS = gql`
       }
       version
 			signed_copy_link
+	    pipol
+	    pipol_status {
+		    id
+		    name
+	    }
+	    pipol_code
     }
   }
 `;
@@ -1234,6 +1239,15 @@ export const OU_PREXC_ACTIVITIES = gql`
 				nep_total
 				disbursement_total
 			}
+		}
+	}
+`
+
+export const PIPOL_STATUS = gql`
+	query {
+		pipol_statuses {
+			id
+			name
 		}
 	}
 `

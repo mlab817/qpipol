@@ -364,5 +364,12 @@ export const PROJECT_FRAGMENT = gql`
       name
     }
     created_by
+	  pipol_status {
+		  id
+		  name
+	  }
+	  pipol_status_id
+	  pipol
+	  pipol_code
   }
 `;

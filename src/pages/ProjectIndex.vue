@@ -46,27 +46,31 @@
         </div>
       </template>
 
-      <template v-slot:body-cell-avatar="props">
-        <q-td :props="props">
-          <q-avatar color="grey-3">
-            <img
-              :src="
-                props.row.operating_unit && props.row.operating_unit.image_url
-              "
-            />
-          </q-avatar>
-        </q-td>
-      </template>
+			<template v-slot:body-cell-pipol="props">
+				<q-td :props="props">
+					<q-badge label="PIPOL" v-if="props.row.pipol"></q-badge>
+				</q-td>
+			</template>
 
       <template v-slot:body-cell-submission_status="props">
         <q-td :props="props">
-					<q-badge color="blue">
+					<q-badge :color="getColor(props.row.submission_status)" v-if="props.row.submission_status">
           {{
             props.row.submission_status ? props.row.submission_status.name : ''
           }}
 					</q-badge>
         </q-td>
       </template>
+
+			<template v-slot:body-cell-pipol_status="props">
+				<q-td :props="props">
+					<q-badge :color="getColor(props.row.pipol_status)" v-if="props.row.pipol_status">
+						{{
+						props.row.pipol_status ? props.row.pipol_status.name : ''
+						}}
+					</q-badge>
+				</q-td>
+			</template>
 
       <template v-slot:body-cell-actions="props">
         <q-td :props="props">
@@ -87,14 +91,6 @@
           >
             <q-list>
               <q-item class="q-pa-sm">
-                <q-item-section avatar>
-                  <q-avatar color="grey-3">
-                    <img
-                      :src="props.row.operating_unit && props.row.operating_unit.image_url"
-                      :alt="props.row.operating_unit && props.row.operating_unit.acronym"
-                    />
-                  </q-avatar>
-                </q-item-section>
                 <q-item-section>
                   <q-item-label>{{ props.row.title }}</q-item-label>
                   <q-item-label>
@@ -220,10 +216,19 @@ export default {
       selected: [],
       columns: [
         {
-          name: 'avatar',
-          label: '',
+          name: 'pipol',
+          label: 'PIPOL',
+					field: row => row.pipol ? 'PIPOL' : '',
+					sortable: true,
           align: 'center'
         },
+				{
+					name: 'ou',
+					label: 'Operating Unit',
+					field: row => row.operating_unit && row.operating_unit.acronym,
+					align: 'center',
+					sortable: true
+				},
         {
           name: 'title',
           label: 'PAP Title',
@@ -289,6 +294,13 @@ export default {
           sortable: true,
           align: 'center'
         },
+	      {
+		      name: 'pipol_status',
+		      label: 'PIPOL Status',
+		      field: row => row.pipol_status && row.pipol_status.name,
+		      sortable: true,
+		      align: 'center'
+	      },
         {
           name: 'actions',
           label: 'Actions',
@@ -296,7 +308,7 @@ export default {
         }
       ],
       pagination: {
-        rowsPerPage: 0
+        rowsPerPage: 10
       }
     };
   },
@@ -402,6 +414,23 @@ export default {
 					})
 				})
 				.finally(() => this.$q.loading.hide())
+		},
+		getColor(status) {
+    	const statusId = status && status.id
+
+			switch (parseInt(statusId)) {
+				case 1:
+					return 'red';
+					break;
+				case 2:
+					return 'blue';
+					break;
+				case 3:
+					return 'green';
+					break;
+				default:
+					return 'white';
+			}
 		}
   },
   filters: {

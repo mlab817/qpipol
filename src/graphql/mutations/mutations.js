@@ -1925,3 +1925,45 @@ export const SYNC_ACTIVITY_TO_PROJECT = gql`
     }
   }
 `
+
+export const ENCODE_PROJECT = gql`
+	mutation (
+		$id: ID!
+		$pipol_code: String
+	) {
+		encodeProject(input: {
+			id: $id
+			pipol_code: $pipol_code
+		}) {
+			id
+			pipol_code
+			pipol_status_id
+			pipol_status {
+				id
+				name
+			}
+			pipol
+		}
+	}
+`
+
+export const UPDATE_PIPOL_STATUS = gql`
+	mutation (
+		$id: ID!
+		$pipol_status_id: ID!
+	) {
+		updatePipolStatus (
+			id: $id
+			pipol_status_id: $pipol_status_id
+		) {
+			id
+			pipol_code
+			pipol_status_id
+			pipol_status {
+				id
+				name
+			}
+			pipol
+		}
+	}
+`
