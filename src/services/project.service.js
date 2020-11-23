@@ -38,7 +38,13 @@ import {
 	EXPORT_PROJECTS,
   RECLASSIFY_PROJECT
 } from '@/graphql';
-import {CREATE_PREXC_ACTIVITY_FROM_PROJECT, OU_PREXC_ACTIVITIES, PREXC_ACTIVITIES} from 'src/graphql'
+import {
+	CREATE_PREXC_ACTIVITY_FROM_PROJECT,
+	ENCODE_PROJECT,
+	OU_PREXC_ACTIVITIES,
+	PREXC_ACTIVITIES,
+	UPDATE_PIPOL_STATUS
+} from 'src/graphql'
 
 export const projectService = {
 	index() {
@@ -844,5 +850,23 @@ export const projectService = {
       })
       .then(handleResponse)
       .catch(handleError)
-  }
+  },
+	encodeProject(payload) {
+		return client
+			.mutate({
+				mutation: ENCODE_PROJECT,
+				variables: payload
+			})
+			.then(handleResponse)
+			.catch(handleError)
+	},
+	updatePipolStatus(payload) {
+		return client
+			.mutate({
+				mutation: UPDATE_PIPOL_STATUS,
+				variables: payload
+			})
+			.then(handleResponse)
+			.catch(handleError)
+	}
 }

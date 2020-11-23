@@ -51,6 +51,12 @@
       v-if="isReviewer && !project.prexc_activity_id"
     ></menu-item>
 
+		<q-separator />
+
+		<menu-item label="PIPOL Encode" icon="fas fa-keyboard" v-if="isReviewer" @click="encodeProject(project)"></menu-item>
+
+		<menu-item label="PIPOL Status" icon="fas fa-edit" v-if="isReviewer && !!project.pipol_code" @click="updatePipolStatus(project)"></menu-item>
+
   </q-list>
 </template>
 
@@ -65,7 +71,7 @@ import BannerProgram from './BannerProgram'
 import {
   projectService
 } from '@/services'
-import {BANNER_PROGRAMS} from '../../../graphql/queries'
+import {BANNER_PROGRAMS, PIPOL_STATUS} from '../../../graphql/queries'
 import { openURL } from 'quasar'
 
 export default {
@@ -99,6 +105,9 @@ export default {
     },
 		banner_programs: {
     	query: BANNER_PROGRAMS
+		},
+		pipol_statuses: {
+    	query: PIPOL_STATUS
 		}
   },
 
@@ -128,7 +137,8 @@ export default {
       transferProjectDialog: false,
       reclassifyProjectDialog: false,
       banner_program_id: this.project.banner_program_id,
-	    banner_programs: []
+	    banner_programs: [],
+	    pipol_statuses: []
     };
   },
   methods: {
@@ -291,8 +301,6 @@ export default {
         id: this.project.id,
         banner_program_id: this.banner_program_id
       }
-
-
     },
 
     createPrexcActivityFromProject(project) {
@@ -316,7 +324,66 @@ export default {
         }))
         .finally(() => this.$q.loading.hide())
       })
-    }
+    },
+	  encodeProject(project) {
+			this.$q.dialog({
+				title: 'Add PIPOL Code',
+				message: project.title,
+				prompt: {
+					model: project.pipol_code,
+					isValid: val => !!val
+				},
+				cancel: true
+			}).onOk(data => {
+				this.$q.loading.show()
+				projectService.encodeProject({
+					id: project.id,
+					pipol_code: data
+				}).then(() => this.$q.notify({
+					type: 'positive',
+					message: 'Success'
+				}))
+				.catch(err => {
+					this.$q.notify({
+						type: 'negative',
+						message: err.message
+					})
+				})
+				.finally(() => this.$q.loading.hide())
+			})
+		},
+	  updatePipolStatus(project) {
+    	const pipolStatuses = this.pipol_statuses && this.pipol_statuses.map(ps => {
+    		return {
+    			value: ps.id,
+					label: ps.name
+				}
+			})
+			this.$q.dialog({
+				title: 'Update PIPOL Status',
+				options: {
+					items: pipolStatuses,
+					model: project.pipol_status && project.pipol_status.id
+				},
+				cancel: true
+			}).onOk(data => {
+				this.$q.loading.show()
+				projectService.updatePipolStatus({
+					id: project.id,
+					pipol_status_id: data
+				}).then(() => this.$q.notify({
+					type: 'positive',
+					message: 'Success'
+				}))
+					.catch(err => {
+						this.$q.notify({
+							type: 'negative',
+							message: err.message
+						})
+					})
+					.finally(() => this.$q.loading.hide())
+			})
+		},
   }
 };
 </script>

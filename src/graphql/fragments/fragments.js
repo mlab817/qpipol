@@ -17,10 +17,6 @@ export const BASIC_INFORMATION_FRAGMENT = gql`
     }
     target_start_year
     target_end_year
-    currency {
-      id
-      name
-    }
     total_project_cost
     creator {
       id
@@ -36,7 +32,7 @@ export const BASIC_INFORMATION_FRAGMENT = gql`
       id
       name
     }
-    processing_status_id
+    pipol_status_id
     finalized
   }
 `;
