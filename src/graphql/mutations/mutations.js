@@ -1725,6 +1725,11 @@ export const FINALIZE_PREXC_ACTIVITY = gql`
     finalizePrexcActivity(id: $id) {
       id
       name
+      banner_program_id
+      banner_program {
+        id
+        name
+      }
       operating_unit_id
       operating_unit {
         id
@@ -1747,6 +1752,12 @@ export const FINALIZE_PREXC_ACTIVITY = gql`
       disbursement_total
       finalized
       reviewed
+      submission_status_id
+      submission_status {
+        id
+        name
+      }
+      updated_at
     }
   }
 `;
@@ -1966,4 +1977,46 @@ export const UPDATE_PIPOL_STATUS = gql`
 			pipol
 		}
 	}
+`
+
+export const UNDO_FINALIZE_PREXC_ACTIVITY = gql`
+  mutation ($id: ID!) {
+    undoFinalizePrexcActivity(id: $id) {
+      id
+      name
+      banner_program_id
+      banner_program {
+        id
+        name
+      }
+      operating_unit_id
+      operating_unit {
+        id
+        name
+      }
+      prexc_program {
+        id
+        name
+      }
+      prexc_subprogram {
+        id
+        name
+      }
+      project_id
+      uacs_code
+      infrastructure_target_total
+      investment_target_total
+      gaa_total
+      nep_total
+      disbursement_total
+      finalized
+      reviewed
+      submission_status_id
+      submission_status {
+        id
+        name
+      }
+      last_updated
+    }
+  }
 `

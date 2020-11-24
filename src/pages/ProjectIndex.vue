@@ -54,7 +54,7 @@
 
       <template v-slot:body-cell-submission_status="props">
         <q-td :props="props">
-					<q-badge :color="getColor(props.row.submission_status)" v-if="props.row.submission_status">
+					<q-badge :color="getColor(props.row.submission_status)" v-if="props.row.submission_status"  @click.stop="filter = props.row.submission_status.name">
           {{
             props.row.submission_status ? props.row.submission_status.name : ''
           }}

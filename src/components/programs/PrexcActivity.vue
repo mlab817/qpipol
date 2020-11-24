@@ -375,6 +375,7 @@
 
       <div class="row justify-end q-py-md q-gutter-sm">
         <q-btn
+          flat
 					color="primary"
 					type="submit"
 					label="Save"
@@ -663,7 +664,6 @@ export default {
       if (payload.id) {
         // run update
         // programService.updatePrexcActivity(payload)
-        console.log('run update');
         programService
           .updatePrexcActivity(payload)
           .then(() => {
@@ -676,7 +676,6 @@ export default {
           .finally(() => this.$q.loading.hide());
       } else {
         // programService.createPrexcActivity(payload)
-        console.log('run create');
         payload.operating_unit_id = this.operating_unit_id;
         programService
           .createPrexcActivity(payload)
@@ -710,7 +709,8 @@ export default {
           prompt: {
             model: '',
             isValid: val => val.toLowerCase() === 'yes'
-          }
+          },
+          cancel: true
         })
         .onOk(() => this.validatePrexcActivity(this.id));
     },

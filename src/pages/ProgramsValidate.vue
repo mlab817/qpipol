@@ -75,6 +75,14 @@
 				</q-td>
 			</template>
 
+      <template v-slot:body-cell-submission_status="props">
+        <q-td :props="props">
+          <q-badge :color="getColor(props.row.submission_status)" v-if="props.row.submission_status" @click="filter = props.row.submission_status.name" class="cursor-pointer">
+            {{props.row.submission_status && props.row.submission_status.name}}
+          </q-badge>
+        </q-td>
+      </template>
+
       <template v-slot:body-cell-actions="props">
         <q-td :props="props">
 					<q-btn-dropdown color="primary" label="Menu" @click.stop>
@@ -89,7 +97,7 @@
 								icon="edit"
 								label="Validate"
 								v-if="props.row.project_id"
-								:disable="props.row.finalized"
+								:disable="!props.row.finalized"
 								:to="`/projects/${props.row.project_id}`"
 							/>
 
@@ -97,15 +105,21 @@
 								icon="edit"
 								label="Validate"
 								@click="editPrexcActivity(props.row.id)"
-								:disable="props.row.finalized"
+								:disable="!props.row.finalized"
 								v-else
+							></menu-item>
+
+              <menu-item
+								icon="fas fa-undo"
+								label="Undo Finalize"
+								@click="undoFinalizePrexcActivity(props.row.id)"
+								:disable="!props.row.finalized"
 							></menu-item>
 
 							<menu-item
 								icon="fas fa-tags"
 								label="Reclassify"
 								@click="reclassifyPrexcActivity(props.row)"
-								:disable="props.row.finalized"
 							></menu-item>
 
 							<menu-item
@@ -122,6 +136,7 @@
       <template v-slot:bottom-row v-if="operating_unit.prexc_activities && operating_unit.prexc_activities.length">
         <q-tr class="text-weight-bold">
           <q-td>TOTAL</q-td>
+          <q-td></q-td>
           <q-td></q-td>
           <q-td></q-td>
           <q-td></q-td>
@@ -146,10 +161,10 @@ import PageTitle from '@/ui/page/PageTitle.vue';
 import PrexcActivity from '@/components/programs/PrexcActivity.vue';
 import ViewActivity from '@/components/programs/ViewActivity.vue';
 import { wrapCsvValue } from 'src/utils';
-import { exportFile } from 'quasar';
+import { exportFile, date } from 'quasar';
 import Search from '../ui/form-inputs/Search'
 import MenuItem from '../components/projects/dropdowns/MenuItem'
-import {programService} from '../services'
+import { programService } from '../services'
 
 export default {
   components: { MenuItem, Search, PageContainer, PageTitle, PrexcActivity, ViewActivity },
@@ -216,13 +231,6 @@ export default {
         acronym: ''
       },
       columns: [
-        // {
-        //   name: 'id',
-        //   label: 'ID',
-        //   field: 'id',
-        //   align: 'center',
-        //   sortable: true
-        // },
         {
           name: 'prexc_program',
           label: 'Program',
@@ -237,13 +245,6 @@ export default {
           align: 'left',
           sortable: true
         },
-				{
-					name: 'banner_program',
-					label: 'Banner Program',
-					field: row => row.banner_program && row.banner_program.name,
-					align: 'left',
-					sortable: true
-				},
         {
           name: 'prexc_activity',
           label: 'Activity',
@@ -252,10 +253,17 @@ export default {
           sortable: true
         },
         {
+          name: 'banner_program',
+          label: 'Banner Program',
+          field: row => row.banner_program && row.banner_program.name,
+          align: 'left',
+          sortable: true
+        },
+        {
           name: 'infrastructure_target_total',
           label: 'Infrastructure Investment (PhP)',
           field: row => row.infrastructure_target_total,
-          format: (val) => val && val.toLocaleString(),
+	        format: (val, row) => val && val.toLocaleString(),
           align: 'right',
           sortable: true
         },
@@ -263,23 +271,23 @@ export default {
           name: 'investment_target_total',
           label: 'Total Investment (PhP)',
           field: row => row.investment_target_total,
-          format: (val) => val && val.toLocaleString(),
+	        format: (val, row) => val && val.toLocaleString(),
           align: 'right',
           sortable: true
         },
-        {
-          name: 'nep_total',
-          label: 'National Expenditure Program (PhP)',
-          field: row => row.nep_total,
-					format: (val) => val && val.toLocaleString(),
-          align: 'right',
-          sortable: true
-        },
+	      {
+		      name: 'nep_total',
+		      label: 'National Expenditure Program (PhP)',
+		      field: row => row.nep_total,
+					format: (val, row) => val && val.toLocaleString(),
+		      align: 'right',
+		      sortable: true
+	      },
         {
           name: 'gaa_total',
           label: 'General Appropriations Act (PhP)',
           field: row => row.gaa_total,
-	        format: (val) => val && val.toLocaleString(),
+	        format: (val, row) => val && val.toLocaleString(),
           align: 'right',
           sortable: true
         },
@@ -287,18 +295,35 @@ export default {
           name: 'disbursement_total',
           label: 'Actual Disbursement (PhP)',
           field: row => row.disbursement_total,
-	        format: (val) => val && val.toLocaleString(),
+	        format: (val, row) => val && val.toLocaleString(),
           align: 'right',
           sortable: true
         },
-				{
-					name: 'project',
-					label: 'Project Link',
-					field: row => row.prexc_activity_id
-				},
+        {
+          name: 'project',
+          label: 'Project Link',
+          field: row => row.project_id,
+          sortable: true
+        },
+        {
+          name: 'submission_status',
+          label: 'Submission Status',
+          field: row => row.submission_status && row.submission_status.name,
+          sortable: true,
+          align: 'center'
+        },
+        {
+          name: 'last_updated',
+          label: 'Last Updated',
+          field: 'updated_at',
+          format: val => this.$options.filters.formatDateTime(val),
+          sortable: true,
+          align: 'center'
+        },
         {
           name: 'actions',
-          label: 'Actions'
+          label: 'Actions',
+          align: 'center'
         }
       ],
       prexc_activity_id: null,
@@ -419,7 +444,48 @@ export default {
 				  })
 				  .finally(() => this.$q.loading.hide())
 		  })
-	  }
+    },
+    undoFinalizePrexcActivity(id) {
+      this.$q.dialog({
+        title: 'Undo Finalize',
+        message: 'This will revert the prexc activity to draft submission status to enable encoder to update it. Type <strong>YES</strong> to confirm.',
+        html: true,
+        cancel: true,
+        prompt: {
+          model: '',
+          isValid: val => val && val.toLowerCase() === 'yes'
+        }
+      }).onOk(() => {
+        this.$q.loading.show()
+				programService.undoFinalizePrexcActivity({
+					id: id
+				}).then(() => this.$q.notify({
+					type: 'positive',
+					message: 'Success'
+				}))
+        .catch(err => {
+          this.$q.notify({
+            type: 'negative',
+            message: err.message
+          })
+        })
+        .finally(() => this.$q.loading.hide())
+      })
+    },
+    getColor(submission_status) {
+      const submissionStatus = submission_status && submission_status.name
+
+      switch (submissionStatus) {
+        case 'Draft':
+          return 'red';
+          break;
+        case 'Finalized':
+          return 'primary';
+          break;
+        default:
+          return 'white';
+      }
+    }
   },
   filters: {
 		money(val) {
@@ -427,7 +493,13 @@ export default {
 				return val.toLocaleString('en-US', {maximumFractionDigits:2})
 			}
 			return 0.00
-		}
+    },
+    formatDateTime(val) {
+      if (!val) {
+        return '';
+      }
+      return date.formatDate(val, 'MMM DD YYYY HH:mm:ss A');
+    },
 	}
 };
 </script>

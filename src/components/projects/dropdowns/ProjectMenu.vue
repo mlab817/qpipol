@@ -11,7 +11,7 @@
     ></menu-item>
 
 		<menu-item
-			@click="handleTransferProject"
+			@click="handleTransferProject(project)"
 			label="Transfer"
 			icon="subdirectory_arrow_right"
 			tooltip="Restricted to owner only"
@@ -33,6 +33,13 @@
       label="Validate"
       icon="fact_check"
       v-if="isReviewer && isEndorsed"
+    ></menu-item>
+
+    <menu-item
+      @click="revertToDraftProject(project)"
+      label="Undo Finalize"
+      icon="fas fa-undo"
+      v-if="isReviewer && !isDraft"
     ></menu-item>
 
     <q-separator />
@@ -90,18 +97,7 @@ export default {
 
   apollo: {
     encoders: {
-      query: FETCH_ENCODERS_QUERY,
-      result({ data }) {
-        this.encoders = data.encoders.map(encoder => {
-          const { id, name, operating_unit } = encoder;
-          return {
-            value: id,
-            label: `${name} - ${
-              operating_unit ? operating_unit.acronym : 'N/A'
-            }`
-          };
-        });
-      }
+      query: FETCH_ENCODERS_QUERY
     },
 		banner_programs: {
     	query: BANNER_PROGRAMS
@@ -190,9 +186,14 @@ export default {
         });
     },
 
-    handleTransferProject() {
+    handleTransferProject(project) {
       // this.$emit('transfer');
-      const encoders = this.encoders;
+      const encoders = this.encoders && this.encoders.map(enc => {
+        return {
+          value: enc.id,
+          label: enc.name
+        }
+      });
 
       this.$q
         .dialog({
@@ -208,7 +209,7 @@ export default {
           persistent: true
         })
         .onOk(data => {
-          this.transferProject(this.project.id, data);
+          this.transferProject(project.id, data);
         });
     },
 
@@ -325,6 +326,7 @@ export default {
         .finally(() => this.$q.loading.hide())
       })
     },
+
 	  encodeProject(project) {
 			this.$q.dialog({
 				title: 'Add PIPOL Code',
@@ -351,7 +353,8 @@ export default {
 				})
 				.finally(() => this.$q.loading.hide())
 			})
-		},
+    },
+    
 	  updatePipolStatus(project) {
     	const pipolStatuses = this.pipol_statuses && this.pipol_statuses.map(ps => {
     		return {
@@ -383,7 +386,35 @@ export default {
 					})
 					.finally(() => this.$q.loading.hide())
 			})
-		},
+    },
+
+    revertToDraftProject(project) {
+      this.$q.dialog({
+        title: 'Undo Finalize',
+        message: 'This will revert the project to draft submission status to enable encoder to update it and will remove signed copy uploaded \(if any\). Type <strong>YES</strong> to confirm.',
+        html: true,
+        cancel: true,
+        prompt: {
+          model: '',
+          isValid: val => val && val.toLowerCase() === 'yes'
+        }
+      }).onOk(() => {
+        this.$q.loading.show()
+				projectService.revertToDraftProject({
+					id: project.id
+				}).then(() => this.$q.notify({
+					type: 'positive',
+					message: 'Success'
+				}))
+        .catch(err => {
+          this.$q.notify({
+            type: 'negative',
+            message: err.message
+          })
+        })
+        .finally(() => this.$q.loading.hide())
+      })
+    }
   }
 };
 </script>
