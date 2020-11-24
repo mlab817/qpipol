@@ -20,6 +20,28 @@
         <icon-button icon="refresh" @click="refetch" />
         <fullscreen-button @click="props.toggleFullscreen" :in-fullscreen="props.inFullscreen"></fullscreen-button>
       </template>
+
+      <template v-slot:body-cell-submission_status="props">
+        <q-td :props="props">
+          <q-badge :color="getColor(props.row.submission_status)" v-if="props.row.submission_status" @click="filter = props.row.submission_status.name" class="cursor-pointer">
+            {{props.row.submission_status && props.row.submission_status.name}}
+          </q-badge>
+        </q-td>
+      </template>
+
+      <template v-slot:bottom-row>
+        <q-tr class="text-weight-bold">
+          <q-td>Total</q-td>
+          <q-td></q-td>
+          <q-td></q-td>
+          <q-td></q-td>
+          <q-td class="text-right">{{ totalRow.infrastructure_target_total.toLocaleString() }}</q-td>
+          <q-td class="text-right">{{ totalRow.investment_target_total.toLocaleString() }}</q-td>
+          <q-td class="text-right">{{ totalRow.nep_total.toLocaleString() }}</q-td>
+          <q-td class="text-right">{{ totalRow.gaa_total.toLocaleString() }}</q-td>
+          <q-td class="text-right">{{ totalRow.disbursement_total.toLocaleString() }}</q-td>
+        </q-tr>
+      </template>
     </q-table>
 
     <div class="row text-caption q-mt-sm text-italic" style="margin-bottom: 70px;">
@@ -70,6 +92,30 @@ export default {
   computed: {
     consolidates() {
       return this.$store.getters['auth/consolidates']
+    },
+    totalRow() {
+      const activities = this.consolidatedActivities;
+
+      let arraySum = {
+        infrastructure_target_total: 0,
+        investment_target_total: 0,
+        gaa_total: 0,
+        nep_total: 0,
+        disbursement_total: 0
+      };
+
+      arraySum = activities.reduce((prev, cur) => {
+        arraySum.infrastructure_target_total +=
+          parseFloat(cur.infrastructure_target_total) || 0;
+        arraySum.investment_target_total +=
+          parseFloat(cur.investment_target_total) || 0;
+        arraySum.gaa_total += parseFloat(cur.gaa_total) || 0;
+        arraySum.nep_total += parseFloat(cur.nep_total) || 0;
+        arraySum.disbursement_total += parseFloat(cur.disbursement_total) || 0;
+        return arraySum;
+      }, arraySum);
+
+      return arraySum;
     }
   },
   data() {
@@ -77,13 +123,13 @@ export default {
       consolidatedActivities: [],
       filter: '',
       columns: [
-        {
-          name: 'id',
-          label: 'ID',
-          field: 'id',
-          align: 'center',
-          sortable: true
-        },
+        // {
+        //   name: 'id',
+        //   label: 'ID',
+        //   field: 'id',
+        //   align: 'center',
+        //   sortable: true
+        // },
         {
           name: 'operating_unit',
           label: 'Operating Unit',
@@ -146,6 +192,13 @@ export default {
           field: 'disbursement_total',
           format: (val, row) => val && val.toLocaleString(),
           sortable: true
+        },
+        {
+          name: 'submission_status',
+          label: 'Submission Status',
+          field: row => row.submission_status && row.submission_status.name,
+          sortable: true,
+          align: 'center'
         }
       ]
     }
@@ -204,6 +257,20 @@ export default {
         })
         .catch(err => console.log(err.message))
         .finally(() => this.$q.loading.hide())
+    },
+    getColor(submission_status) {
+      const submissionStatus = submission_status && submission_status.name
+
+      switch (submissionStatus) {
+        case 'Draft':
+          return 'red';
+          break;
+        case 'Finalized':
+          return 'primary';
+          break;
+        default:
+          return 'white';
+      }
     }
   }
 }
