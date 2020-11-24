@@ -101,7 +101,6 @@
       row-key="id"
       :selected.sync="selected"
       selection="multiple"
-      style="margin-bottom: 70px;"
        v-if="!isAc && !isAa"
     >
 
@@ -128,7 +127,7 @@
           :props="props"
           :class="
             props.row.finalized
-              ? 'bg-green-2 text-black'
+              ? 'bg-green-1 text-black'
               : 'bg-white text-black'
           "
         >
@@ -139,6 +138,14 @@
       <template v-slot:body-cell-project="props">
         <q-td :props="props">
           <a target="_blank" style="text-decoration: none;" v-if="props.row.project_id" :href="`/projects/${props.row.project_id}`">#{{props.row.project_id}}</a>
+        </q-td>
+      </template>
+
+      <template v-slot:body-cell-submission_status="props">
+        <q-td :props="props">
+          <q-badge :color="getColor(props.row.submission_status)" v-if="props.row.submission_status" @click="filter = props.row.submission_status.name" class="cursor-pointer">
+            {{props.row.submission_status && props.row.submission_status.name}}
+          </q-badge>
         </q-td>
       </template>
 
@@ -204,6 +211,19 @@
         </q-tr>
       </template>
     </q-table>
+
+    <div class="row q-pa-sm" style="margin-bottom: 70px;">
+      <ul class="text-caption text-italic">
+        <li>
+        Projects converted to activities will appear here. However, they can only be viewed. To edit, click the Project Link and edit the entry from the 
+        Edit Project Feature. Afterwards, click the Sync button <q-icon name="sync" color="purple" /> to apply your changes.
+        </li>
+        <li>
+          You may click on the submission status to filter submissions by submission status. Just clear the search text box afterwards to remove the filter.
+        </li>
+
+      </ul>
+    </div>
   </page-container>
 </template>
 
@@ -253,38 +273,6 @@ export default {
     prexc_activities: {
       query: PREXC_ACTIVITIES
     },
-    // operating_unit: {
-    //   query: gql`
-    //     query ($id: ID!) {
-    //       operating_unit (id: $id) {
-    //         id
-    //         name
-    //         prexc_programs {
-    //           id
-    //           name
-    //           children {
-    //             id
-    //             name
-    //             children {
-    //               id
-    //               name
-    //               investment_target_total
-    //             }
-    //           }
-    //         }
-    //       }
-    //     }
-    //   `,
-    //   variables() {
-    //     return {
-    //       id: this.operating_unit_id
-    //     }
-    //   },
-    //   result({ data }) {
-    //     const { prexc_programs } = data.operating_unit
-    //     this.ou_prexc_programs = prexc_programs
-    //   }
-    // }
   },
   computed: {
     totalRow() {
@@ -435,6 +423,21 @@ export default {
           label: 'Project Link',
           field: row => row.project_id,
           sortable: true
+        },
+        {
+          name: 'submission_status',
+          label: 'Submission Status',
+          field: row => row.submission_status && row.submission_status.name,
+          sortable: true,
+          align: 'center'
+        },
+        {
+          name: 'last_updated',
+          label: 'Last Updated',
+          field: 'updated_at',
+          format: val => this.$options.filters.formatDateTime(val),
+          sortable: true,
+          align: 'center'
         },
         {
           name: 'actions',
@@ -640,6 +643,20 @@ export default {
           })
           .finally(() => this.$q.loading.hide())
       })
+    },
+    getColor(submission_status) {
+      const submissionStatus = submission_status && submission_status.name
+
+      switch (submissionStatus) {
+        case 'Draft':
+          return 'red';
+          break;
+        case 'Finalized':
+          return 'primary';
+          break;
+        default:
+          return 'white';
+      }
     }
   },
 	filters: {
@@ -654,7 +671,13 @@ export default {
         return (parseFloat(val) / 1000000000).toLocaleString() + ' B'
       }
       return 0.00
-    }
+    },
+    formatDateTime(val) {
+      if (!val) {
+        return '';
+      }
+      return date.formatDate(val, 'MMM DD YYYY HH:mm:ss A');
+    },
 	}
 };
 </script>

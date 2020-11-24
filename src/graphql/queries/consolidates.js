@@ -31,7 +31,10 @@ export const CONSOLIDATED_ACTIVITIES = gql`
       gaa_total
       disbursement_total
       finalized
-      reviewed
+      submission_status {
+        id
+        name
+      }
     }
   }
 `

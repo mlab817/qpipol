@@ -12,7 +12,8 @@ import {
 	EXPORT_FOR_CONSOLIDATION,
 	SYNC_ACTIVITY_TO_PROJECT,
 	RECLASSIFY_PREXC_ACTIVITY,
-	OU_PREXC_ACTIVITIES
+  OU_PREXC_ACTIVITIES,
+  UNDO_FINALIZE_PREXC_ACTIVITY
 } from 'src/graphql'
 
 export const programService = {
@@ -210,5 +211,14 @@ export const programService = {
 		  })
 		  .then(handleResponse)
 		  .catch(handleError)
-	}
+  },
+  undoFinalizePrexcActivity(payload) {
+    return client
+      .mutate({
+        mutation: UNDO_FINALIZE_PREXC_ACTIVITY,
+        variables: payload
+      })
+      .then(handleResponse)
+      .catch(handleError)
+  }
 };

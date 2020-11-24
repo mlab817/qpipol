@@ -123,7 +123,7 @@
               {{ project.creator ? project.creator.name : '' }}
             </q-item-label>
             <q-item-label caption>
-              {{ project.created_at | formatDate }}
+              {{ project.created_at | formatDateTime }}
             </q-item-label>
           </q-item-section>
         </q-item>
@@ -139,7 +139,7 @@
               {{ project.updater ? project.updater.name : '' }}
             </q-item-label>
             <q-item-label caption>
-              {{ project.updated_at | formatDate }}
+              {{ project.updated_at | formatDateTime }}
             </q-item-label>
           </q-item-section>
         </q-item>

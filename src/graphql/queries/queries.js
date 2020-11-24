@@ -1081,12 +1081,10 @@ export const PREXC_ACTIVITIES = gql`
     prexc_activities {
       id
       name
-      banner_program_id
       banner_program {
         id
         name
       }
-      operating_unit_id
       operating_unit {
         id
         name
@@ -1108,11 +1106,11 @@ export const PREXC_ACTIVITIES = gql`
       disbursement_total
       finalized
       reviewed
-      submission_status_id
       submission_status {
         id
         name
       }
+      updated_at
     }
   }
 `;
@@ -1218,26 +1216,37 @@ export const OU_PREXC_ACTIVITIES = gql`
 			acronym
 			prexc_activities {
 				id
-				banner_program_id
-				banner_program {
-					id
-					name
-				}
-				prexc_program {
-					id
-					name
-				}
-				prexc_subprogram {
-					id
-					name
-				}
-				name
-				project_id
-				infrastructure_target_total
-				investment_target_total
-				gaa_total
-				nep_total
-				disbursement_total
+        name
+        banner_program {
+          id
+          name
+        }
+        operating_unit {
+          id
+          name
+        }
+        prexc_program {
+          id
+          name
+        }
+        prexc_subprogram {
+          id
+          name
+        }
+        project_id
+        uacs_code
+        infrastructure_target_total
+        investment_target_total
+        gaa_total
+        nep_total
+        disbursement_total
+        finalized
+        reviewed
+        submission_status {
+          id
+          name
+        }
+        updated_at
 			}
 		}
 	}
