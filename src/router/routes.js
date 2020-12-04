@@ -1,52 +1,15 @@
-import ProjectsRoutes from './projects';
+import { requireAuth } from "src/router/middleware";
 
 const routes = [
   {
-    path: '',
+    path: '/',
     component: () => import('@/layouts/LandingLayout.vue'),
     children: [
       {
-        path: '/',
+        path: '',
         name: 'home',
         component: () =>
           import(/* webpackChunkName: 'LandingPage' */ '../pages/Landing.vue')
-      }
-    ]
-  },
-  {
-    path: '/',
-    component: () => import('@/layouts/AppLayout.vue'),
-    children: [
-      {
-        path: 'review',
-        name: 'review',
-        component: () =>
-          import(/* webpackChunkName: 'Review' */ '../pages/Review.vue'),
-        meta: {
-          requiresAuth: true
-        }
-      },
-      // {
-      //   path: 'activity',
-      //   name: 'activity',
-      //   component: () =>
-      //     import(
-      //       /* webpackChunkName: 'ActivityPage' */ '../pages/ActivityPage.vue'
-      //     ),
-      //   meta: {
-      //     requiresAuth: true
-      //   }
-      // },
-      {
-        path: 'notifications',
-        name: 'notifications',
-        component: () =>
-          import(
-            /* webpackChunkName: 'Notifications' */ '../pages/Notifications.vue'
-          ),
-        meta: {
-          requiresAuth: true
-        }
       },
       {
         path: 'dashboard',
@@ -63,7 +26,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: 'SettingsPage' */ '../pages/SettingsPage.vue'
-          ),
+            ),
         meta: {
           requiresAuth: true
         }
@@ -74,7 +37,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: 'ProfilePage' */ '../pages/ProfilePage.vue'
-          ),
+            ),
         meta: {
           requiresAuth: true
         }
@@ -85,7 +48,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: 'SecurityPage' */ '../pages/Security.vue'
-          ),
+            ),
         meta: {
           requiresAuth: true
         }
@@ -96,10 +59,95 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: 'ProgramsIndex' */ '@/pages/ProgramsIndex.vue'
-          ),
+            ),
         meta: {
           requiresAuth: true,
           isEncoder: true
+        }
+      },
+    ]
+  },
+  {
+    path: '/projects',
+    component: () => import('@/layouts/AppLayout.vue'),
+    beforeEnter: requireAuth,
+    children: [
+      {
+        path: '',
+        name: 'index-project',
+        component: () =>
+          import(
+            /* webpackChunkName: 'ProjectsPage' */ 'pages/ProjectIndex.vue'
+            ),
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'trash',
+        name: 'deleted-projects',
+        component: () => import('pages/ProjectsDeleted.vue')
+      },
+      {
+        path: 'add',
+        name: 'add-project',
+        component: () =>
+          import(
+            /* webpackChunkName: 'AddProjectPage' */ 'pages/ProjectAdd.vue'
+            ),
+        meta: {
+          requiresAuth: true,
+          isEncoder: true
+        }
+      },
+      {
+        path: ':id/validate',
+        name: 'validate-project',
+        component: () =>
+          import(
+            /* webpackChunkName: 'ValidateProjectPage' */ 'pages/ProjectValidate.vue'
+            ),
+        meta: {
+          requiresAuth: true,
+          isReviewer: true
+        }
+      },
+      {
+        path: ':id/edit',
+        name: 'edit-project',
+        component: () =>
+          import(
+            /* webpackChunkName: 'EditProjectPage' */ 'pages/ProjectEdit.vue'
+            ),
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: ':id',
+        name: 'view-project',
+        component: () =>
+          import(
+            /* webpackChunkName: 'ViewProject' */ 'pages/ProjectView.vue'
+            ),
+        meta: {
+          requiresAuth: true
+        }
+      }
+    ]
+  },
+  {
+    path: '/review',
+    component: () => import('@/layouts/AppLayout.vue'),
+    beforeEnter: requireAuth,
+    children: [
+      {
+        path: '',
+        name: 'review',
+        component: () =>
+          import(/* webpackChunkName: 'Review' */ '../pages/Review.vue'),
+        meta: {
+          requiresAuth: true
         }
       },
       {
@@ -121,6 +169,7 @@ const routes = [
           import(
             /* webpackChunkName: 'BannerPrograms' */ '@/pages/BannerPrograms.vue'
           ),
+        before: requireAuth,
         meta: {
           requiresAuth: true,
           isEncoder: true
@@ -140,7 +189,6 @@ const routes = [
       },
     ]
   },
-  ProjectsRoutes,
   {
     path: '/shared',
     component: () => import('@/layouts/PublicLayout.vue'),
@@ -156,33 +204,45 @@ const routes = [
     ]
   },
   {
-    path: '',
+    path: '/login',
     component: () => import('../layouts/AuthLayout.vue'),
     children: [
       {
-        path: '/login',
+        path: '',
         name: 'login',
         component: () =>
           import(/* webpackChunkName: 'LoginPage' */ '../pages/Login.vue'),
         meta: {
           guest: true
         }
-      },
+      }
+    ]
+  },
+  {
+    path: '/email-verify',
+    name: 'email-verify',
+    component: () => import('../layouts/AuthLayout.vue'),
+    children: [
       {
-        path: '/email-verify',
-        name: 'email-verify',
+        path: '',
         component: () =>
           import(
             /* webpackChunkName: 'EmailVerify' */ '../pages/EmailVerify.vue'
-          )
-      },
+            )
+      }
+    ]
+  },
+  {
+    path: '/password/reset/:token',
+    name: 'reset-password',
+    component: () => import('../layouts/AuthLayout.vue'),
+    children: [
       {
-        path: '/password/reset/:token',
-        name: 'reset-password',
+        path: '',
         component: () =>
           import(
             /* webpackChunkName: 'ResetPassword' */ '../pages/ResetPassword.vue'
-          )
+            )
       }
     ]
   },

@@ -423,11 +423,14 @@ export default {
 					return 'red';
 					break;
 				case 2:
-					return 'blue';
-					break;
-				case 3:
 					return 'green';
 					break;
+				case 3:
+					return 'blue';
+					break;
+        case 4:
+          return 'purple';
+          break;
 				default:
 					return 'white';
 			}

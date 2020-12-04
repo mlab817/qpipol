@@ -11,7 +11,8 @@ const state = () => {
     error: null,
     loggedIn: LocalStorage.getItem('loggedIn') || false,
     token: LocalStorage.getItem('token') || '',
-    role: LocalStorage.getItem('role') || ''
+    role: LocalStorage.getItem('role') || '',
+    me: {}
   };
 };
 
