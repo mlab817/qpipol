@@ -74,39 +74,6 @@ export default {
   },
 
   methods: {
-    handleReturnProject() {
-      const id = this.$route.params.id;
-
-      this.$q
-        .dialog({
-          title: 'Return Project',
-          message: 'Add remarks.',
-          prompt: {
-            model: '',
-            isValid: val => !!val || '* Required',
-            type: 'textarea'
-          },
-          cancel: true,
-          persistent: true
-        })
-        .onOk(data => {
-          const payload = {
-            project_id: id,
-            remarks: data
-          };
-          this.$q.loading.show();
-          this.$store.dispatch('projects/returnProject', payload).then(() => {
-            this.$q.notify({
-              type: 'positive',
-              message: 'Successfully returned project.',
-              position: 'bottom-right'
-            });
-            this.$q.loading.hide();
-            this.validated = true;
-          });
-        });
-    },
-
 	  handleValidateProject() {
 		  this.$q
 			  .dialog({
@@ -128,21 +95,21 @@ export default {
 
 		  this.$q
 			  .dialog({
-				  component: ValidateProject,
-				  title: 'Validate Project'
+				  title: 'Validate Project',
+          message: 'Please input remarks (if any). Input N/A if not applicable',
+          prompt: {
+				    model: '',
+            isValid: val => val && val.toLowerCase() === 'n/a'
+          }
 			  })
-			  .onOk(data => {
-				  const payload = {
-					  id: id,
-					  validation_data: data.validation_data,
-					  validation_signed: data.validation_signed,
-					  remarks: data.remarks
-				  };
-
+			  .onOk(remarks => {
 				  this.$q.loading.show();
 
 				  this.$store
-					  .dispatch('projects/validateProject', payload)
+					  .dispatch('projects/validateProject', {
+					    id: this.project.id,
+              remarks: remarks
+            })
 					  .then(() => {
 						  this.$q.notify({
 							  type: 'positive',

@@ -10,7 +10,7 @@ module.exports = function(ctx) {
       'apollo',
       'copy',
       'loading-defaults',
-      'router-auth',
+      // 'router-auth',
       'v-money',
       'papaparse',
       'error-handler',

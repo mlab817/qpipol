@@ -380,12 +380,12 @@
 					type="submit"
 					label="Save"
 					v-if="editMode" />
-        <q-btn
+        <!-- <q-btn
           color="primary"
           label="Validate"
           @click="confirmValidation"
           v-if="isReviewer"
-        />
+        /> -->
       </div>
     </q-form>
   </q-card>

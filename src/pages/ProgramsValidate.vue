@@ -482,6 +482,9 @@ export default {
         case 'Finalized':
           return 'primary';
           break;
+        case 'Endorsed':
+          return 'blue';
+          break;
         default:
           return 'white';
       }

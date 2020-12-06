@@ -131,12 +131,6 @@
               :rules="rules.selectOne"
               label="Region"
             ></region>
-
-            <province
-              v-model="project.province_id"
-              v-if="project.spatial_coverage_id === '4'"
-              :rules="rules.selectOne"
-            ></province>
           </q-card-section>
         </q-card>
 
@@ -1203,7 +1197,6 @@ import BudgetTier from './dropdowns/BudgetTier';
 import CipTypes from './dropdowns/CipTypes';
 import Gad from './dropdowns/Gad';
 import Region from './dropdowns/Region';
-import Province from './dropdowns/Province';
 import FundingSource from './dropdowns/FundingSource';
 import FundingInstitution from './dropdowns/FundingInstitution';
 import ImplementationMode from './dropdowns/ImplementationMode';
@@ -1252,7 +1245,6 @@ export default {
     InfrastructureSectors,
     FundingInstitution,
     FundingSource,
-    Province,
     Region,
     ProjectStatus,
     ImplementingAgency,

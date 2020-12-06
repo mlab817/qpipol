@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import activities from './activities';
 import auth from './auth';
 import projects from './projects';
 import profile from './profile';
@@ -18,7 +17,6 @@ Vue.use(Vuex);
 
 const Store = new Vuex.Store({
   modules: {
-    activities,
     auth,
     projects,
     profile,
