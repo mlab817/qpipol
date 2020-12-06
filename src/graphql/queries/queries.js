@@ -17,55 +17,12 @@ export const CHECK_EMAIL_AVAILABILITY_QUERY = gql`
 `;
 
 export const GET_CURRENT_USER = gql`
-  query getCurrentUser {
-    getCurrentUser {
+  query me {
+    me {
       ...user
-      project_count
     }
   }
   ${USER_FRAGMENT}
-`;
-
-export const GET_IMAGES = gql`
-  query images {
-    images {
-      id
-      name
-      dropbox_link
-      size
-    }
-  }
-`;
-
-/* Notifications */
-
-export const FETCH_NOTIFICATIONS_QUERY = gql`
-  query notifications {
-    notifications {
-      ...notificationDetails
-    }
-  }
-  ${NOTIFICATION_FRAGMENT}
-`;
-
-export const FETCH_UNREAD_NOTIFICATIONS_QUERY = gql`
-  query unreadNotifications {
-    unreadNotifications {
-      ...notificationDetails
-    }
-  }
-  ${NOTIFICATION_FRAGMENT}
-`;
-
-/* Options */
-
-export const FETCH_CURRENCIES = gql`
-  query currencies {
-    currencies {
-      id
-      name
-    }
-  }
 `;
 
 export const FETCH_DISTRICTS = gql`
@@ -118,10 +75,8 @@ export const FETCH_OPERATING_UNITS = gql`
         id
         name
         email
-        position
         active
         verified
-        image_url
       }
       reviewers {
         id
@@ -289,12 +244,6 @@ export const FETCH_REVIEWERS_QUERY = gql`
     reviewers {
       id
       name
-      reviews {
-        id
-        projects {
-          id
-        }
-      }
     }
   }
 `;
@@ -304,11 +253,6 @@ export const FETCH_ENCODERS_QUERY = gql`
     encoders {
       id
       name
-      operating_unit {
-        id
-        acronym
-      }
-      image_url
     }
   }
 `;

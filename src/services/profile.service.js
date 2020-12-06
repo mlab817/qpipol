@@ -1,12 +1,12 @@
-import { client } from '@/boot/apollo';
-import { handleResponse, handleError } from '@/utils';
+import { client } from 'boot/apollo';
+import { handleResponse, handleError } from 'src/utils';
 
-import { GET_CURRENT_USER } from '@/graphql/queries';
+import { GET_CURRENT_USER } from 'src/graphql';
 import {
   UPLOAD_USER_AVATAR_MUTATION,
   UPDATE_PROFILE_MUTATION,
   CHOOSE_AVATAR_MUTATION
-} from '@/graphql/mutations';
+} from 'src/graphql';
 
 export const profileService = {
   getCurrentUser() {

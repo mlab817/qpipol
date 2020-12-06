@@ -13,168 +13,171 @@
       </page-title>
     </template>
 
-    <q-table
-      :data="filteredProjects"
-      :loading="$apollo.loading"
-      :columns="columns"
-      :pagination="pagination"
-      :filter="filter"
-      :grid="$q.screen.lt.md"
-      wrap-cells
-      @row-click="rowClicked"
-      style="margin-bottom: 70px;"
-    >
-
-      <template v-slot:top-right="props">
+    <div class="row">
+      <div class="col">
         <div class="row q-gutter-sm">
-          <search v-model="filter"></search>
-
-          <icon-button
-						tooltip="Filter by Submission Status"
-            icon="filter_alt"
-            @click="filterProjects"
-            :color="selected.length ? 'primary' : void 0"
-          />
-
-          <icon-button icon="refresh" tooltip="Re-download data from server" @click="refetch" />
-
-					<icon-button icon="cloud_download" tooltip="Download data from server" @click="exportProjects" v-if="isReviewer" />
-
-					<icon-button icon="table_chart" tooltip="Download table" @click="exportTable" />
-
-					<fullscreen-button @click="props.toggleFullscreen" :in-fullscreen="props.inFullscreen"></fullscreen-button>
+          <q-btn label="Filter" icon="filter_list" outline color="blue" @click="filter = !filter" />
+          <q-select outlined v-model="sortBy" :options="orders" style="min-width: 200px;" />
         </div>
-      </template>
-
-			<template v-slot:body-cell-pipol="props">
-				<q-td :props="props">
-					<q-badge label="PIPOL" v-if="props.row.pipol"></q-badge>
-				</q-td>
-			</template>
-
-      <template v-slot:body-cell-submission_status="props">
-        <q-td :props="props">
-					<q-badge :color="getColor(props.row.submission_status)" v-if="props.row.submission_status"  @click.stop="filter = props.row.submission_status.name">
-          {{
-            props.row.submission_status ? props.row.submission_status.name : ''
-          }}
-					</q-badge>
-        </q-td>
-      </template>
-
-			<template v-slot:body-cell-pipol_status="props">
-				<q-td :props="props">
-					<q-badge :color="getColor(props.row.pipol_status)" v-if="props.row.pipol_status">
-						{{
-						props.row.pipol_status ? props.row.pipol_status.name : ''
-						}}
-					</q-badge>
-				</q-td>
-			</template>
-
-      <template v-slot:body-cell-actions="props">
-        <q-td :props="props">
-					<q-btn-dropdown color="primary" label="Menu" @click.stop>
-						<project-menu :project="props.row" />
-					</q-btn-dropdown>
-        </q-td>
-      </template>
-
-      <template v-slot:item="props">
-        <div class="q-pa-sm col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
-          <q-card
-            class="fit q-pa-none cursor-pointer"
-            :class="
-              props.row.submission_status && props.row.submission_status.name === 'Finalized' ? 'bg-green' : ''
-            "
-						@click="openURL(`/projects/${props.row.id}`, null, {target: '_blank'})"
-          >
-            <q-list>
-              <q-item class="q-pa-sm">
-                <q-item-section>
-                  <q-item-label>{{ props.row.title }}</q-item-label>
-                  <q-item-label>
-                    <q-badge
-                      :color="
-                        props.row.type && props.row.type.id === '1'
-                          ? 'blue'
-                          : 'negative'
-                      "
-                      >{{ props.row.type && props.row.type.name }}</q-badge
-                    >
-                    |
-                    {{
-                      props.row.main_funding_source
-                        ? props.row.main_funding_source.name
-                        : ''
-                    }}
-                  </q-item-label>
-                </q-item-section>
-                <q-item-section side>
-									<q-btn-dropdown color="primary" label="Menu" @click.stop>
-										<project-menu :project="props.row" />
-									</q-btn-dropdown>
-                </q-item-section>
-              </q-item>
-              <q-item>
-                <q-item-section>
-                  <q-item-label caption class="text-capitalize"
-                    >{{
-                      props.row.submission_status
-                        ? props.row.submission_status.name
-                        : ''
-                    }}:</q-item-label
-                  >
-                  <q-item-label>
-                    <q-badge color="blue">v. {{ props.row.version }}</q-badge> |
-                    {{ props.row.updated_at | formatDate }}</q-item-label
-                  >
-                </q-item-section>
-                <q-item-section side>
-                  <q-item-label class="text-h6">
-                    PhP {{ props.row.total_project_cost | formatMoney }}
-                  </q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-card>
+      </div>
+      <div class="col">
+        <div class="row justify-end text-h6 text-weight-bold">
+          {{total}} results
         </div>
-      </template>
-    </q-table>
+      </div>
+    </div>
+    <div class="row q-mt-sm q-col-gutter-sm">
+      <div class="col-3" v-if="filter">
+        <div class="row q-gutter-sm q-py-sm justify-end">
+          <q-btn label="Clear Filters" color="red" size="sm" @click="clearFilters" />
+          <q-btn label="Apply Filters" color="blue" size="sm" @click="applyFilters" />
+        </div>
+        <q-separator />
+        <q-expansion-item label="PAP Types">
+          <q-option-group color="secondary" :options="types" type="checkbox" v-model="selectedTypes"></q-option-group>
+        </q-expansion-item>
+        <q-separator/>
+        <q-expansion-item label="Operating Units">
+          <q-option-group color="secondary" :options="operating_units" type="checkbox" v-model="selectedOperatingUnits"></q-option-group>
+        </q-expansion-item>
+        <q-separator  />
+        <q-expansion-item label="Banner Program">
+          <q-option-group color="secondary" :options="banner_programs" type="checkbox" v-model="selectedBannerPrograms"></q-option-group>
+        </q-expansion-item>
+        <q-separator />
+        <q-expansion-item label="Project Status">
+          <q-option-group color="secondary" :options="project_statuses" type="checkbox" v-model="selectedProjectStatuses"></q-option-group>
+        </q-expansion-item>
+        <q-separator />
+      </div>
+
+      <div class="col">
+        <q-list separator>
+          <template v-if="$apollo.loading">
+            <q-item v-for="i in 10" :key="i">
+              <q-item-section avatar>
+                <q-skeleton type="QAvatar" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>
+                  <q-skeleton type="text" />
+                </q-item-label>
+                <q-item-label caption>
+                  <q-skeleton type="text" width="65%" />
+                </q-item-label>
+                <q-item-label caption>
+                  <q-skeleton type="text" width="90%" />
+                </q-item-label>
+                <q-item-label caption>
+                  <q-skeleton type="text" width="20%" />
+                </q-item-label>
+              </q-item-section>
+              <q-item-section side top class="col-1">
+                <q-item-label>
+                  <q-skeleton type="QBadge" />
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+          </template>
+          <q-item v-for="project in projects" :key="project.id" v-else>
+            <q-item-section>
+              <q-item-label class="text-weight-bold">
+                {{ project.title }}
+              </q-item-label>
+              <q-item-label :lines="2">
+                {{ project.description }}
+              </q-item-label>
+              <q-item-label caption>
+                {{ project.creator ? project.creator.name : '' }}
+              </q-item-label>
+              <q-item-label caption>
+                {{ project.updated_at | formatDate }}
+              </q-item-label>
+              <q-item-label>
+                <q-badge class="text-weight-bold" :color="getColor(project.type)" v-if="project.type">
+                  {{ project.type ? project.type.name : '' }}
+                </q-badge>
+              </q-item-label>
+            </q-item-section>
+            <q-item-section side top class="text-weight-bold">
+              PhP {{ project.investment_target_total }}
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </div>
+    </div>
+
+    <div class="row justify-center">
+      <q-pagination
+        v-model="page"
+        :max="lastPage"
+        :boundary-links="true"
+      >
+      </q-pagination>
+    </div>
   </page-container>
 </template>
 
 <script>
 import { exportFile, date, openURL } from 'quasar';
-import ProjectMenu from '../components/projects/dropdowns/ProjectMenu.vue';
+// import ProjectMenu from '../components/projects/dropdowns/ProjectMenu.vue';
 import PageContainer from '@/ui/page/PageContainer.vue';
 import PageTitle from '@/ui/page/PageTitle.vue';
-import { ALL_PROJECTS } from '@/graphql';
-import { SUBMISSION_STATUSES } from '../graphql';
+// import { ALL_PROJECTS } from '@/graphql';
+import {
+  BANNER_PROGRAMS,
+  FETCH_PROJECT_STATUSES,
+  FETCH_TYPES,
+  PROJECTS,
+  SUBMISSION_STATUSES
+} from 'src/graphql';
 import { timeAgo, wrapCsvValue } from 'src/utils';
 
-import {
-	FullscreenButton,
-	Search
-} from '@/ui'
-import IconButton from '../ui/buttons/IconButton'
-import HelpButton from '../ui/buttons/HelpButton'
+// import {
+// 	FullscreenButton,
+// 	Search
+// } from '@/ui'
+// import IconButton from '../ui/buttons/IconButton'
+// import HelpButton from '../ui/buttons/HelpButton'
 import {projectService} from '../services'
+import gql from "graphql-tag";
 
 export default {
   components: {
-	  HelpButton,
-	  IconButton,
-    ProjectMenu,
+    // ProjectMenu,
     PageContainer,
     PageTitle,
-    Search,
-	  FullscreenButton
+    // Search,
+	  // FullscreenButton
   },
 
   name: 'ProjectsIndex',
 
   computed: {
+    orderBy() {
+      const sortBy = this.sortBy
+      const UPDATED_AT = "UPDATED_AT"
+      const TITLE = "TITLE"
+      const DESC = "DESC"
+      const ASC = "ASC"
+
+      switch (sortBy.toLowerCase()) {
+        case 'newest':
+          return [{field: UPDATED_AT, order: DESC}]
+          break;
+        case 'oldest':
+          return [{field: UPDATED_AT, order: ASC}];
+          break;
+        case 'a - z':
+          return [{field: UPDATED_AT, order: ASC}];
+          break;
+        case 'z - a':
+          return [{field: TITLE, order: DESC}];
+          break;
+        default:
+          return [{field: UPDATED_AT, order: DESC}]
+      }
+    },
   	isReviewer() {
   		return this.$store.getters['auth/isReviewer']
 		},
@@ -187,10 +190,10 @@ export default {
 
       if (!selected.length) {
         // if nothing is selected, return all projects
-        filteredProjects = this.allProjects;
+        filteredProjects = this.projects;
       } else {
         // if something is selected, return projects that match the status
-        filteredProjects = this.allProjects.filter(proj => {
+        filteredProjects = this.projects.filter(proj => {
           return proj.submission_status && selected.includes(proj.submission_status.id);
         });
       }
@@ -200,18 +203,105 @@ export default {
   },
 
   apollo: {
-    allProjects: {
-      query: ALL_PROJECTS
+    projects: {
+      query: PROJECTS,
+      variables() {
+        return {
+          orderBy: this.orderBy,
+          first: this.first,
+          page: this.page
+        }
+      },
+      result({ data }) {
+        console.log(data.projects)
+        this.projects = data.projects.data
+        this.lastPage = data.projects.paginatorInfo.lastPage
+        this.total = data.projects.paginatorInfo.total
+      }
     },
     submission_statuses: {
       query: SUBMISSION_STATUSES
+    },
+    types: {
+      query: FETCH_TYPES,
+      result({data}) {
+        this.types = data.types && data.types.map(x => {
+          return {
+            label: x.name,
+            value: x.id
+          }
+        })
+      }
+    },
+    banner_programs: {
+      query: BANNER_PROGRAMS,
+      result({data}) {
+        this.banner_programs = data.banner_programs && data.banner_programs.map(x => {
+          return {
+            label: x.name,
+            value: x.id
+          }
+        })
+      }
+    },
+    project_statuses: {
+      query: FETCH_PROJECT_STATUSES,
+      result({data}) {
+        this.project_statuses = data.project_statuses && data.project_statuses.map(x => {
+          return {
+            label: x.name,
+            value: x.id
+          }
+        })
+      }
+    },
+    operating_units: {
+      query: gql`
+        query {
+          operating_units {
+            id
+            name
+          }
+        }
+      `,
+      result({data}) {
+        this.operating_units = data.operating_units && data.operating_units.map(x => {
+          return {
+            label: x.name,
+            value: x.id
+          }
+        })
+      }
     }
   },
 
   data() {
     return {
-      filter: '',
-      allProjects: [],
+      types: [],
+      banner_programs: [],
+      project_statuses: [],
+      operating_units: [],
+      selectedTypes: [],
+      selectedBannerPrograms: [],
+      selectedProjectStatuses: [],
+      selectedOperatingUnits: [],
+      page: 1,
+      first: 10,
+      lastPage: 1,
+      sortBy: 'Newest',
+      orders: [
+        'Newest',
+        'Oldest',
+        'A - Z',
+        'Z - A'
+      ],
+      total: 0,
+      filter: true,
+      pagination: {
+        page: 1,
+        rowsPerPage: 10,
+      },
+      projects: [],
       processing_statuses: [],
       selected: [],
       columns: [
@@ -306,25 +396,37 @@ export default {
           label: 'Actions',
           align: 'center'
         }
-      ],
-      pagination: {
-        rowsPerPage: 10
-      }
+      ]
     };
   },
   methods: {
     openURL,
     refetch() {
-      this.$apollo.queries.allProjects.refetch();
+      this.$apollo.queries.projects.refetch();
     },
-    rowClicked(evt, row) {
-      // this.$router.push('/projects/' + row.id);
-      openURL('/projects/' + row.id, null, { target: '_blank' })
+    clearFilters() {
+      this.selectedTypes = []
+      this.selectedBannerPrograms = []
+      this.selectedProjectStatuses = []
+      this.selectedOperatingUnits = []
+    },
+    applyFilters() {
+      const {
+        selectedTypes,
+        selectedBannerPrograms,
+        selectedProjectStatuses,
+        selectedOperatingUnits
+      } = this.$data
+      alert(`selectedTypes >>> ${selectedTypes},
+        selectedBannerPrograms >>> ${selectedBannerPrograms},
+        selectedProjectStatuses >>> ${selectedProjectStatuses},
+        selectedOperatingUnits >>> ${selectedOperatingUnits}`
+      )
     },
     exportTable() {
       const content = [this.columns.map(col => wrapCsvValue(col.label))]
         .concat(
-          this.allProjects.map(row =>
+          this.projects.map(row =>
             this.columns
               .map(col =>
                 wrapCsvValue(
@@ -415,23 +517,25 @@ export default {
 				})
 				.finally(() => this.$q.loading.hide())
 		},
-		getColor(status) {
-    	const statusId = status && status.id
-
-			switch (parseInt(statusId)) {
-				case 1:
-					return 'red';
-					break;
-				case 2:
-					return 'blue';
-					break;
-				case 3:
-					return 'green';
-					break;
-				default:
-					return 'white';
-			}
-		}
+    getColor(type) {
+      const name = type ? type.name.toLowerCase() : ''
+      switch (name) {
+        case 'activity':
+          return 'red';
+          break;
+        case 'program':
+          return 'yellow';
+          break;
+        case 'ongoing project':
+          return 'green';
+          break;
+        case 'new project':
+          return 'blue';
+          break;
+        default:
+          return 'white';
+      }
+    }
   },
   filters: {
     formatMoney(val) {

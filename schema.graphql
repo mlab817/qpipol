@@ -1,14 +1,23 @@
 type Query {
-  project_processing_statuses: [ProjectProcessingStatus]
-  announcements: [Announcement]
-
-  # Get current user
-  getCurrentUser: User
   activities(
+    # Limits number of fetched elements.
     first: Int!
+
+    # The offset from which elements are returned.
     page: Int
-    orderBy: [ActivitiesOrderByOrderByClause!]
   ): ActivityPaginator
+  activity(id: ID!): Activity
+  searchActivities(
+    # Limits number of fetched elements.
+    first: Int!
+
+    # The offset from which elements are returned.
+    page: Int
+  ): ActivityPaginator
+  announcements: [Announcement]
+  attachments: [Attachment]
+  attachment(id: ID!): Attachment
+  attachment_types: [AttachmentType]
 
   # Get all implementation basis
   bases: [Basis]
@@ -79,25 +88,51 @@ type Query {
   # Get all years
   years: [Year]
 
-  # Get paginated user list
-  paginatedUsers(
-    # Limits number of fetched elements.
+  # Get current user
+  getCurrentUser: User
+  funding_source_financials(project_id: ID!): [FundingSourceFinancial]
+  funding_source_infrastructures(project_id: ID!): [FundingSourceInfrastructure]
+
+  # Return all operating units
+  operating_units: [OperatingUnit]
+
+  # Return an operating unit by ID
+  operating_unit(id: ID!): OperatingUnit
+  operating_unit_financials(project_id: ID!): [OperatingUnitFinancial]
+  permissions: [Permission]
+  pipol_statuses: [PipolStatus]
+  cost_structures: [CostStructure]
+  prexc_programs: [PrexcProgram]
+  prexc_program(id: ID!): PrexcProgram
+  prexc_subprograms: [PrexcSubprogram]
+  prexc_subprogram(id: ID!): PrexcSubprogram
+  prexc_activity(id: ID!): PrexcActivity
+  prexc_activities(
+    # Limits number of fetched elements. Maximum allowed value: 25.
     first: Int = 10
 
     # The offset from which elements are returned.
     page: Int
-  ): UserPaginator
 
-  # Get all users in a single list
-  users: [User!]!
+    # Allows to filter if trashed elements should be fetched.
+    trashed: Trashed
+  ): PrexcActivityPaginator
+  banner_programs: [BannerProgram]
+  ouPrexcActivities: [PrexcActivity]
 
-  # Get all reviewers
-  reviewers: [User]
-  checkEmailAvailability(email: String!): CheckEmailAvailabilityResponse!
+  # Return projects for review by operating unit
+  prexcActivitiesForReview(operating_unit_id: ID!): [PrexcActivity]
+  consolidatedActivities: [PrexcActivity]
+  projects(
+    # Limits number of fetched elements.
+    first: Int!
 
-  # Get all encoders
-  encoders: [User]
-  roles: [Role!]!
+    # The offset from which elements are returned.
+    page: Int
+
+    # Allows to filter if trashed elements should be fetched.
+    trashed: Trashed
+  ): ProjectPaginator
 
   # Get paginated list of projects. Accepts page argument
   paginatedProjects(
@@ -122,72 +157,6 @@ type Query {
     # Allows to filter if trashed elements should be fetched.
     trashed: Trashed
   ): ProjectConnection
-  draftProjects(
-    # Limits number of fetched elements.
-    first: Int!
-
-    # The offset from which elements are returned.
-    page: Int
-  ): ProjectPaginator
-  finalizedProjects: [Project]
-  endorsedProjects(
-    # Limits number of fetched elements.
-    first: Int!
-
-    # The offset from which elements are returned.
-    page: Int
-  ): ProjectPaginator
-  returnedProjects(
-    # Limits number of fetched elements.
-    first: Int!
-
-    # The offset from which elements are returned.
-    page: Int
-  ): ProjectPaginator
-  validatedProjects(
-    # Limits number of fetched elements.
-    first: Int!
-
-    # The offset from which elements are returned.
-    page: Int
-  ): ProjectPaginator
-  reviewedProjects(
-    # Limits number of fetched elements.
-    first: Int!
-
-    # The offset from which elements are returned.
-    page: Int
-  ): ProjectPaginator
-  acceptedProjects(
-    # Limits number of fetched elements.
-    first: Int!
-
-    # The offset from which elements are returned.
-    page: Int
-  ): ProjectPaginator
-  approvedProjects(
-    # Limits number of fetched elements.
-    first: Int!
-
-    # The offset from which elements are returned.
-    page: Int
-  ): ProjectPaginator
-  encodedProjects(
-    # Limits number of fetched elements.
-    first: Int!
-
-    # The offset from which elements are returned.
-    page: Int
-  ): ProjectPaginator
-  projects(
-    processing_status_id: ID!
-
-    # Limits number of fetched elements. Maximum allowed value: 25.
-    first: Int = 10
-
-    # The offset from which elements are returned.
-    page: Int
-  ): ProjectPaginator
 
   # Gets project information based on id
   project(id: ID!): Project
@@ -195,82 +164,275 @@ type Query {
     # Allows to filter if trashed elements should be fetched.
     trashed: Trashed
   ): [Project]
-  operating_units: [OperatingUnit]
-  operating_unit(id: ID!): OperatingUnit
+  ownProjects: [Project]
 
-  # Get all contacts.
-  contacts(
-    # Allows to filter if trashed elements should be fetched.
-    trashed: Trashed
-  ): [Contact]
+  # Return projects of the operating unit
+  ouProjects: [Project]
 
-  # Find contact by ID.
-  contact(id: ID): Contact
-  processing_statuses: [ProcessingStatus]
-  processing_status(id: ID!): ProcessingStatus
-  submission_statuses: [SubmissionStatus]
-  notifications: [Notification]
-  unreadNotifications: [Notification]
-  pdp_chapters: [PdpChapter]
-  pdp_outcomes: [PdpOutcome]
-  pdp_suboutcomes: [PdpSuboutcome]
-  pdp_indicators: [PdpIndicator]
+  # Return all projects belonging to the team
+  teamProjects: [Project]
 
-  # Search projects using their title
-  searchProjects(search: String!): [Project]
-  images: [Image]
-  image(id: ID!): Image
-  appVersions: [AppVersion]
-  appVersion(id: ID!): AppVersion
-  currentAppVersion: AppVersion
-  viewSharedProject(id: ID!, token: String!): Project
-  attachments: [Attachment]
-  attachment(id: ID!): Attachment
-  attachment_types: [AttachmentType]
-  permissions: [Permission]
-  cost_structures: [CostStructure]
-  prexc_programs: [PrexcProgram]
-  prexc_program(id: ID!): PrexcProgram
-  prexc_subprograms: [PrexcSubprogram]
-  prexc_subprogram(id: ID!): PrexcSubprogram
-  prexc_activities: [PrexcActivity]
-  prexc_activity(id: ID!): PrexcActivity
-  paginatedPrexcActivities(
+  # Return all projects belonging to all teams the user belongs to
+  allTeamProjects: [Project]
+
+  # Return projects for review by operating unit
+  projectsForReview(operating_unit_id: ID!): [Project]
+
+  # Search for projects based on key word
+  searchProjects(
+    search: String!
+
     # Limits number of fetched elements. Maximum allowed value: 25.
     first: Int = 10
 
     # The offset from which elements are returned.
     page: Int
-
-    # Allows to filter if trashed elements should be fetched.
-    trashed: Trashed
-  ): PrexcActivityPaginator
-  banner_programs: [BannerProgram]
+  ): ProjectPaginator
   region_financials(project_id: ID!): [RegionFinancial]
-  funding_source_financials(project_id: ID!): [FundingSourceFinancial]
   release(id: ID!): Release
   releases: [Release]
+  roles: [Role!]!
+  submission_statuses: [SubmissionStatus]
+  teams: [Team]
   useful_links: [UsefulLink]
-  consolidatedActivities: [PrexcActivity]
+
+  # Get paginated user list
+  paginatedUsers(
+    # Limits number of fetched elements.
+    first: Int = 10
+
+    # The offset from which elements are returned.
+    page: Int
+  ): UserPaginator
+
+  # Get all users in a single list
+  users: [User!]!
+
+  # Get all reviewers
+  reviewers: [User]
+  checkEmailAvailability(email: String!): CheckEmailAvailabilityResponse!
+
+  # Get all encoders
+  encoders: [User]
+  pdp_chapters: [PdpChapter]
+  pdp_outcomes: [PdpOutcome]
+  pdp_suboutcomes: [PdpSuboutcome]
+  pdp_indicators: [PdpIndicator]
+  appVersions: [AppVersion]
+  appVersion(id: ID!): AppVersion
+  currentAppVersion: AppVersion
+  node(id: ID!): Node
 }
 
-type ProjectProcessingStatus {
-  id: ID
-  project_id: ID!
-  project: Project
-  processing_status_id: ID!
-  processing_status: ProcessingStatus
-  processed_by: ID!
-  processor: User
-  remarks: String
-  processed_at: String
+# A paginated list of Activity items.
+type ActivityPaginator {
+  # Pagination information about the list of items.
+  paginatorInfo: PaginatorInfo!
+
+  # A list of Activity items.
+  data: [Activity!]!
+}
+
+# Pagination information about the corresponding list of items.
+type PaginatorInfo {
+  # Total count of available items in the page.
+  count: Int!
+
+  # Current pagination page.
+  currentPage: Int!
+
+  # Index of first item in the current page.
+  firstItem: Int
+
+  # If collection has more pages.
+  hasMorePages: Boolean!
+
+  # Index of last item in the current page.
+  lastItem: Int
+
+  # Last page number of the collection.
+  lastPage: Int!
+
+  # Number of items per page in the collection.
+  perPage: Int!
+
+  # Total items available in the collection.
+  total: Int!
+}
+
+type Activity {
+  id: ID!
+  title: String
+  slug: String
+  operating_unit_id: ID
+  operating_unit: OperatingUnit
+  prexc_program_id: ID
+  prexc_program: PrexcProgram
+  prexc_subprogram_id: ID
+  prexc_subprogram: PrexcSubprogram
+  banner_program_id: ID
+  banner_program: BannerProgram
+  project_id: ID
+  trip: Boolean
+  uacs_code: String
+  investment_target_2016: Float
+  investment_target_2017: Float
+  investment_target_2018: Float
+  investment_target_2019: Float
+  investment_target_2020: Float
+  investment_target_2021: Float
+  investment_target_2022: Float
+  investment_target_2023: Float
+  investment_target_2024: Float
+  investment_target_2025: Float
+  investment_target_total: Float
+  infrastructure_target_2016: Float
+  infrastructure_target_2017: Float
+  infrastructure_target_2018: Float
+  infrastructure_target_2019: Float
+  infrastructure_target_2020: Float
+  infrastructure_target_2021: Float
+  infrastructure_target_2022: Float
+  infrastructure_target_2023: Float
+  infrastructure_target_2024: Float
+  infrastructure_target_2025: Float
+  infrastructure_target_total: Float
+  gaa_2016: Float
+  gaa_2017: Float
+  gaa_2018: Float
+  gaa_2019: Float
+  gaa_2020: Float
+  gaa_2021: Float
+  gaa_2022: Float
+  gaa_2023: Float
+  gaa_2024: Float
+  gaa_2025: Float
+  gaa_total: Float
+  nep_2016: Float
+  nep_2017: Float
+  nep_2018: Float
+  nep_2019: Float
+  nep_2020: Float
+  nep_2021: Float
+  nep_2022: Float
+  nep_2023: Float
+  nep_2024: Float
+  nep_2025: Float
+  nep_total: Float
+  disbursement_2016: Float
+  disbursement_2017: Float
+  disbursement_2018: Float
+  disbursement_2019: Float
+  disbursement_2020: Float
+  disbursement_2021: Float
+  disbursement_2022: Float
+  disbursement_2023: Float
+  disbursement_2024: Float
+  disbursement_2025: Float
+  disbursement_total: Float
+  created_by: ID
+  creator: User
+  updated_by: ID
+  updater: User
+  deleted_by: ID
+  deleter: User
   created_at: String
   updated_at: String
-  deleted_at: String
+  finalized: Boolean
+  reviewed: Boolean
+  submission_status_id: ID
+  submission_status: SubmissionStatus
+  project: Project
+  tier: Tier
+  last_updated: String
+  team_id: ID
+  team: Team
+}
+
+type OperatingUnit {
+  id: ID
+  name: String
+  acronym: String
+  image: String
+  image_url: String
+  address: String
+  agency_head_name: String
+  agency_head_designation: String
+  telephone_number: String
+  fax_number: String
+  email: String
+  focals: [User]
+  operating_unit_type_id: ID
+  operating_unit_type: OperatingUnitType
+  projects(
+    # Limits number of fetched elements. Maximum allowed value: 25.
+    first: Int = 10
+
+    # A cursor after which elements are returned.
+    after: String
+  ): ProjectConnection
+  count_project: Int
+  total_investment: Float
+  reviewers: [User]
+  viewers: [User]
+  investment_target_total: Float
+  investment_target_2016: Float
+  investment_target_2017: Float
+  investment_target_2018: Float
+  investment_target_2019: Float
+  investment_target_2020: Float
+  investment_target_2021: Float
+  investment_target_2022: Float
+  investment_target_2023: Float
+  project_count: Int
+  prexc_activities: [PrexcActivity]
+  prexc_programs: [PrexcProgram]
+  prexc_subprograms: [PrexcSubprogram]
+  consolidates: [BannerProgram]
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  verified: Boolean!
+  projects(
+    # Limits number of fetched elements.
+    first: Int!
+
+    # The offset from which elements are returned.
+    page: Int
+  ): ProjectPaginator
+  active: Boolean!
+  reviews: [OperatingUnit]
+  views: [OperatingUnit]
+  created_at: DateTime
+  reviewed: [Project!]!
+  user_avatar: String
+  project_count: Int
+  tokens: [Token]
+  token: Token
+  roles: [Role]
+  currentTeam: Team
+  profile: Profile
+  teams: [Team]
+  ownedTeams: [Team]
+  invites: [TeamInvite]
+  permissions: [String]
+}
+
+# A paginated list of Project items.
+type ProjectPaginator {
+  # Pagination information about the list of items.
+  paginatorInfo: PaginatorInfo!
+
+  # A list of Project items.
+  data: [Project!]!
 }
 
 type Project {
   id: ID!
+  uuid: String
   prexc_program_id: ID
   prexc_program: PrexcProgram
   prexc_subprogram_id: ID
@@ -280,14 +442,10 @@ type Project {
   banner_program_id: ID
   banner_program: BannerProgram
   pipol_code: String
-  uuid: String
   pip: Boolean
   cip: Boolean
   trip: Boolean
   rdip: Boolean
-  pcip: Boolean
-  afmip: Boolean
-  infrastructure: Boolean
   title: String!
   slug: String
   operating_unit: OperatingUnit
@@ -296,14 +454,9 @@ type Project {
   funding_institution_id: ID
   funding_institution: FundingInstitution
   operating_unit_id: ID
-  spatial_coverage_id: ID
   bases: [Basis]
   selected_bases: [ID]
   description: String
-  components: String
-  goals: String
-  outcomes: String
-  purpose: String
   expected_outputs: String
   iccable: Boolean
   clearinghouse: Boolean
@@ -319,6 +472,7 @@ type Project {
   type: Type
   type_id: ID
   regular: Boolean
+  spatial_coverage_id: ID
   spatial_coverage: SpatialCoverage
   region_id: ID
   region: Region
@@ -467,33 +621,16 @@ type Project {
   updater: User
   deleted_by: ID
   deleter: User
-  can_update: Boolean
-  processing_statuses: [ProcessingStatus]
   activities: [Activity]
   endorsed_by: ID
   endorser: User
   endorsed_at: String
-  endorsement: Endorsement
-  endorsement_id: ID
   reviewer: User
   reviewed_by: ID
   reviewed_at: String
   created_at: String
   updated_at: String
-  finalized_by: ID
-  finalizer: User
-  finalized_at: String
-  approved_by: ID
-  approved_at: String
-  createdAt: String
-  updatedAt: String
-  finalizedAt: String
-  reviewedAt: String
-  endorsedAt: String
   deleted_at: String
-  deletedAt: String
-  project_processing_statuses: [ProjectProcessingStatus]
-  latest_processing_status: ProjectProcessingStatus
   region_financials: [RegionFinancial]
   funding_source_financials: [FundingSourceFinancial]
   pdp_chapter_id: ID
@@ -505,36 +642,25 @@ type Project {
   selected_pdp_chapters: [ID]
   selected_pdp_indicators: [ID]
   pdp_indicators: [PdpIndicator]
-  latest_status: String
-  processing_status: ProcessingStatus
-  attachments: [Attachment]
   funding_sources: [FundingSource]
   uacs_code: String
   signed_copy: String
-  validation_data: Boolean
-  validation_signed: Boolean
-  finalized: Boolean
-  endorsed: Boolean
-  reviewed: Boolean
-  approved: Boolean
-  encoded: Boolean
-  version: Int
   signed_copy_link: String
   funding_source_infrastructures: [FundingSourceInfrastructure]
   infrastructure_subsectors: [InfrastructureSubsector]
   selected_infrastructure_subsectors: [ID]
-  project_preparation_document_id: ID
-  project_preparation_document: ProjectPreparationDocument
-  project_preparation_document_others: String
+  preparation_document_id: ID
+  preparation_document: ProjectPreparationDocument
+  preparation_document_others: String
   selected_funding_sources: [ID]
   cip_type_id: ID
   cip_type: CipType
-  validated: Boolean
   submission_status: SubmissionStatus
   submission_status_id: ID
-  pipol: Boolean
   pipol_status_id: ID
   pipol_status: PipolStatus
+  team: Team
+  team_id: ID
 }
 
 type PrexcProgram {
@@ -591,350 +717,7 @@ type PrexcActivity {
   id: ID!
   name: String
   acronym: String
-  operating_unit_id: ID
-  operating_unit: OperatingUnit
-  prexc_program_id: ID
-  prexc_program: PrexcProgram
-  prexc_subprogram_id: ID
-  prexc_subprogram: PrexcSubprogram
-  banner_program_id: ID
-  banner_program: BannerProgram
-  project_id: ID
-  trip: Boolean
-  uacs_code: String
-  investment_target_2016: Float
-  investment_target_2017: Float
-  investment_target_2018: Float
-  investment_target_2019: Float
-  investment_target_2020: Float
-  investment_target_2021: Float
-  investment_target_2022: Float
-  investment_target_2023: Float
-  investment_target_2024: Float
-  investment_target_2025: Float
-  investment_target_total: Float
-  infrastructure_target_2016: Float
-  infrastructure_target_2017: Float
-  infrastructure_target_2018: Float
-  infrastructure_target_2019: Float
-  infrastructure_target_2020: Float
-  infrastructure_target_2021: Float
-  infrastructure_target_2022: Float
-  infrastructure_target_2023: Float
-  infrastructure_target_2024: Float
-  infrastructure_target_2025: Float
-  infrastructure_target_total: Float
-  gaa_2016: Float
-  gaa_2017: Float
-  gaa_2018: Float
-  gaa_2019: Float
-  gaa_2020: Float
-  gaa_2021: Float
-  gaa_2022: Float
-  gaa_2023: Float
-  gaa_2024: Float
-  gaa_2025: Float
-  gaa_total: Float
-  nep_2016: Float
-  nep_2017: Float
-  nep_2018: Float
-  nep_2019: Float
-  nep_2020: Float
-  nep_2021: Float
-  nep_2022: Float
-  nep_2023: Float
-  nep_2024: Float
-  nep_2025: Float
-  nep_total: Float
-  disbursement_2016: Float
-  disbursement_2017: Float
-  disbursement_2018: Float
-  disbursement_2019: Float
-  disbursement_2020: Float
-  disbursement_2021: Float
-  disbursement_2022: Float
-  disbursement_2023: Float
-  disbursement_2024: Float
-  disbursement_2025: Float
-  disbursement_total: Float
-  created_by: ID
-  creator: User
-  updated_by: ID
-  updater: User
-  created_at: String
-  updated_at: String
-  finalized: Boolean
-  reviewed: Boolean
-  submission_status_id: ID
-  submission_status: SubmissionStatus
-  project: Project
-  tier: Tier
-}
-
-type OperatingUnit {
-  id: ID
-  name: String
-  acronym: String
-  image: String
-  image_url: String
-  address: String
-  agency_head_name: String
-  agency_head_designation: String
-  telephone_number: String
-  fax_number: String
-  email: String
-  focals: [User]
-  operating_unit_type_id: ID
-  operating_unit_type: OperatingUnitType
-  projects(
-    # Limits number of fetched elements. Maximum allowed value: 25.
-    first: Int = 10
-
-    # A cursor after which elements are returned.
-    after: String
-  ): ProjectConnection
-  count_project: Int
-  total_investment: Float
-  reviewers: [User]
-  viewers: [User]
-  investment_target_total: Float
-  investment_target_2016: Float
-  investment_target_2017: Float
-  investment_target_2018: Float
-  investment_target_2019: Float
-  investment_target_2020: Float
-  investment_target_2021: Float
-  investment_target_2022: Float
-  investment_target_2023: Float
-  project_count: Int
-  prexc_activities: [PrexcActivity]
-  prexc_programs: [PrexcProgram]
-  prexc_subprograms: [PrexcSubprogram]
-  consolidates: [BannerProgram]
-}
-
-type User {
-  id: ID!
-  name: String!
-  nickname: String
-  email: String!
-  verified: Boolean!
-  role_id: ID
-  role: Role
-  projects(
-    # Limits number of fetched elements.
-    first: Int!
-
-    # The offset from which elements are returned.
-    page: Int
-  ): ProjectPaginator
-  image_url: String
-  contact_number: String
-  position: String
-  operating_unit_id: ID
-  operating_unit: OperatingUnit
-  active: Boolean!
-  notifications: [Notification]
-  unreadNotifications: [Notification]
-  reviews: [OperatingUnit]
-  views: [OperatingUnit]
-  activities(
-    # Limits number of fetched elements.
-    first: Int!
-
-    # The offset from which elements are returned.
-    page: Int
-  ): ActivityPaginator
-  created_at: DateTime
-  reviewed: [Project!]!
-  project_processing_statuses: [ProjectProcessingStatus]
-  images: [Image]
-  image: Image
-  avatar: String
-  user_avatar: String
-  project_count: Int
-  tokens: [Token]
-  token: Token
-}
-
-type Role {
-  id: ID!
-  name: String!
-  ident: String!
-  color: String
-  description: String
-  active: Boolean
-  users: [User]
-  permissions: [Permission]
-}
-
-type Permission {
-  id: ID!
-  name: String!
-  guard_name: String
-  roles: [Role]
-}
-
-# A paginated list of Project items.
-type ProjectPaginator {
-  # Pagination information about the list of items.
-  paginatorInfo: PaginatorInfo!
-
-  # A list of Project items.
-  data: [Project!]!
-}
-
-# Pagination information about the corresponding list of items.
-type PaginatorInfo {
-  # Total count of available items in the page.
-  count: Int!
-
-  # Current pagination page.
-  currentPage: Int!
-
-  # Index of first item in the current page.
-  firstItem: Int
-
-  # If collection has more pages.
-  hasMorePages: Boolean!
-
-  # Index of last item in the current page.
-  lastItem: Int
-
-  # Last page number of the collection.
-  lastPage: Int!
-
-  # Number of items per page in the collection.
-  perPage: Int!
-
-  # Total items available in the collection.
-  total: Int!
-}
-
-type Notification {
-  id: String
-  type: String
-  notifiable: User
-  notifiable_id: ID
-  notifiable_type: String
-  data: NotificationData
-  read_at: String
-  created_at: String
-  updated_at: String
-}
-
-type NotificationData {
-  type: String
-  from: String
-  title: String
-  body: String
-  actionUrl: String
-  actionText: String
-}
-
-type ActivityPaginator {
-  data: [Activity!]!
-  paginatorInfo: PaginatorInfo!
-}
-
-type Activity {
-  id: ID
-  description: String
-  subject: Subject
-  causer: Causer
-  properties: String
-  created_at: String
-  updated_at: String
-}
-
-type Subject {
-  id: ID
-  name: String
-  title: String
-}
-
-type Causer {
-  id: ID
-  name: String
-}
-
-# A datetime string with format `Y-m-d H:i:s`, e.g. `2018-01-01 13:00:00`.
-scalar DateTime
-
-type Image {
-  id: ID
-  name: String
-  type: String
-  size: Int
-  dropbox_path: String
-  dropbox_link: String
-  uploader_id: ID
-  uploader: User
-  mime_type: String
-  extension: String
-}
-
-type Token {
-  id: String
-  user_id: ID
-  client_id: ID
-  name: String
-  scopes: String
-  revoked: Boolean
-  created_at: String
-  updated_at: String
-  expires_at: String
-}
-
-type OperatingUnitType {
-  id: ID
-  name: String
-  operating_units: [OperatingUnit]
-}
-
-# A paginated list of Project edges.
-type ProjectConnection {
-  # Pagination information about the list of edges.
-  pageInfo: PageInfo!
-
-  # A list of Project edges.
-  edges: [ProjectEdge]
-}
-
-# Pagination information about the corresponding list of items.
-type PageInfo {
-  # When paginating forwards, are there more items?
-  hasNextPage: Boolean!
-
-  # When paginating backwards, are there more items?
-  hasPreviousPage: Boolean!
-
-  # When paginating backwards, the cursor to continue.
-  startCursor: String
-
-  # When paginating forwards, the cursor to continue.
-  endCursor: String
-
-  # Total number of node in connection.
-  total: Int
-
-  # Count of nodes in current request.
-  count: Int
-
-  # Current page of request.
-  currentPage: Int
-
-  # Last page in connection.
-  lastPage: Int
-}
-
-# An edge that contains a node of type Project and a cursor.
-type ProjectEdge {
-  # The Project node.
-  node: Project
-
-  # A unique cursor that can be used for pagination.
-  cursor: String!
+  activities: [Activity]
 }
 
 type BannerProgram {
@@ -943,19 +726,6 @@ type BannerProgram {
   acronym: String
   prexc_activities: [PrexcActivity]
   consolidators: [OperatingUnit]
-}
-
-type SubmissionStatus {
-  id: ID!
-  name: String!
-  projects: [Project]
-}
-
-type Tier {
-  id: ID!
-  name: String
-  projects: [Project]
-  prexc_activities: [PrexcActivity]
 }
 
 type FundingSource {
@@ -1046,6 +816,13 @@ type ProjectStatus {
   projects: [Project]
 }
 
+type Tier {
+  id: ID!
+  name: String
+  projects: [Project]
+  prexc_activities: [PrexcActivity]
+}
+
 type TechnicalReadiness {
   id: ID!
   name: String!
@@ -1075,35 +852,6 @@ type SustainableDevelopmentGoal {
   name: String
   description: String
   projects: [Project]
-}
-
-type ProcessingStatus {
-  id: ID
-  name: String
-  project_processing_statuses: [ProjectProcessingStatus]
-  projects: [Project]
-  count_projects: Int
-}
-
-type Endorsement {
-  id: ID!
-  uuid: String
-  file_name: String
-  file_path: String
-  file_size: String
-  file_extension: String
-  file_type: String
-  dropbox_link: String
-  remarks: String
-  uploaded_by: String
-  uploader: User
-  deleted_by: String
-  deleter: User
-  created_at: String
-  updated_at: String
-  deleted_at: String
-  projects: [Project]
-  link: String
 }
 
 type RegionFinancial {
@@ -1265,30 +1013,10 @@ type PdpIndicator {
   label: String
 }
 
-type Attachment {
-  id: ID!
-  uuid: String
-  project_id: ID
-  attachment_type_id: ID
-  attachment_type: AttachmentType
-  file_name: String
-  file_size: String
-  file_extension: String
-  file_type: String
-  file_path: String
-  dropbox_link: String
-  uploaded_by: ID
-  deleted_by: ID
-}
-
-type AttachmentType {
-  id: ID!
-  name: String!
-}
-
 type FundingSourceInfrastructure {
   id: ID!
   project_id: ID!
+  project: Project
   funding_source_id: ID!
   funding_source: FundingSource
   infrastructure_target_2016: Float
@@ -1332,15 +1060,135 @@ type CipType {
   projects: [Project]
 }
 
-type PipolStatus {
-  id: ID
-  name: String
-  slug: String
+type SubmissionStatus {
+  id: ID!
+  name: String!
   projects: [Project]
 }
 
-type Announcement {
+type PipolStatus {
+  id: ID
+  name: String
+}
+
+type Team {
+  id: ID
+  name: String
+  owner_id: ID
+}
+
+# A datetime string with format `Y-m-d H:i:s`, e.g. `2018-01-01 13:00:00`.
+scalar DateTime
+
+type Token {
+  id: String
+  user_id: ID
+  client_id: ID
+  name: String
+  scopes: String
+  revoked: Boolean
+  created_at: String
+  updated_at: String
+  expires_at: String
+}
+
+type Role implements Node {
   id: ID!
+  name: String!
+  guard_name: String
+  users: [User]
+  permissions: [Permission]
+}
+
+# Node global interface
+interface Node {
+  # Global identifier that can be used to resolve any Node implementation.
+  id: ID!
+}
+
+type Permission implements Node {
+  id: ID!
+  name: String!
+  guard_name: String
+  is_enabled: Boolean
+  roles: [Role]
+}
+
+type Profile {
+  id: ID
+  user_id: ID
+  nickname: String
+  avatar: String
+  contact_number: String
+  position: String
+  operating_unit_id: ID
+  unit: String
+  operating_unit: OperatingUnit
+}
+
+type TeamInvite implements Node {
+  id: ID!
+  user_id: ID
+  team_id: ID
+  type: String
+  email: String
+  accept_token: String
+  deny_token: String
+}
+
+type OperatingUnitType {
+  id: ID
+  name: String
+  operating_units: [OperatingUnit]
+}
+
+# A paginated list of Project edges.
+type ProjectConnection {
+  # Pagination information about the list of edges.
+  pageInfo: PageInfo!
+
+  # A list of Project edges.
+  edges: [ProjectEdge]
+}
+
+# Pagination information about the corresponding list of items.
+type PageInfo {
+  # When paginating forwards, are there more items?
+  hasNextPage: Boolean!
+
+  # When paginating backwards, are there more items?
+  hasPreviousPage: Boolean!
+
+  # When paginating backwards, the cursor to continue.
+  startCursor: String
+
+  # When paginating forwards, the cursor to continue.
+  endCursor: String
+
+  # Total number of node in connection.
+  total: Int
+
+  # Count of nodes in current request.
+  count: Int
+
+  # Current page of request.
+  currentPage: Int
+
+  # Last page in connection.
+  lastPage: Int
+}
+
+# An edge that contains a node of type Project and a cursor.
+type ProjectEdge {
+  # The Project node.
+  node: Project
+
+  # A unique cursor that can be used for pagination.
+  cursor: String!
+}
+
+type Announcement {
+  id: ID
   subject: String
   message: String
   created_at: String
@@ -1348,27 +1196,25 @@ type Announcement {
   creator: User
 }
 
-# Order by clause for the `orderBy` argument on the query `activities`.
-input ActivitiesOrderByOrderByClause {
-  # The column that is used for ordering.
-  field: ActivitiesOrderByColumn!
-
-  # The direction that is used for ordering.
-  order: SortOrder!
+type Attachment {
+  id: ID!
+  uuid: String
+  project_id: ID
+  attachment_type_id: ID
+  attachment_type: AttachmentType
+  file_name: String
+  file_size: String
+  file_extension: String
+  file_type: String
+  file_path: String
+  dropbox_link: String
+  uploaded_by: ID
+  deleted_by: ID
 }
 
-# Allowed column names for the `orderBy` argument on the query `activities`.
-enum ActivitiesOrderByColumn {
-  CREATED_AT
-}
-
-# The available directions for ordering a list of records.
-enum SortOrder {
-  # Sort records in ascending order.
-  ASC
-
-  # Sort records in descending order.
-  DESC
+type AttachmentType {
+  id: ID!
+  name: String!
 }
 
 type Readiness {
@@ -1382,18 +1228,34 @@ type Year {
   projects: [Project]
 }
 
-# A paginated list of User items.
-type UserPaginator {
-  # Pagination information about the list of items.
-  paginatorInfo: PaginatorInfo!
-
-  # A list of User items.
-  data: [User!]!
-}
-
-type CheckEmailAvailabilityResponse {
-  status: String!
-  message: String!
+type OperatingUnitFinancial {
+  id: ID!
+  project_id: ID!
+  project: Project
+  operating_unit_id: ID!
+  operating_unit: OperatingUnit
+  investment_target_2016: Float
+  investment_target_2017: Float
+  investment_target_2018: Float
+  investment_target_2019: Float
+  investment_target_2020: Float
+  investment_target_2021: Float
+  investment_target_2022: Float
+  investment_target_2023: Float
+  investment_target_2024: Float
+  investment_target_2025: Float
+  investment_target_total: Float
+  infrastructure_target_2016: Float
+  infrastructure_target_2017: Float
+  infrastructure_target_2018: Float
+  infrastructure_target_2019: Float
+  infrastructure_target_2020: Float
+  infrastructure_target_2021: Float
+  infrastructure_target_2022: Float
+  infrastructure_target_2023: Float
+  infrastructure_target_2024: Float
+  infrastructure_target_2025: Float
+  infrastructure_target_total: Float
 }
 
 # Specify if you want to include or exclude trashed results from a query.
@@ -1406,30 +1268,6 @@ enum Trashed {
 
   # Only return non-trashed results.
   WITHOUT
-}
-
-type Contact {
-  id: ID!
-  name: String
-  email: String
-  designation: String
-  operating_unit_id: ID
-  operating_unit: OperatingUnit
-  user_id: ID
-  user: User
-  phone_number: String
-  fax_number: String
-}
-
-type AppVersion {
-  id: ID!
-  version: String
-  change_type: String
-  change_log: String
-  notes: String
-  user: User
-  created_at: String
-  updated_at: String
 }
 
 # A paginated list of PrexcActivity items.
@@ -1464,6 +1302,31 @@ type UsefulLink {
   updated_at: String
 }
 
+# A paginated list of User items.
+type UserPaginator {
+  # Pagination information about the list of items.
+  paginatorInfo: PaginatorInfo!
+
+  # A list of User items.
+  data: [User!]!
+}
+
+type CheckEmailAvailabilityResponse {
+  status: String!
+  message: String!
+}
+
+type AppVersion {
+  id: ID!
+  version: String
+  change_type: String
+  change_log: String
+  notes: String
+  user: User
+  created_at: String
+  updated_at: String
+}
+
 type Mutation {
   createAnnouncement(input: CreateAnnouncementInput): Announcement
   updateAnnouncement(input: UpdateAnnouncementInput): Announcement
@@ -1473,30 +1336,22 @@ type Mutation {
   ): RESEND_EMAIL_VERIFICATION_RESPONSE!
   requestAccount(input: RequestAccountInput): REQUEST_ACCOUNT_RESPONSE!
   createAccount(input: CreateAccountInput!): CREATE_ACCOUNT_RESPONSE!
-
-  # Mark a specific notification as read
-  markAsRead(id: ID!): Notification!
-
-  # Mark all unread notifications as read
-  markAllAsRead: NotificationResponse!
-
-  # Update user information
-  updateUser(input: UpdateUserInput): User
-  updateOu(id: ID!, operating_unit_id: ID!): User
-
-  # Assign operating unit to review
-  assignOperatingUnitToReview(user_id: ID!, operating_units: [ID]!): User
-
-  # Assign role to user
-  assignRole(user_id: ID!, role_id: ID): User!
-
-  # Upload avatar for the user
-  uploadUserAvatar(image: Upload!): User
-  chooseAvatar(image_id: ID!): User
-  createRole(input: CreateRoleInput!): Role
-  updateRole(input: UpdateRoleInput!): Role
-  deleteRole(id: ID!): Role
-  attachPermissions(input: AttachPermissionsInput!): Role
+  exportProjects: DownloadLink
+  exportForConsolidation: DownloadLink
+  createFundingSourceFinancial(
+    input: CreateFundingSourceFinancialInput!
+  ): FundingSourceFinancial
+  updateFundingSourceFinancial(
+    input: UpdateFundingSourceFinancialInput!
+  ): FundingSourceFinancial
+  deleteFundingSourceFinancial(id: ID!): FundingSourceFinancial
+  createFundingSourceInfrastructure(
+    input: CreateFundingSourceInfrastructureInput!
+  ): FundingSourceInfrastructure
+  updateFundingSourceInfrastructure(
+    input: UpdateFundingSourceInfrastructureInput!
+  ): FundingSourceInfrastructure
+  deleteFundingSourceInfrastructure(id: ID!): FundingSourceInfrastructure
 
   # Create a new operating unit
   createOperatingUnit(input: CreateOperatingUnitInput!): OperatingUnit
@@ -1506,65 +1361,26 @@ type Mutation {
 
   # Delete operating unit
   deleteOperatingUnit(id: ID!): OperatingUnit
+
+  # Update operating unit image
   updateOperatingUnitImage(id: ID!, image: Upload!): OperatingUnit
   assignReviewer(input: AssignReviewerInput!): AssignReviewerResponse
-
-  # Creates new project.
-  createProject(input: CreateProjectInput!): Project
-
-  # Updates existing project.
-  updateProject(input: UpdateProjectInput!): Project
-  deleteProject(id: ID!): DeleteProjectResponse!
-  forceDeleteProject(id: ID!): Project
-  restoreProject(id: ID!): Project
-
-  # Add a contact.
-  createContact(input: CreateContactInput!): Contact
-  createContacts(input: CreateContactsInput): CreateContactsResponse
-
-  # Update a contact.
-  updateContact(input: UpdateContactInput!): Contact
-
-  # Delete a contact.
-  deleteContact(id: ID!): Contact
-  createSubmissionStatus(name: String!): SubmissionStatus
-  updateSubmissionStatus(id: ID!, name: String!): SubmissionStatus
-  deleteSubmissionStatus(id: ID!): SubmissionStatus
-  restoreSubmissionStatus(id: ID!): SubmissionStatus
-
-  # Deprecated
-  endorseProjects(projects: [ID!]!, file: Upload!): Endorsement
-  finalizeProject(input: UpdateProjectInput!): Project
-  revertToDraftProject(id: ID!): Project
-  uploadSignedCopy(id: ID!, signed_copy: Upload, remarks: String): Project
-  validateProject(
-    id: ID!
-    validation_data: Boolean
-    validation_signed: Boolean
-    remarks: String
-  ): Project
-  returnProject(project_id: ID!, remarks: String): Project
-  encodeProject(input: EncodeProjectInput!): Project
-  updatePipolStatus(id: ID!, pipol_status_id: ID!): Project
-  reclassifyProject(id: ID!, banner_program_id: ID): Project
-
-  # Transfer ownership of project to another user
-  transferProject(project_id: ID!, user_id: ID!): TransferProjectResponse!
-  createAppVersion(input: CreateAppVersionInput!): AppVersion
-  updateAppVersion(input: UpdateAppVersionInput!): AppVersion
-  deleteAppVersion(id: ID!): AppVersion
-  shareProject(input: ShareProjectInput!): ShareProjectResponse
-  uploadAttachment(
-    project_id: ID!
-    attachment_type_id: ID!
-    file: Upload!
-  ): Attachment
-  deleteAttachment(id: ID!): Attachment
-  acceptProject(id: ID!, remarks: String!): Project
-  approveProject(id: ID!, remarks: String!): Project
+  assignBannerProgramToOu(
+    operating_unit_id: ID!
+    banner_programs: [ID!]!
+  ): OperatingUnit
+  createOperatingUnitFinancial(
+    input: CreateOperatingUnitFinancialInput!
+  ): OperatingUnitFinancial
+  updateOperatingUnitFinancial(
+    input: UpdateOperatingUnitFinancialInput!
+  ): OperatingUnitFinancial
+  deleteOperatingUnitFinancial(id: ID!): OperatingUnitFinancial
   createPermission(input: CreatePermissionInput!): Permission
   updatePermission(input: UpdatePermissionInput!): Permission
   deletePermission(id: ID!): Permission
+  disablePermission(permission: String!): Permission
+  enablePermission(permission: String!): Permission
   createBannerProgram(input: CreateBannerProgramInput!): BannerProgram
   updateBannerProgram(input: UpdateBannerProgramInput!): BannerProgram
   deleteBannerProgram(id: ID!): BannerProgram
@@ -1578,7 +1394,6 @@ type Mutation {
   updatePrexcActivity(input: UpdatePrexcActivityInput!): PrexcActivity
   deletePrexcActivity(id: ID!): PrexcActivity
   createPrexcActivityFromProject(id: ID!): PrexcActivity
-  syncActivityToProject(id: ID!): PrexcActivity
   assignActivityToOus(id: ID!, operating_units: [ID]): PrexcActivity
   assignProgramToOus(id: ID!, operating_units: [ID]): PrexcProgram
   assignSubprogramToOus(id: ID!, operating_units: [ID]): PrexcSubprogram
@@ -1594,38 +1409,77 @@ type Mutation {
 
   # Review multiple activities at once
   reviewPrexcActivities(id: [ID]!): [PrexcActivity]
-  exportExcel(operating_unit_id: ID): Link
   reclassifyPrexcActivity(id: ID!, banner_program_id: ID): PrexcActivity
+  undoFinalizePrexcActivity(id: ID!): PrexcActivity
+
+  # Update user profile
+  updateUser(input: UpdateUserInput!): User
+
+  # Creates new project.
+  createProject(input: CreateProjectInput!): Project!
+
+  # Updates existing project
+  updateProject(input: UpdateProjectInput!): Project
+
+  # Soft deletes existing project
+  deleteProject(id: ID!): Project
+
+  # Permanently deletes existing project
+  forceDeleteProject(id: ID!): Project
+
+  # Restores soft deleted project
+  restoreProject(id: ID!): Project
+  acceptProject(id: ID!, remarks: String!): Project
+  shareProject(project_id: ID!, user_id: ID!): ShareProjectResponse
+
+  # Transfer ownership of project to another user
+  transferProject(project_id: ID!, user_id: ID!): Project!
+  encodeProject(id: ID!, pipol_code: String!): Project!
+  finalizeProject(id: ID!): Project!
+  inviteEditor(project_id: ID!, user_id: ID!): Project!
+  reclassifyProject(banner_program_id: ID!): Project!
+  revertProject(id: ID!): Project!
+  synctoActivity(prexc_activity_id: ID!): Activity!
+  updatePipolStatus(id: ID!, pipol_status_id: ID!): Project!
+  uploadSignedCopy(id: ID!, signed_copy: Upload!): Project!
+  validateProject(id: ID!): Project!
+  attachActivities(id: ID!, activities: [ID]): Project!
   createRegionFinancial(input: CreateRegionFinancialInput!): RegionFinancial
   updateRegionFinancial(input: UpdateRegionFinancialInput!): RegionFinancial
   deleteRegionFinancial(id: ID!): RegionFinancial
-  createFundingSourceFinancial(
-    input: CreateFundingSourceFinancialInput!
-  ): FundingSourceFinancial
-  updateFundingSourceFinancial(
-    input: UpdateFundingSourceFinancialInput!
-  ): FundingSourceFinancial
-  deleteFundingSourceFinancial(id: ID!): FundingSourceFinancial
-  createFundingSourceInfrastructure(
-    input: CreateFundingSourceInfrastructureInput!
-  ): FundingSourceInfrastructure
-  updateFundingSourceInfrastructure(
-    input: UpdateFundingSourceInfrastructureInput!
-  ): FundingSourceInfrastructure
-  deleteFundingSourceInfrastructure(id: ID!): FundingSourceInfrastructure
   createRelease(input: CreateReleaseInput!): Release
   updateRelease(input: UpdateReleaseInput!): Release
   deleteRelease(id: ID!): Release
+  createRole(input: CreateRoleInput!): Role
+  updateRole(input: UpdateRoleInput!): Role
+  deleteRole(id: ID!): Role
+  attachPermissions(input: AttachPermissionsInput!): Role
+
+  # Assign role to user
+  assignRole(user_id: ID!, roles: [String]): User
+  createSubmissionStatus(name: String!): SubmissionStatus
+  updateSubmissionStatus(id: ID!, name: String!): SubmissionStatus
+  deleteSubmissionStatus(id: ID!): SubmissionStatus
+  restoreSubmissionStatus(id: ID!): SubmissionStatus
+  attachTeam(id: ID!): User
+  detachTeam(id: ID!): User
+  attachTeams(id: [ID]): User
+  detachTeams(id: [ID]): User
+  switchTeam(id: ID!): User
   createUsefulLink(input: CreateUsefulLinkInput!): UsefulLink
   updateUsefulLink(input: UpdateUsefulLinkInput!): UsefulLink
   deleteUsefulLink(id: ID!): Release
-  exportProjectDocx(id: ID!): DocxLink
-  exportProjects: ProjectExportsLink
-  assignBannerProgramToOu(
-    operating_unit_id: ID!
-    banner_programs: [ID!]!
-  ): OperatingUnit
-  exportForConsolidation: ConsolidatedFile
+  updateOu(id: ID!, operating_unit_id: ID!): User
+
+  # Assign operating unit to review
+  assignOperatingUnitToReview(user_id: ID!, operating_units: [ID]!): User
+
+  # Upload avatar for the user
+  uploadUserAvatar(image: Upload!): User
+  chooseAvatar(image_id: ID!): User
+  createAppVersion(input: CreateAppVersionInput!): AppVersion
+  updateAppVersion(input: UpdateAppVersionInput!): AppVersion
+  deleteAppVersion(id: ID!): AppVersion
   login(input: LoginInput): AuthPayload!
   refreshToken(input: RefreshTokenInput): RefreshTokenPayload!
   logout: LogoutResponse!
@@ -1647,7 +1501,7 @@ input CreateAnnouncementInput {
 }
 
 input UpdateAnnouncementInput {
-  id: ID!
+  id: ID
   subject: String
   message: String
 }
@@ -1689,47 +1543,162 @@ type CREATE_ACCOUNT_RESPONSE {
   message: String
 }
 
-type NotificationResponse {
-  status: String
+type DownloadLink {
+  link: String
 }
 
-input UpdateUserInput {
-  name: String
-  nickname: String
-  operating_unit_id: ID
-  unit: String
-  position: String
-  image_url: String
-  contact_number: String
+input CreateFundingSourceFinancialInput {
+  project_id: ID!
+  funding_source_id: ID!
+  investment_target_2016: Float
+  investment_target_2017: Float
+  investment_target_2018: Float
+  investment_target_2019: Float
+  investment_target_2020: Float
+  investment_target_2021: Float
+  investment_target_2022: Float
+  investment_target_2023: Float
+  investment_target_2024: Float
+  investment_target_2025: Float
+  investment_target_total: Float
+  infrastructure_target_2016: Float
+  infrastructure_target_2017: Float
+  infrastructure_target_2018: Float
+  infrastructure_target_2019: Float
+  infrastructure_target_2020: Float
+  infrastructure_target_2021: Float
+  infrastructure_target_2022: Float
+  infrastructure_target_2023: Float
+  infrastructure_target_2024: Float
+  infrastructure_target_2025: Float
+  infrastructure_target_total: Float
+  nep_2016: Float
+  nep_2017: Float
+  nep_2018: Float
+  nep_2019: Float
+  nep_2020: Float
+  nep_2021: Float
+  nep_2022: Float
+  nep_2023: Float
+  nep_2024: Float
+  nep_2025: Float
+  nep_total: Float
+  gaa_2016: Float
+  gaa_2017: Float
+  gaa_2018: Float
+  gaa_2019: Float
+  gaa_2020: Float
+  gaa_2021: Float
+  gaa_2022: Float
+  gaa_2023: Float
+  gaa_2024: Float
+  gaa_2025: Float
+  gaa_total: Float
+  disbursement_2016: Float
+  disbursement_2017: Float
+  disbursement_2018: Float
+  disbursement_2019: Float
+  disbursement_2020: Float
+  disbursement_2021: Float
+  disbursement_2022: Float
+  disbursement_2023: Float
+  disbursement_2024: Float
+  disbursement_2025: Float
+  disbursement_total: Float
 }
 
-# Can be used as an argument to upload files using https://github.com/jaydenseric/graphql-multipart-request-spec
-scalar Upload
-
-input CreateRoleInput {
-  name: String!
-  ident: String!
-  color: String
-  description: String
-  active: Boolean
-}
-
-input UpdateRoleInput {
+input UpdateFundingSourceFinancialInput {
   id: ID!
-  name: String!
-  ident: String!
-  color: String
-  description: String
-  active: Boolean
+  project_id: ID!
+  funding_source_id: ID!
+  investment_target_2016: Float
+  investment_target_2017: Float
+  investment_target_2018: Float
+  investment_target_2019: Float
+  investment_target_2020: Float
+  investment_target_2021: Float
+  investment_target_2022: Float
+  investment_target_2023: Float
+  investment_target_2024: Float
+  investment_target_2025: Float
+  investment_target_total: Float
+  infrastructure_target_2016: Float
+  infrastructure_target_2017: Float
+  infrastructure_target_2018: Float
+  infrastructure_target_2019: Float
+  infrastructure_target_2020: Float
+  infrastructure_target_2021: Float
+  infrastructure_target_2022: Float
+  infrastructure_target_2023: Float
+  infrastructure_target_2024: Float
+  infrastructure_target_2025: Float
+  infrastructure_target_total: Float
+  nep_2016: Float
+  nep_2017: Float
+  nep_2018: Float
+  nep_2019: Float
+  nep_2020: Float
+  nep_2021: Float
+  nep_2022: Float
+  nep_2023: Float
+  nep_2024: Float
+  nep_2025: Float
+  nep_total: Float
+  gaa_2016: Float
+  gaa_2017: Float
+  gaa_2018: Float
+  gaa_2019: Float
+  gaa_2020: Float
+  gaa_2021: Float
+  gaa_2022: Float
+  gaa_2023: Float
+  gaa_2024: Float
+  gaa_2025: Float
+  gaa_total: Float
+  disbursement_2016: Float
+  disbursement_2017: Float
+  disbursement_2018: Float
+  disbursement_2019: Float
+  disbursement_2020: Float
+  disbursement_2021: Float
+  disbursement_2022: Float
+  disbursement_2023: Float
+  disbursement_2024: Float
+  disbursement_2025: Float
+  disbursement_total: Float
 }
 
-input AttachPermissionsInput {
+input CreateFundingSourceInfrastructureInput {
+  project_id: ID!
+  funding_source_id: ID!
+  infrastructure_target_2016: Float
+  infrastructure_target_2017: Float
+  infrastructure_target_2018: Float
+  infrastructure_target_2019: Float
+  infrastructure_target_2020: Float
+  infrastructure_target_2021: Float
+  infrastructure_target_2022: Float
+  infrastructure_target_2023: Float
+  infrastructure_target_2024: Float
+  infrastructure_target_2025: Float
+  infrastructure_target_total: Float
+}
+
+input UpdateFundingSourceInfrastructureInput {
   id: ID!
-  permissions: SyncPermissions
-}
-
-input SyncPermissions {
-  sync: [ID!]
+  project_id: ID!
+  funding_source_id: ID!
+  infrastructure_target_2016: Float
+  infrastructure_target_2017: Float
+  infrastructure_target_2018: Float
+  infrastructure_target_2019: Float
+  infrastructure_target_2020: Float
+  infrastructure_target_2021: Float
+  infrastructure_target_2022: Float
+  infrastructure_target_2023: Float
+  infrastructure_target_2024: Float
+  infrastructure_target_2025: Float
+  infrastructure_target_total: Float
 }
 
 input CreateOperatingUnitInput {
@@ -1843,6 +1812,9 @@ input UpdatePrexcSubprogramsBelongsToMany {
   connect: [ID]
 }
 
+# Can be used as an argument to upload files using https://github.com/jaydenseric/graphql-multipart-request-spec
+scalar Upload
+
 input AssignReviewerInput {
   operating_unit_id: ID!
   users: [ID]!
@@ -1852,6 +1824,218 @@ type AssignReviewerResponse {
   status: String
   message: String
   operating_unit: OperatingUnit
+}
+
+input CreateOperatingUnitFinancialInput {
+  project_id: ID!
+  operating_unit_id: ID!
+  investment_target_2016: Float
+  investment_target_2017: Float
+  investment_target_2018: Float
+  investment_target_2019: Float
+  investment_target_2020: Float
+  investment_target_2021: Float
+  investment_target_2022: Float
+  investment_target_2023: Float
+  investment_target_2024: Float
+  investment_target_2025: Float
+  investment_target_total: Float
+  infrastructure_target_2016: Float
+  infrastructure_target_2017: Float
+  infrastructure_target_2018: Float
+  infrastructure_target_2019: Float
+  infrastructure_target_2020: Float
+  infrastructure_target_2021: Float
+  infrastructure_target_2022: Float
+  infrastructure_target_2023: Float
+  infrastructure_target_2024: Float
+  infrastructure_target_2025: Float
+  infrastructure_target_total: Float
+}
+
+input UpdateOperatingUnitFinancialInput {
+  id: ID!
+  project_id: ID!
+  operating_unit_id: ID!
+  investment_target_2016: Float
+  investment_target_2017: Float
+  investment_target_2018: Float
+  investment_target_2019: Float
+  investment_target_2020: Float
+  investment_target_2021: Float
+  investment_target_2022: Float
+  investment_target_2023: Float
+  investment_target_2024: Float
+  investment_target_2025: Float
+  investment_target_total: Float
+  infrastructure_target_2016: Float
+  infrastructure_target_2017: Float
+  infrastructure_target_2018: Float
+  infrastructure_target_2019: Float
+  infrastructure_target_2020: Float
+  infrastructure_target_2021: Float
+  infrastructure_target_2022: Float
+  infrastructure_target_2023: Float
+  infrastructure_target_2024: Float
+  infrastructure_target_2025: Float
+  infrastructure_target_total: Float
+}
+
+input CreatePermissionInput {
+  name: String!
+  guard_name: String
+}
+
+input UpdatePermissionInput {
+  id: ID!
+  name: String!
+  guard_name: String
+}
+
+input CreateBannerProgramInput {
+  name: String
+  acronym: String
+}
+
+input UpdateBannerProgramInput {
+  id: ID!
+  name: String
+  acronym: String
+}
+
+input CreatePrexcProgramInput {
+  name: String!
+  acronym: String!
+  uacs_code: String
+  cost_structure_id: ID
+  title: String
+  organizational_outcome: String
+  objective_statement: String
+  program_strategy: String
+}
+
+input UpdatePrexcProgramInput {
+  id: ID!
+  name: String!
+  acronym: String!
+  uacs_code: String
+  cost_structure_id: ID
+  title: String
+  organizational_outcome: String
+  objective_statement: String
+  program_strategy: String
+}
+
+input CreatePrexcSubprogramInput {
+  name: String!
+  acronym: String!
+  uacs_code: String
+  prexc_program_id: ID!
+  title: String
+  organizational_outcome: String
+  objective_statement: String
+  program_strategy: String
+  outcome_indicators: String
+  output_indicators: String
+}
+
+input UpdatePrexcSubprogramInput {
+  id: ID!
+  name: String
+  acronym: String
+  uacs_code: String
+  prexc_program_id: ID
+  title: String
+  organizational_outcome: String
+  objective_statement: String
+  program_strategy: String
+  outcome_indicators: String
+  output_indicators: String
+}
+
+input CreatePrexcActivityInput {
+  name: String
+  acronym: String
+  operating_unit_id: ID
+  prexc_program_id: ID
+  prexc_subprogram_id: ID
+  banner_program_id: ID
+  trip: Boolean
+  uacs_code: String
+  investment_target_2016: Float
+  investment_target_2017: Float
+  investment_target_2018: Float
+  investment_target_2019: Float
+  investment_target_2020: Float
+  investment_target_2021: Float
+  investment_target_2022: Float
+  investment_target_2023: Float
+  investment_target_2024: Float
+  investment_target_2025: Float
+  investment_target_total: Float
+  infrastructure_target_2016: Float
+  infrastructure_target_2017: Float
+  infrastructure_target_2018: Float
+  infrastructure_target_2019: Float
+  infrastructure_target_2020: Float
+  infrastructure_target_2021: Float
+  infrastructure_target_2022: Float
+  infrastructure_target_2023: Float
+  infrastructure_target_2024: Float
+  infrastructure_target_2025: Float
+  infrastructure_target_total: Float
+  gaa_2016: Float
+  gaa_2017: Float
+  gaa_2018: Float
+  gaa_2019: Float
+  gaa_2020: Float
+  gaa_2021: Float
+  gaa_2022: Float
+  gaa_2023: Float
+  gaa_2024: Float
+  gaa_2025: Float
+  gaa_total: Float
+  nep_2016: Float
+  nep_2017: Float
+  nep_2018: Float
+  nep_2019: Float
+  nep_2020: Float
+  nep_2021: Float
+  nep_2022: Float
+  nep_2023: Float
+  nep_2024: Float
+  nep_2025: Float
+  nep_total: Float
+  disbursement_2016: Float
+  disbursement_2017: Float
+  disbursement_2018: Float
+  disbursement_2019: Float
+  disbursement_2020: Float
+  disbursement_2021: Float
+  disbursement_2022: Float
+  disbursement_2023: Float
+  disbursement_2024: Float
+  disbursement_2025: Float
+  disbursement_total: Float
+  tier_id: ID
+}
+
+input UpdateUserInput {
+  id: ID!
+  profile: UpdateProfileHasOne
+}
+
+input UpdateProfileHasOne {
+  upsert: UpdateProfileInput
+}
+
+input UpdateProfileInput {
+  id: ID!
+  nickname: String
+  contact_number: String
+  position: String
+  operating_unit_id: ID
+  unit: String
 }
 
 # Input to create a new project.
@@ -2086,220 +2270,9 @@ input UpdateBasesBelongsToMany {
   sync: [ID]
 }
 
-type DeleteProjectResponse {
-  project: Project
-  status: String
-  message: String
-}
-
-input CreateContactInput {
-  name: String
-  email: String
-  designation: String
-  operating_unit_id: ID
-  user_id: ID
-  phone_number: String
-  fax_number: String
-}
-
-input CreateContactsInput {
-  contacts: [CreateContactInput!]
-}
-
-type CreateContactsResponse {
-  contacts: [Contact]
-  failed: [Contact]
-}
-
-input UpdateContactInput {
-  id: ID!
-  name: String
-  email: String
-  designation: String
-  operating_unit_id: ID
-  user_id: ID
-  phone_number: String
-  fax_number: String
-}
-
-input EncodeProjectInput {
-  id: ID!
-  pipol_code: String
-  pipol_status_id: ID
-}
-
-type TransferProjectResponse {
-  project: Project
-  status: String
-  message: String
-}
-
-input CreateAppVersionInput {
-  version: String
-  change_type: String
-  change_log: String
-  notes: String
-}
-
-input UpdateAppVersionInput {
-  id: ID!
-  version: String
-  change_type: String
-  change_log: String
-  notes: String
-}
-
-input ShareProjectInput {
-  project_id: ID!
-  email: String!
-}
-
 type ShareProjectResponse {
   message: String
   status: String
-}
-
-input CreatePermissionInput {
-  name: String!
-  guard_name: String
-}
-
-input UpdatePermissionInput {
-  id: ID!
-  name: String!
-  guard_name: String
-}
-
-input CreateBannerProgramInput {
-  name: String
-  acronym: String
-}
-
-input UpdateBannerProgramInput {
-  id: ID!
-  name: String
-  acronym: String
-}
-
-input CreatePrexcProgramInput {
-  name: String!
-  acronym: String!
-  uacs_code: String
-  cost_structure_id: ID
-  title: String
-  organizational_outcome: String
-  objective_statement: String
-  program_strategy: String
-}
-
-input UpdatePrexcProgramInput {
-  id: ID!
-  name: String!
-  acronym: String!
-  uacs_code: String
-  cost_structure_id: ID
-  title: String
-  organizational_outcome: String
-  objective_statement: String
-  program_strategy: String
-}
-
-input CreatePrexcSubprogramInput {
-  name: String!
-  acronym: String!
-  uacs_code: String
-  prexc_program_id: ID!
-  title: String
-  organizational_outcome: String
-  objective_statement: String
-  program_strategy: String
-  outcome_indicators: String
-  output_indicators: String
-}
-
-input UpdatePrexcSubprogramInput {
-  id: ID!
-  name: String
-  acronym: String
-  uacs_code: String
-  prexc_program_id: ID
-  title: String
-  organizational_outcome: String
-  objective_statement: String
-  program_strategy: String
-  outcome_indicators: String
-  output_indicators: String
-}
-
-input CreatePrexcActivityInput {
-  name: String
-  acronym: String
-  operating_unit_id: ID
-  prexc_program_id: ID
-  prexc_subprogram_id: ID
-  banner_program_id: ID
-  trip: Boolean
-  uacs_code: String
-  investment_target_2016: Float
-  investment_target_2017: Float
-  investment_target_2018: Float
-  investment_target_2019: Float
-  investment_target_2020: Float
-  investment_target_2021: Float
-  investment_target_2022: Float
-  investment_target_2023: Float
-  investment_target_2024: Float
-  investment_target_2025: Float
-  investment_target_total: Float
-  infrastructure_target_2016: Float
-  infrastructure_target_2017: Float
-  infrastructure_target_2018: Float
-  infrastructure_target_2019: Float
-  infrastructure_target_2020: Float
-  infrastructure_target_2021: Float
-  infrastructure_target_2022: Float
-  infrastructure_target_2023: Float
-  infrastructure_target_2024: Float
-  infrastructure_target_2025: Float
-  infrastructure_target_total: Float
-  gaa_2016: Float
-  gaa_2017: Float
-  gaa_2018: Float
-  gaa_2019: Float
-  gaa_2020: Float
-  gaa_2021: Float
-  gaa_2022: Float
-  gaa_2023: Float
-  gaa_2024: Float
-  gaa_2025: Float
-  gaa_total: Float
-  nep_2016: Float
-  nep_2017: Float
-  nep_2018: Float
-  nep_2019: Float
-  nep_2020: Float
-  nep_2021: Float
-  nep_2022: Float
-  nep_2023: Float
-  nep_2024: Float
-  nep_2025: Float
-  nep_total: Float
-  disbursement_2016: Float
-  disbursement_2017: Float
-  disbursement_2018: Float
-  disbursement_2019: Float
-  disbursement_2020: Float
-  disbursement_2021: Float
-  disbursement_2022: Float
-  disbursement_2023: Float
-  disbursement_2024: Float
-  disbursement_2025: Float
-  disbursement_total: Float
-  tier_id: ID
-}
-
-type Link {
-  link: String
 }
 
 input CreateRegionFinancialInput {
@@ -2423,160 +2396,6 @@ input UpdateRegionFinancialInput {
   disbursement_total: Float
 }
 
-input CreateFundingSourceFinancialInput {
-  project_id: ID!
-  funding_source_id: ID!
-  investment_target_2016: Float
-  investment_target_2017: Float
-  investment_target_2018: Float
-  investment_target_2019: Float
-  investment_target_2020: Float
-  investment_target_2021: Float
-  investment_target_2022: Float
-  investment_target_2023: Float
-  investment_target_2024: Float
-  investment_target_2025: Float
-  investment_target_total: Float
-  infrastructure_target_2016: Float
-  infrastructure_target_2017: Float
-  infrastructure_target_2018: Float
-  infrastructure_target_2019: Float
-  infrastructure_target_2020: Float
-  infrastructure_target_2021: Float
-  infrastructure_target_2022: Float
-  infrastructure_target_2023: Float
-  infrastructure_target_2024: Float
-  infrastructure_target_2025: Float
-  infrastructure_target_total: Float
-  nep_2016: Float
-  nep_2017: Float
-  nep_2018: Float
-  nep_2019: Float
-  nep_2020: Float
-  nep_2021: Float
-  nep_2022: Float
-  nep_2023: Float
-  nep_2024: Float
-  nep_2025: Float
-  nep_total: Float
-  gaa_2016: Float
-  gaa_2017: Float
-  gaa_2018: Float
-  gaa_2019: Float
-  gaa_2020: Float
-  gaa_2021: Float
-  gaa_2022: Float
-  gaa_2023: Float
-  gaa_2024: Float
-  gaa_2025: Float
-  gaa_total: Float
-  disbursement_2016: Float
-  disbursement_2017: Float
-  disbursement_2018: Float
-  disbursement_2019: Float
-  disbursement_2020: Float
-  disbursement_2021: Float
-  disbursement_2022: Float
-  disbursement_2023: Float
-  disbursement_2024: Float
-  disbursement_2025: Float
-  disbursement_total: Float
-}
-
-input UpdateFundingSourceFinancialInput {
-  id: ID!
-  project_id: ID!
-  funding_source_id: ID!
-  investment_target_2016: Float
-  investment_target_2017: Float
-  investment_target_2018: Float
-  investment_target_2019: Float
-  investment_target_2020: Float
-  investment_target_2021: Float
-  investment_target_2022: Float
-  investment_target_2023: Float
-  investment_target_2024: Float
-  investment_target_2025: Float
-  investment_target_total: Float
-  infrastructure_target_2016: Float
-  infrastructure_target_2017: Float
-  infrastructure_target_2018: Float
-  infrastructure_target_2019: Float
-  infrastructure_target_2020: Float
-  infrastructure_target_2021: Float
-  infrastructure_target_2022: Float
-  infrastructure_target_2023: Float
-  infrastructure_target_2024: Float
-  infrastructure_target_2025: Float
-  infrastructure_target_total: Float
-  nep_2016: Float
-  nep_2017: Float
-  nep_2018: Float
-  nep_2019: Float
-  nep_2020: Float
-  nep_2021: Float
-  nep_2022: Float
-  nep_2023: Float
-  nep_2024: Float
-  nep_2025: Float
-  nep_total: Float
-  gaa_2016: Float
-  gaa_2017: Float
-  gaa_2018: Float
-  gaa_2019: Float
-  gaa_2020: Float
-  gaa_2021: Float
-  gaa_2022: Float
-  gaa_2023: Float
-  gaa_2024: Float
-  gaa_2025: Float
-  gaa_total: Float
-  disbursement_2016: Float
-  disbursement_2017: Float
-  disbursement_2018: Float
-  disbursement_2019: Float
-  disbursement_2020: Float
-  disbursement_2021: Float
-  disbursement_2022: Float
-  disbursement_2023: Float
-  disbursement_2024: Float
-  disbursement_2025: Float
-  disbursement_total: Float
-}
-
-input CreateFundingSourceInfrastructureInput {
-  project_id: ID!
-  funding_source_id: ID!
-  infrastructure_target_2016: Float
-  infrastructure_target_2017: Float
-  infrastructure_target_2018: Float
-  infrastructure_target_2019: Float
-  infrastructure_target_2020: Float
-  infrastructure_target_2021: Float
-  infrastructure_target_2022: Float
-  infrastructure_target_2023: Float
-  infrastructure_target_2024: Float
-  infrastructure_target_2025: Float
-  infrastructure_target_total: Float
-}
-
-input UpdateFundingSourceInfrastructureInput {
-  id: ID!
-  project_id: ID!
-  funding_source_id: ID!
-  infrastructure_target_2016: Float
-  infrastructure_target_2017: Float
-  infrastructure_target_2018: Float
-  infrastructure_target_2019: Float
-  infrastructure_target_2020: Float
-  infrastructure_target_2021: Float
-  infrastructure_target_2022: Float
-  infrastructure_target_2023: Float
-  infrastructure_target_2024: Float
-  infrastructure_target_2025: Float
-  infrastructure_target_total: Float
-}
-
 input CreateReleaseInput {
   version: String
   summary: String
@@ -2592,6 +2411,26 @@ input UpdateReleaseInput {
   notes: String
 }
 
+input CreateRoleInput {
+  name: String!
+  guard_name: String
+}
+
+input UpdateRoleInput {
+  id: ID!
+  name: String!
+  guard_name: String
+}
+
+input AttachPermissionsInput {
+  id: ID!
+  permissions: SyncPermissions
+}
+
+input SyncPermissions {
+  sync: [ID!]
+}
+
 input CreateUsefulLinkInput {
   title: String
   description: String
@@ -2605,16 +2444,19 @@ input UpdateUsefulLinkInput {
   to: String
 }
 
-type DocxLink {
-  link: String
+input CreateAppVersionInput {
+  version: String
+  change_type: String
+  change_log: String
+  notes: String
 }
 
-type ProjectExportsLink {
-  link: String
-}
-
-type ConsolidatedFile {
-  link: String
+input UpdateAppVersionInput {
+  id: ID!
+  version: String
+  change_type: String
+  change_log: String
+  notes: String
 }
 
 input LoginInput {
@@ -2699,16 +2541,22 @@ type UpdatePasswordResponse {
   message: String
 }
 
-type Subscription {
-  assignedRole(user_id: ID): User
-  assignedOperatingUnitToReview(user_id: ID): User
-  transferredProject(user_id: ID): Project
+type Link {
+  link: String
 }
 
-type CanUpdateResponse {
-  userId: ID
-  created_by: ID
-  check: Boolean
+input ShareProjectInput {
+  project_id: ID!
+  email: String!
+}
+
+# The available directions for ordering a list of records.
+enum SortOrder {
+  # Sort records in ascending order.
+  ASC
+
+  # Sort records in descending order.
+  DESC
 }
 
 # Allows ordering a list of records.

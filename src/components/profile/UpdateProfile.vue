@@ -74,9 +74,10 @@
 </template>
 
 <script>
-import TextInput from '@/ui/form-inputs/TextInput';
+import { TextInput } from 'src/ui';
 import ChooseAvatar from './ChooseAvatar';
-import { GET_CURRENT_USER, GET_IMAGES } from '@/graphql/queries';
+import { GET_CURRENT_USER } from 'src/graphql/queries';
+import {showErrorNotification, showSuccessNotification} from "src/functions";
 
 export default {
   components: {
@@ -119,10 +120,6 @@ export default {
         this.contact_number = contact_number;
         this.user_avatar = user_avatar;
       }
-    },
-
-    images: {
-      query: GET_IMAGES
     }
   },
 
@@ -130,23 +127,8 @@ export default {
     selectImage(image) {
       this.selectedAvatar = image.id;
     },
-
-    showSuccessNotification() {
-      this.$q.notify({
-        type: 'positive',
-        message: 'Success',
-        position: 'bottom-right'
-      });
-    },
-
-    showErrorNotification() {
-      this.$q.notify({
-        type: 'negative',
-        message: 'An error occurred',
-        position: 'bottom-right'
-      });
-    },
-
+    showSuccessNotification,
+    showErrorNotification,
     handleChooseAvatar() {
       this.$q.loading.show();
       // implement choose avatar mutation

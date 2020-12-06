@@ -17,10 +17,6 @@
       </div>
 
       <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
-				<announcement-component />
-
-				<releases-component />
-
 				<useful-links></useful-links>
       </div>
     </div>
@@ -28,23 +24,18 @@
 </template>
 
 <script>
-import { PageTitle, PageContainer } from '@/ui'
-import ShortCuts from '../components/dashboard/ShortCuts.vue';
-import ReleasesComponent from '../components/dashboard/Releases'
-import UsefulLinks from '../components/dashboard/UsefulLinks'
+import { PageTitle, PageContainer } from 'src/ui'
+import ShortCuts from 'src/components/dashboard/ShortCuts.vue';
+import UsefulLinks from 'src/components/dashboard/UsefulLinks'
 import { openURL } from 'quasar'
-import AnnouncementComponent from '../components/dashboard/AnnouncementComponent'
 
 export default {
   name: 'PageIndex',
 
   components: {
-	  AnnouncementComponent,
 	  UsefulLinks,
-	  ReleasesComponent,
     PageContainer,
     PageTitle,
-
     ShortCuts
   },
 

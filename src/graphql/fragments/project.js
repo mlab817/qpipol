@@ -207,26 +207,9 @@ export const PROJECT_FRAGMENT = gql`
       id
       name
     }
-    processing_status {
-      id
-      name
-    }
     project_preparation_document {
       id
       name
-    }
-    project_processing_statuses {
-      id
-      processing_status {
-        id
-        name
-      }
-      processor {
-        id
-        name
-      }
-      remarks
-      processed_at
     }
     project_status_id
     project_status {
@@ -330,10 +313,6 @@ export const PROJECT_FRAGMENT = gql`
     updates_date
     updated_at
     updater {
-      id
-      name
-    }
-    processing_status {
       id
       name
     }

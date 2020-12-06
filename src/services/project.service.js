@@ -36,14 +36,13 @@ import {
   EXPORT_PROJECT_DOCX_MUTATION,
   REVERT_TO_DRAFT_PROJECT,
 	EXPORT_PROJECTS,
-  RECLASSIFY_PROJECT
-} from '@/graphql';
-import {
+  RECLASSIFY_PROJECT,
 	CREATE_PREXC_ACTIVITY_FROM_PROJECT,
 	ENCODE_PROJECT,
 	OU_PREXC_ACTIVITIES,
 	PREXC_ACTIVITIES,
-	UPDATE_PIPOL_STATUS
+	UPDATE_PIPOL_STATUS,
+  PROJECTS
 } from 'src/graphql'
 
 export const projectService = {
@@ -51,7 +50,7 @@ export const projectService = {
 		// console.log(payload);
 		return client
 			.query({
-				query: ALL_PROJECTS
+				query: PROJECTS
 			})
 			.then(handleResponse)
 			.catch(handleError);
@@ -809,16 +808,16 @@ export const projectService = {
 						},
 						data
 					})
-					
+
 					const data2 = store.readQuery({
 						query: ALL_PROJECTS
 					})
-					
+
 					console.log(data2)
-					
+
 					const projectToUpdate = data2.allProjects.find(ap => ap.id === createPrexcActivityFromProject.project_id)
 					projectToUpdate.prexc_activity_id = createPrexcActivityFromProject.id
-					
+
 					store.writeQuery({
 						query: ALL_PROJECTS,
 						data2
@@ -828,7 +827,7 @@ export const projectService = {
 			.then(handleResponse)
 			.catch(handleError)
 	},
-  
+
   reclassifyProject(payload) {
     return client
       .mutate({

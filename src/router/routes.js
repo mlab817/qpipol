@@ -26,28 +26,6 @@ const routes = [
           requiresAuth: true
         }
       },
-      // {
-      //   path: 'activity',
-      //   name: 'activity',
-      //   component: () =>
-      //     import(
-      //       /* webpackChunkName: 'ActivityPage' */ '../pages/ActivityPage.vue'
-      //     ),
-      //   meta: {
-      //     requiresAuth: true
-      //   }
-      // },
-      {
-        path: 'notifications',
-        name: 'notifications',
-        component: () =>
-          import(
-            /* webpackChunkName: 'Notifications' */ '../pages/Notifications.vue'
-          ),
-        meta: {
-          requiresAuth: true
-        }
-      },
       {
         path: 'dashboard',
         name: 'dashboard',

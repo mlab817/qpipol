@@ -24,38 +24,10 @@ export const BASIC_INFORMATION_FRAGMENT = gql`
     }
     created_at
     updated_at
-    processing_status {
-      id
-      name
-    }
     submission_status {
       id
       name
     }
     pipol_status_id
-    finalized
-  }
-`;
-
-export const NOTIFICATION_FRAGMENT = gql`
-  fragment notificationDetails on Notification {
-    id
-    type
-    notifiable_id
-    notifiable_type
-    notifiable {
-      name
-    }
-    data {
-      type
-      from
-      title
-      body
-      actionText
-      actionUrl
-    }
-    read_at
-    created_at
-    updated_at
   }
 `;

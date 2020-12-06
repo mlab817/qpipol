@@ -14,8 +14,8 @@
 		<q-separator />
     <menu-item
       label="#AskHelp"
-      icon="fab fa-slack"
-      @click="openURL('https://ipmsglobal.slack.com')"
+      icon="fab fa-discord"
+      @click="openURL('https://discord.com')"
       type="a"
       target="_blank"
     />

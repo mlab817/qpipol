@@ -4,7 +4,6 @@ import Vuex from 'vuex';
 import activities from './activities';
 import auth from './auth';
 import projects from './projects';
-import notifications from './notifications';
 import profile from './profile';
 import security from './security';
 import settings from './settings';
@@ -22,7 +21,6 @@ const Store = new Vuex.Store({
     activities,
     auth,
     projects,
-    notifications,
     profile,
     security,
     settings,

@@ -22,8 +22,8 @@ const actions = {
   },
   getCurrentUser({ commit }) {
     return profileService.getCurrentUser().then(res => {
-      LocalStorage.set('user', res.getCurrentUser);
-      commit('SET_USER', res.getCurrentUser);
+      LocalStorage.set('user', res.me);
+      commit('SET_USER', res.me);
     });
   },
   clearError({ commit }) {

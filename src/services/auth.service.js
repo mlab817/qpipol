@@ -13,7 +13,7 @@ import {
   UPDATE_SETTING,
   REQUEST_ACCOUNT,
   CHECK_EMAIL_AVAILABILITY_QUERY
-} from '@/graphql';
+} from 'src/graphql';
 
 export const authService = {
   register({ name, email, password, password_confirmation }) {

@@ -14,10 +14,6 @@
     </q-toolbar-title>
     <q-space />
 
-    <!-- <q-btn flat round icon="search" class="q-mr-sm" v-else></q-btn> -->
-
-    <notification-button></notification-button>
-
     <q-btn flat round>
       <div>
         <user-avatar :src="user ? user.user_avatar : ''"></user-avatar>
@@ -31,12 +27,10 @@
 <script>
 import DropdownMenu from './Dropdown';
 import UserAvatar from './UserAvatar';
-import NotificationButton from './NotificationButton';
 
 export default {
   components: {
     DropdownMenu,
-    NotificationButton,
     UserAvatar
   },
   name: 'AppHeader',

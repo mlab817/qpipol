@@ -1,4 +1,4 @@
-# Quasar App (qpipol)
+# Investment Programming and Management System
 
 A Quasar Framework app
 

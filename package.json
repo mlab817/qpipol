@@ -37,7 +37,7 @@
     "apollo-upload-client": "^14.1.2",
     "axios": "^0.18.1",
     "core-js": "^3.6.5",
-    "cross-env": "^7.0.2",
+    "cross-env": "^7.0.3",
     "docx": "^5.4.0",
     "docxtemplater": "^3.19.7",
     "echarts": "^4.9.0",

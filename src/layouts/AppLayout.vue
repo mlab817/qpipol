@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHr LpR lfr">
     <q-header bordered class="bg-accent">
-      <app-header :user="getCurrentUser"></app-header>
+      <app-header :user="user"></app-header>
 
       <q-separator color="secondary" class="header-separator" />
     </q-header>
@@ -18,10 +18,10 @@
       >
 
       <q-scroll-area style="height: calc(100% - 200px); margin-top: 200px; border-right: 1px solid #ddd">
-        <app-menu :user="getCurrentUser" />
+        <app-menu :user="user" />
       </q-scroll-area>
 
-      <user-info :user="getCurrentUser" v-if="!miniState"></user-info>
+      <user-info :user="user" v-if="!miniState"></user-info>
 
       <div class="q-mini-drawer-hide absolute" style="top: 60px; right: -17px; z-index: 999">
         <q-btn
@@ -69,10 +69,10 @@ export default {
   name: 'AppLayout',
 
   apollo: {
-    getCurrentUser: {
+    me: {
       query: GET_CURRENT_USER,
       result({ data }) {
-        this.user = data.getCurrentUser;
+        this.user = data.me;
       }
     }
   },
