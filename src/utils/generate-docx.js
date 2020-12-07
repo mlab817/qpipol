@@ -345,7 +345,7 @@ const recodeData = (data) => {
 }
 
 export const generateDocx = (project) => {
-  loadFile("https://staging.dapmsipd.org/template", function(
+  loadFile("https://ipms.dapmsipd.org/template", function(
       error,
       content
     ) {
