@@ -7,6 +7,30 @@ export const LOGIN_MUTATION = gql`
   mutation login($username: String!, $password: String!) {
     login(input: { username: $username, password: $password }) {
       access_token
+      refresh_token
+      expires_in
+      user {
+        id
+        name
+        email
+        verified
+        avatar
+        roles {
+          id
+          name
+        }
+        permissions
+        profile {
+          id
+          nickname
+          operating_unit {
+            id
+            name
+          }
+        }
+        discord_user_id
+        discord_private_channel_id
+      }
     }
   }
 `;

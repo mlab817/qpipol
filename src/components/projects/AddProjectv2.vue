@@ -8,6 +8,8 @@
     >
 			<q-card flat square>
 				<q-card-section class="q-gutter-sm">
+          <operating-unit v-model="operating_unit_id"></operating-unit>
+
           <prexc-programs v-model="prexc_program_id" />
 
 					<prexc-subprograms v-model="prexc_subprogram_id" :filter="prexc_program_id" />
@@ -17,7 +19,6 @@
 					<text-input
 						label="UACS Code"
 						v-model="uacs_code"
-						hint="Input N/A if the PAP does not have a UACS Code yet."
 						with-na
 					/>
 
@@ -26,24 +27,7 @@
 							label="Title"
 							v-model="title"
 							:rules="rules.required"
-							hint="The PAP Title must match the title of the proposal to be submitted to NEDA/DBM."
 						/>
-						<!--
-							if title is not empty,
-							if no matches were found
-						-->
-						<div class="row" v-if="matches.length > 0">
-							<q-list>
-								<q-item v-for="{ name, id } in matches" :key="id">
-									<q-item-section>
-										<q-item-label
-											class="text-caption"
-											v-html="$options.filters.searchHighlight(name, title)"
-										></q-item-label>
-									</q-item-section>
-								</q-item>
-							</q-list>
-						</div>
 					</div>
 				</q-card-section>
 
@@ -65,31 +49,23 @@
 <script>
 import { mapGetters } from 'vuex';
 import TextInput from '@/ui/form-inputs/TextInput';
-import SingleSelect from '@/ui/form-inputs/SingleSelect';
 import BannerProgram from './dropdowns/BannerProgram'
 import PrexcPrograms from './dropdowns/PrexcPrograms'
 import PrexcSubprograms from './dropdowns/PrexcSubprograms'
-import {
-  PREXC_ACTIVITIES
-} from 'src/graphql/queries';
 import { showError } from '@/utils';
+import OperatingUnit from "components/projects/dropdowns/ImplementingAgency";
 
 export default {
   name: 'AddProject',
   components: {
+    OperatingUnit,
     TextInput,
     BannerProgram,
     PrexcPrograms,
     PrexcSubprograms
   },
-  apollo: {
-    prexc_activities: {
-      query: PREXC_ACTIVITIES
-    }
-  },
   data() {
     return {
-      prexc_activities: [],
       rules: {
         required: [val => !!val || '* Required'],
         notEmpty: [val => !!val || '* Select one'],
@@ -108,16 +84,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('auth', ['user']),
-    matches() {
-      const title = this.title && this.title.toLowerCase();
-      if (title && title.length > 3) {
-        const activities = this.prexc_activities;
-        const matches = activities.filter(x => x.name.includes(title));
-        return matches;
-      }
-      return [];
-    }
+    ...mapGetters('auth', ['user'])
   },
   methods: {
     confirmSubmit() {
@@ -208,20 +175,6 @@ export default {
     saved() {
       this.$emit('saved');
     }
-  },
-  filters: {
-    searchHighlight(value, search) {
-      if (search) {
-        let searchRegExp = new RegExp(search, 'ig');
-        return value.replace(searchRegExp, match => {
-          return `<span class="bg-yellow-6">${match}</span>`;
-        });
-      }
-      return value;
-    }
-  },
-  mounted() {
-    this.operating_unit_id = this.user.operating_unit.id;
   }
 };
 </script>

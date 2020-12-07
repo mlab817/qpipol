@@ -1,5 +1,5 @@
 <template>
-  <q-toolbar>
+  <q-toolbar style="height: 84px;" class="text-grey-8">
     <q-avatar>
       <q-img
         src="~assets/app-logo-128x128.png"
@@ -8,31 +8,21 @@
       />
     </q-avatar>
 
-    <q-toolbar-title class="text-white">
+    <q-toolbar-title class="text-red-5">
       <span class="gt-md">{{ appName }}</span>
       <span class="lt-md">{{ appShortname }}</span>
     </q-toolbar-title>
     <q-space />
 
-    <q-btn flat round>
-      <div>
-        <user-avatar :src="user ? user.user_avatar : ''"></user-avatar>
-
-        <dropdown-menu :user="user" />
-      </div>
-    </q-btn>
+    <q-btn color="red-5" flat label="Dashboard"></q-btn>
+    <q-btn color="red-5" flat label="Projects"></q-btn>
+    <q-btn color="red-5" flat label="Settings"></q-btn>
+    <q-btn-dropdown color="red-5" flat label="More"></q-btn-dropdown>
   </q-toolbar>
 </template>
 
 <script>
-import DropdownMenu from './Dropdown';
-import UserAvatar from './UserAvatar';
-
 export default {
-  components: {
-    DropdownMenu,
-    UserAvatar
-  },
   name: 'AppHeader',
   props: ['user'],
   computed: {

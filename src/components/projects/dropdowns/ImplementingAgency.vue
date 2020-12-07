@@ -4,7 +4,6 @@
     label="Implementing Agency"
     :options="operating_units"
     :rules="rules"
-    hint="Determined based on the user's indicated operating unit/office"
 		:loading="$apollo.loading"
 		with-refresh
 		@refetch="refetch"
@@ -12,8 +11,8 @@
 </template>
 
 <script>
-import { SingleSelect } from '@/ui';
-import {FETCH_OPERATING_UNITS} from '../../../graphql/queries'
+import { SingleSelect } from 'src/ui';
+import gql from "graphql-tag";
 
 export default {
   components: { SingleSelect },
@@ -31,7 +30,14 @@ export default {
   },
   apollo: {
     operating_units: {
-      query: FETCH_OPERATING_UNITS
+      query: gql`
+        query {
+          operating_units {
+              id
+              name
+          }
+        }
+      `
     }
   },
   data() {

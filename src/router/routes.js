@@ -1,19 +1,19 @@
+import {
+  requireAuth,
+  requireGuest
+} from "src/router/middleware";
+
 const routes = [
   {
     path: '',
-    component: () => import('@/layouts/LandingLayout.vue'),
-    children: [
-      {
-        path: '/',
-        name: 'home',
-        component: () =>
-          import(/* webpackChunkName: 'LandingPage' */ '../pages/Landing.vue')
-      }
-    ]
+    name: 'landing',
+    component: () =>
+      import(/* webpackChunkName: 'LandingPage' */ '../pages/Landing.vue')
   },
   {
     path: '/',
-    component: () => import('@/layouts/AppLayout.vue'),
+    component: () => import('src/layouts/MainLayout.vue'),
+    beforeEnter: requireAuth,
     children: [
       {
         path: 'review',
@@ -71,7 +71,7 @@ const routes = [
         name: 'programs',
         component: () =>
           import(
-            /* webpackChunkName: 'ProgramsIndex' */ '@/pages/ProgramsIndex.vue'
+            /* webpackChunkName: 'ProgramsIndex' */ 'src/pages/ProgramsIndex.vue'
           ),
         meta: {
           requiresAuth: true,
@@ -83,7 +83,7 @@ const routes = [
         name: 'review-activities',
         component: () =>
           import(
-            /* webpackChunkName: 'ProgramsValidate' */ '@/pages/ProgramsValidate.vue'
+            /* webpackChunkName: 'ProgramsValidate' */ 'src/pages/ProgramsValidate.vue'
           ),
         meta: {
           requiresAuth: true,
@@ -95,7 +95,7 @@ const routes = [
         name: 'banner-programs',
         component: () =>
           import(
-            /* webpackChunkName: 'BannerPrograms' */ '@/pages/BannerPrograms.vue'
+            /* webpackChunkName: 'BannerPrograms' */ 'src/pages/BannerPrograms.vue'
           ),
         meta: {
           requiresAuth: true,
@@ -107,7 +107,7 @@ const routes = [
         name: 'prexc-programs',
         component: () =>
           import(
-            /* webpackChunkName: 'PrexcPrograms' */ '@/pages/PrexcPrograms.vue'
+            /* webpackChunkName: 'PrexcPrograms' */ 'src/pages/PrexcPrograms.vue'
           ),
         meta: {
           requiresAuth: true,
@@ -119,11 +119,17 @@ const routes = [
   {
     path: '/projects',
     component: () => import('@/layouts/AppLayout.vue'),
+    beforeEnter: requireAuth,
     children: [
       {
         path: '',
         name: 'project-index',
         component: () => import('src/pages/ProjectIndex.vue')
+      },
+      {
+        path: 'add',
+        name: 'project-add',
+        component: () => import('src/pages/ProjectAdd.vue')
       }
     ]
   },
@@ -142,39 +148,34 @@ const routes = [
     ]
   },
   {
-    path: '',
-    component: () => import('../layouts/AuthLayout.vue'),
-    children: [
-      {
-        path: '/login',
-        name: 'login',
-        component: () =>
-          import(/* webpackChunkName: 'LoginPage' */ '../pages/Login.vue'),
-        meta: {
-          guest: true
-        }
-      },
-      {
-        path: '/email-verify',
-        name: 'email-verify',
-        component: () =>
-          import(
-            /* webpackChunkName: 'EmailVerify' */ '../pages/EmailVerify.vue'
-          )
-      },
-      {
-        path: '/password/reset/:token',
-        name: 'reset-password',
-        component: () =>
-          import(
-            /* webpackChunkName: 'ResetPassword' */ '../pages/ResetPassword.vue'
-          )
-      }
-    ]
+    path: '/login',
+    name: 'login',
+    component: () =>
+      import(/* webpackChunkName: 'LoginPage' */ '../pages/Login.vue'),
+    beforeEnter: requireGuest,
+    meta: {
+      guest: true
+    }
+  },
+  {
+    path: '/email-verify',
+    name: 'email-verify',
+    component: () =>
+      import(
+        /* webpackChunkName: 'EmailVerify' */ '../pages/EmailVerify.vue'
+      )
+  },
+  {
+    path: '/password/reset/:token',
+    name: 'reset-password',
+    component: () =>
+      import(
+        /* webpackChunkName: 'ResetPassword' */ '../pages/ResetPassword.vue'
+      )
   },
   {
     path: '/upload',
-    component: () => import('@/layouts/AppLayout.vue'),
+    component: () => import('src/layouts/AppLayout.vue'),
     children: [
       {
         path: '',
@@ -188,7 +189,7 @@ const routes = [
   },
   {
     path: '/consolidates',
-    component: () => import('@/layouts/AppLayout.vue'),
+    component: () => import('src/layouts/AppLayout.vue'),
     children: [
       {
         path: '',

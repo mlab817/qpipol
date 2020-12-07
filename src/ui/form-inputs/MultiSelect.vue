@@ -9,8 +9,8 @@
       option-label="name"
       option-value="id"
       behavior="menu"
-      :dense="dense"
-      :options-dense="dense"
+      dense
+      options-dense
       outlined
       multiple
       map-options

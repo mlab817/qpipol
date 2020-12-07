@@ -1,23 +1,18 @@
 <template>
   <div class="col">
-    <div class="row text-caption text-weight-bold items-center justify-between">
-      {{ label }}
-    </div>
     <q-input
-      square
+      :label="label"
       v-model="model"
       :type="type"
-      :dense="$q.screen.lt.md"
       outlined
       :readonly="readonly"
       :rules="rules"
       :max-length="maxlength"
       :hint="hint"
       clearable
-      label-color="orange-10"
-      hide-bottom-space
       :mask="mask"
       :placeholder="placeholder"
+      dense
     >
       <template v-slot:append>
         <q-btn

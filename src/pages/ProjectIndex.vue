@@ -9,15 +9,14 @@
           to="/projects/add"
           v-if="isEncoder"
         ></q-btn>
-				<help-button @click="showHelp" />
       </page-title>
     </template>
 
     <div class="row">
       <div class="col">
         <div class="row q-gutter-sm">
-          <q-btn label="Filter" icon="filter_list" outline color="blue" @click="filter = !filter" />
-          <q-select outlined v-model="sortBy" :options="orders" style="min-width: 200px;" />
+          <q-btn dense label="Filter" icon="filter_list" outline color="blue" @click="filter = !filter" />
+          <q-select label="Order By" dense outlined v-model="sortBy" :options="orders" style="min-width: 200px;" />
         </div>
       </div>
       <div class="col">
@@ -26,6 +25,7 @@
         </div>
       </div>
     </div>
+
     <div class="row q-mt-sm q-col-gutter-sm">
       <div class="col-3" v-if="filter">
         <div class="row q-gutter-sm q-py-sm justify-end">
@@ -79,35 +79,45 @@
               </q-item-section>
             </q-item>
           </template>
-          <q-item v-for="project in projects" :key="project.id" v-else>
-            <q-item-section>
-              <q-item-label class="text-weight-bold">
-                {{ project.title }}
-              </q-item-label>
-              <q-item-label :lines="2">
-                {{ project.description }}
-              </q-item-label>
-              <q-item-label caption>
-                {{ project.creator ? project.creator.name : '' }}
-              </q-item-label>
-              <q-item-label caption>
-                {{ project.updated_at | formatDate }}
-              </q-item-label>
-              <q-item-label>
-                <q-badge class="text-weight-bold" :color="getColor(project.type)" v-if="project.type">
-                  {{ project.type ? project.type.name : '' }}
-                </q-badge>
-              </q-item-label>
-            </q-item-section>
-            <q-item-section side top class="text-weight-bold">
-              PhP {{ project.investment_target_total }}
-            </q-item-section>
-          </q-item>
+          <template v-else>
+            <template v-if="!projects.length">
+              <q-banner class="bg-purple text-white">
+                No projects found.
+                <template v-slot:action>
+                  <q-btn flat color="white" label="Add" to="/projects/add" />
+                </template>
+              </q-banner>
+            </template>
+            <q-item v-for="project in projects" :key="project.id" v-else>
+              <q-item-section>
+                <q-item-label class="text-weight-bold">
+                  {{ project.title }}
+                </q-item-label>
+                <q-item-label :lines="2">
+                  {{ project.description }}
+                </q-item-label>
+                <q-item-label caption>
+                  {{ project.creator ? project.creator.name : '' }}
+                </q-item-label>
+                <q-item-label caption>
+                  {{ project.updated_at | formatDate }}
+                </q-item-label>
+                <q-item-label>
+                  <q-badge class="text-weight-bold" :color="getColor(project.type)" v-if="project.type">
+                    {{ project.type ? project.type.name : '' }}
+                  </q-badge>
+                </q-item-label>
+              </q-item-section>
+              <q-item-section side top class="text-weight-bold">
+                PhP {{ project.investment_target_total }}
+              </q-item-section>
+            </q-item>
+          </template>
         </q-list>
       </div>
     </div>
 
-    <div class="row justify-center">
+    <div class="row justify-center q-mt-md">
       <q-pagination
         v-model="page"
         :max="lastPage"

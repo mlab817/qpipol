@@ -66,7 +66,8 @@ module.exports = function(ctx) {
         'Notify',
         'LoadingBar',
         'Dark',
-        'Loading'
+        'Loading',
+        'AppFullscreen'
       ]
     },
 

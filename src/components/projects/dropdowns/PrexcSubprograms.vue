@@ -1,6 +1,6 @@
 <template>
   <single-select
-    label="Subprogram"
+    label="Subprogram (if applicable)"
     v-model="model"
     :options="filtered_prexc_subprograms"
     :rules="rules"
@@ -22,9 +22,6 @@ export default {
   computed: {
     filtered_prexc_subprograms() {
       const subprograms = this.prexc_subprograms;
-      if (!this.filter) {
-        return [{ id: null, name: 'Select program first' }];
-      }
       return subprograms.filter(
         x => x.prexc_program_id === this.filter
       );

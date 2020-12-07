@@ -106,19 +106,15 @@ export default {
   },
 
   apollo: {
-    getCurrentUser: {
+    me: {
       query: GET_CURRENT_USER,
       result({ data }) {
         const {
-          name,
           position,
-          contact_number,
-          user_avatar
-        } = data.getCurrentUser;
-        this.name = name;
-        this.position = position;
-        this.contact_number = contact_number;
-        this.user_avatar = user_avatar;
+          contact_number
+        } = data.me.profile;
+        this.position = position
+        this.contact_number = contact_number
       }
     }
   },

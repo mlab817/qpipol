@@ -1,86 +1,99 @@
 <template>
-  <q-page padding>
-    <div class="full-width column justify-center">
-      <div class="row justify-center q-my-lg">
-        <div class="column text-center">
-          <div>
-            <q-img src="~assets/app-logo-128x128.png" width="128px" />
-          </div>
-        </div>
-      </div>
-
-      <div class="row justify-center">
-        <q-card bordered flat class="my-card bg-info" dark square>
-          <div class="row q-pa-md text-weight-light text-h6">
-            Login to your IPMS Account
-          </div>
-
-          <q-separator color="white" spaced />
-
-          <q-card-section class="q-pa-md">
-            <login-form></login-form>
+  <q-layout>
+    <q-page-container>
+      <q-page class="flex bg-image flex-center">
+        <q-card v-bind:style="$q.screen.lt.sm?{'width': '80%'}:{'width':'380px'}">
+          <q-card-section>
+            <q-avatar size="103px" class="absolute-center shadow-10">
+              <img src="../statics/profile.svg">
+            </q-avatar>
           </q-card-section>
-          <q-card-section class="q-gutter-md">
-            <div class="text-center">
-              <span
-                class="text-blue text-weight-lighter cursor-pointer"
-                @click="showForgotPasswordDialog"
-              >
-                Forgot password
-              </span>
+          <q-card-section>
+            <div class="text-center q-pt-lg">
+              <div class="col text-h6 ellipsis">
+                Log in
+              </div>
             </div>
-            <div class="text-center">
-              Don't have an account?
-              <span
-                class="text-blue text-wight-bolder cursor-pointer"
-                @click="requestAccountDialog = true"
-                >Request one</span
+          </q-card-section>
+          <q-card-section>
+            <q-form
+              ref="loginForm"
+              class="q-gutter-md"
+              @submit="handleSubmit"
+            >
+              <div>
+                <q-btn push icon="fab fa-google" label="Continue with Google" type="button" text-color="red-5" color="white" class="full-width" size="lg" no-caps />
+              </div>
+
+              <q-input
+                outlined
+                v-model="username"
+                label="Username"
+                lazy-rules
+                :rules="[ val => !!val || '* Required' ]"
               >
-            </div>
+                <template v-slot:prepend>
+                  <q-icon name="fas fa-envelope" />
+                </template>
+              </q-input>
+
+              <q-input
+                type="password"
+                outlined
+                v-model="password"
+                label="Password"
+                lazy-rules
+                :rules="[ val => !!val || '* Required' ]"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="fas fa-lock" />
+                </template>
+              </q-input>
+
+              <div>
+                <q-btn type="submit" label="Log in" color="primary" class="full-width" size="lg" no-caps />
+              </div>
+
+              <div class="row justify-center text-primary">
+                or <span @click="showForgotPasswordDialog" class="cursor-pointer text-blue-5"> &nbsp;Forgot Password</span>
+              </div>
+            </q-form>
           </q-card-section>
         </q-card>
-      </div>
 
-      <q-dialog
-        v-model="requestAccountDialog"
-        transition-show="jump-down"
-        transition-hide="jump-up"
-        :maximized="$q.screen.lt.sm"
-      >
-        <request-account
-          @close="requestAccountDialog = false"
-        ></request-account>
-      </q-dialog>
-
-      <div class="row justify-center q-my-xl">
-        &copy; 2020 Investment Programming Division
-      </div>
-    </div>
-  </q-page>
+        <q-dialog
+          v-model="requestAccountDialog"
+          transition-show="jump-down"
+          transition-hide="jump-up"
+          :maximized="$q.screen.lt.sm"
+        >
+          <request-account
+            @close="requestAccountDialog = false"
+          ></request-account>
+        </q-dialog>
+      </q-page>
+    </q-page-container>
+  </q-layout>
 </template>
 
 <script>
-import LoginForm from '../components/auth/LoginForm';
-
-import RequestAccount from '../components/auth/RequestAccount';
-import { validateEmail, showError } from '@/utils';
+import { validateEmail, showError } from 'src/utils';
 
 import {
   showErrorNotification,
   showSuccessNotification
-} from '@/functions/function-show-notifications';
+} from 'src/functions/function-show-notifications';
+import {authService} from "src/services";
+import {LocalStorage} from "quasar";
 
 export default {
   name: 'PageLogin',
-  components: {
-    LoginForm,
-    RequestAccount
-  },
-
   data() {
     return {
       appTitle: process.env.APP_NAME,
-      requestAccountDialog: false
+      requestAccountDialog: false,
+      username: '',
+      password: ''
     };
   },
   methods: {
@@ -118,14 +131,36 @@ export default {
             .catch(showError)
             .finally(() => this.$q.loading.hide());
         });
+    },
+    handleSubmit() {
+      this.$refs.loginForm.validate().then(success => {
+        if (success) {
+          // TODO: implement Login
+          authService.login({
+            username: this.username,
+            password: this.password
+          }).then(res => {
+            console.log(res)
+            const {
+              access_token,
+              user
+            } = res.login
+            LocalStorage.set('token', access_token)
+            LocalStorage.set('user', user)
+            LocalStorage.set('loggedIn', true)
+            this.$router.replace('/')
+          })
+          .catch(err => {
+            showErrorNotification(err.message)
+            LocalStorage.remove('token')
+            LocalStorage.remove('user')
+            LocalStorage.remove('loggedIn')
+          })
+        }
+      })
     }
   }
 };
 </script>
 
-<style>
-.my-card {
-  width: 100%;
-  max-width: 400px;
-}
-</style>
+

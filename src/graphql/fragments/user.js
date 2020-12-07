@@ -22,5 +22,7 @@ export const USER_FRAGMENT = gql`
         contact_number
     }
     permissions
+    discord_user_id
+    discord_private_channel_id
   }
 `;

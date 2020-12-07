@@ -1,22 +1,25 @@
 import { LocalStorage } from 'quasar';
 import { client, persistor } from 'boot/apollo';
 
-import { authService, profileService } from '@/services';
-import { showError } from '@/utils';
+import { authService, profileService } from 'src/services';
+import { showError } from 'src/utils';
 
 const state = () => {
   return {
-    user: LocalStorage.getItem('user') || null,
-    loading: false,
-    error: null,
-    loggedIn: LocalStorage.getItem('loggedIn') || false,
-    token: LocalStorage.getItem('token') || '',
-    role: LocalStorage.getItem('role') || '',
-    me: {}
+    me: LocalStorage.getItem('user') || null,
+    loggedIn: LocalStorage.getItem('loggedIn') || false
   };
 };
 
 const actions = {
+  onAuthStateChanged({ dispatch }) {
+    dispatch('getCurrentUser').then(user => {
+      console.log(user)
+      if (!user) {
+        this.$router.replace('/login', {})
+      }
+    })
+  },
   signinUser({}, payload) {
     // clear token so it does not get sent to server
     return authService.login(payload);
@@ -25,6 +28,7 @@ const actions = {
     return profileService.getCurrentUser().then(res => {
       LocalStorage.set('user', res.me);
       commit('SET_USER', res.me);
+      return res.me
     });
   },
   clearError({ commit }) {
@@ -40,8 +44,8 @@ const actions = {
 
     // remove token and user from localStorage
     LocalStorage.remove('token');
-	  LocalStorage.remove('lastUpdated');
     LocalStorage.remove('user');
+    LocalStorage.remove('loggedIn')
 
     // remove user data from store
     commit('CLEAR_USER');
@@ -94,6 +98,7 @@ const mutations = {
   },
   SET_USER(state, payload) {
     state.user = payload;
+    state.me = payload;
   },
   CLEAR_USER(state) {
     state.user = null;

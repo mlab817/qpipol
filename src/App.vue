@@ -5,17 +5,19 @@
 </template>
 
 <script>
-import { LocalStorage } from 'quasar';
+import {LocalStorage} from "quasar";
 
 export default {
   name: 'App',
-
   created() {
-    const token = LocalStorage.getItem('token');
-    if (token && (token !== null || token !== '')) {
-      this.$store.dispatch('auth/getCurrentUser');
+    /**
+     * Check if token is defined
+     * If yes, check if the token is still valid
+     */
+    const token = LocalStorage.getItem('token')
+    if (token) {
+      this.$store.dispatch('auth/onAuthStateChanged')
     }
-    this.$q.dark.set(this.dark);
   }
 };
 </script>

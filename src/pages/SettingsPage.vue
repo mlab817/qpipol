@@ -6,6 +6,24 @@
 
     <div class="row q-pa-sm">
       <div class="col-lg-4 col-md-6 col-xs-12">
+        <span class="text-subtitle1">Discord</span>
+        <p class="text-caption">
+          Link your Discord account to get real-time notifications.
+        </p>
+      </div>
+
+      <div class="col-lg-8 col-md-6 col-xs-12 q-pl-md">
+        <q-btn
+          :disable="discord"
+          color="grey-8"
+          icon="fab fa-discord"
+          :label="discord ? 'CONNECTED' : 'CONNECT'"
+          @click="confirmDiscord"></q-btn>
+      </div>
+    </div>
+
+    <div class="row q-pa-sm">
+      <div class="col-lg-4 col-md-6 col-xs-12">
         <span class="text-subtitle1">Reset App</span>
         <p class="text-caption">
           Reset the application if you are encountering problems.
@@ -21,8 +39,11 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import PageContainer from '@/ui/page/PageContainer';
-import PageTitle from '@/ui/page/PageTitle';
+import {
+  PageContainer,
+  PageTitle
+} from 'src/ui';
+import { openURL } from "quasar";
 
 export default {
   name: 'PageSettings',
@@ -30,7 +51,10 @@ export default {
   components: { PageTitle, PageContainer },
 
   computed: {
-    ...mapState('settings', ['dark', 'dense'])
+    ...mapState('settings', ['dark', 'dense']),
+    discord() {
+      return !!this.$store.state.auth.me.discord_user_id
+    }
   },
 
   data() {
@@ -59,13 +83,12 @@ export default {
           window.location.reload();
           this.$router.push('/login');
         });
+    },
+    confirmDiscord() {
+      openURL('http://ipmsv2.test/auth/discord', null, {
+        target: '_blank'
+      })
     }
   }
 };
 </script>
-
-<style scoped>
-button.q-btn {
-  width: 150px;
-}
-</style>

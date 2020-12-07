@@ -1,40 +1,8 @@
 <template>
-  <q-layout view="lHr LpR lfr">
-    <q-header bordered class="bg-accent">
+  <q-layout view="hhh lpR fff">
+    <q-header class="bg-white">
       <app-header :user="user"></app-header>
-
-      <q-separator color="secondary" class="header-separator" />
     </q-header>
-
-    <q-drawer
-        v-model="drawer"
-        show-if-above
-        :mini="!drawer || miniState"
-        @click.capture="drawerClick"
-        :mini-state="miniState"
-        :breakpoint="500"
-        bordered
-        content-class="bg-grey-1"
-      >
-
-      <q-scroll-area style="height: calc(100% - 200px); margin-top: 200px; border-right: 1px solid #ddd">
-        <app-menu :user="user" />
-      </q-scroll-area>
-
-      <user-info :user="user" v-if="!miniState"></user-info>
-
-      <div class="q-mini-drawer-hide absolute" style="top: 60px; right: -17px; z-index: 999">
-        <q-btn
-          dense
-          round
-          unelevated
-          color="secondary"
-          icon="chevron_left"
-          @click="miniState = true"
-        />
-      </div>
-
-    </q-drawer>
 
     <q-footer
       bordered
@@ -53,17 +21,12 @@
 import { mapState } from 'vuex';
 import AppHeader from '../ui/components/Header';
 import AppFooter from '../ui/components/Footer';
-import AppMenu from '../ui/components/Menu'
-import UserInfo from '../ui/components/UserInfo'
-import { GET_CURRENT_USER } from '@/graphql/queries';
+import { GET_CURRENT_USER } from 'src/graphql';
 
 export default {
   components: {
     AppFooter,
     AppHeader,
-
-    AppMenu,
-    UserInfo
   },
 
   name: 'AppLayout',
