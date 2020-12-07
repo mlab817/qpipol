@@ -90,6 +90,9 @@ type Query {
 
   # Get current user
   getCurrentUser: User
+
+  # Get currently logged in user
+  me: User
   funding_source_financials(project_id: ID!): [FundingSourceFinancial]
   funding_source_infrastructures(project_id: ID!): [FundingSourceInfrastructure]
 
@@ -124,6 +127,9 @@ type Query {
   prexcActivitiesForReview(operating_unit_id: ID!): [PrexcActivity]
   consolidatedActivities: [PrexcActivity]
   projects(
+    where: ProjectsWhereWhereConditions
+    orderBy: [ProjectsOrderByOrderByClause!]
+
     # Limits number of fetched elements.
     first: Int!
 
@@ -214,13 +220,13 @@ type Query {
 
   # Get all encoders
   encoders: [User]
+  appVersions: [AppVersion]
+  appVersion(id: ID!): AppVersion
+  currentAppVersion: AppVersion
   pdp_chapters: [PdpChapter]
   pdp_outcomes: [PdpOutcome]
   pdp_suboutcomes: [PdpSuboutcome]
   pdp_indicators: [PdpIndicator]
-  appVersions: [AppVersion]
-  appVersion(id: ID!): AppVersion
-  currentAppVersion: AppVersion
   node(id: ID!): Node
 }
 
@@ -1277,6 +1283,106 @@ type PrexcActivityPaginator {
 
   # A list of PrexcActivity items.
   data: [PrexcActivity!]!
+}
+
+# Dynamic WHERE conditions for the `where` argument on the query `projects`.
+input ProjectsWhereWhereConditions {
+  # The column that is used for the condition.
+  column: ProjectsWhereColumn
+
+  # The operator that is used for the condition.
+  operator: SQLOperator = EQ
+
+  # The value that is used for the condition.
+  value: Mixed
+
+  # A set of conditions that requires all conditions to match.
+  AND: [ProjectsWhereWhereConditions!]
+
+  # A set of conditions that requires at least one condition to match.
+  OR: [ProjectsWhereWhereConditions!]
+}
+
+# Allowed column names for the `where` argument on the query `projects`.
+enum ProjectsWhereColumn {
+  OPERATING_UNIT_ID
+  PROJECT_STATUS_ID
+  TYPE_ID
+  BANNER_PROGRAM_ID
+}
+
+# The available SQL operators that are used to filter query results.
+enum SQLOperator {
+  # Equal operator (`=`)
+  EQ
+
+  # Not equal operator (`!=`)
+  NEQ
+
+  # Greater than operator (`>`)
+  GT
+
+  # Greater than or equal operator (`>=`)
+  GTE
+
+  # Less than operator (`<`)
+  LT
+
+  # Less than or equal operator (`<=`)
+  LTE
+
+  # Simple pattern matching (`LIKE`)
+  LIKE
+
+  # Negation of simple pattern matching (`NOT LIKE`)
+  NOT_LIKE
+
+  # Whether a value is within a set of values (`IN`)
+  IN
+
+  # Whether a value is not within a set of values (`NOT IN`)
+  NOT_IN
+
+  # Whether a value is within a range of values (`BETWEEN`)
+  BETWEEN
+
+  # Whether a value is not within a range of values (`NOT BETWEEN`)
+  NOT_BETWEEN
+
+  # Whether a value is null (`IS NULL`)
+  IS_NULL
+
+  # Whether a value is not null (`IS NOT NULL`)
+  IS_NOT_NULL
+}
+
+# Loose type that allows any value. Be careful when passing in large `Int` or `Float` literals,
+# as they may not be parsed correctly on the server side. Use `String` literals if you are
+# dealing with really large numbers to be on the safe side.
+scalar Mixed
+
+# Order by clause for the `orderBy` argument on the query `projects`.
+input ProjectsOrderByOrderByClause {
+  # The column that is used for ordering.
+  field: ProjectsOrderByColumn!
+
+  # The direction that is used for ordering.
+  order: SortOrder!
+}
+
+# Allowed column names for the `orderBy` argument on the query `projects`.
+enum ProjectsOrderByColumn {
+  TITLE
+  UPDATED_AT
+}
+
+# The available directions for ordering a list of records.
+enum SortOrder {
+  # Sort records in ascending order.
+  ASC
+
+  # Sort records in descending order.
+  DESC
 }
 
 type Release {
@@ -2550,15 +2656,6 @@ input ShareProjectInput {
   email: String!
 }
 
-# The available directions for ordering a list of records.
-enum SortOrder {
-  # Sort records in ascending order.
-  ASC
-
-  # Sort records in descending order.
-  DESC
-}
-
 # Allows ordering a list of records.
 input OrderByClause {
   # The column that is used for ordering.
@@ -2566,4 +2663,22 @@ input OrderByClause {
 
   # The direction that is used for ordering.
   order: SortOrder!
+}
+
+# Dynamic WHERE conditions for queries.
+input WhereConditions {
+  # The column that is used for the condition.
+  column: String
+
+  # The operator that is used for the condition.
+  operator: SQLOperator = EQ
+
+  # The value that is used for the condition.
+  value: Mixed
+
+  # A set of conditions that requires all conditions to match.
+  AND: [WhereConditions!]
+
+  # A set of conditions that requires at least one condition to match.
+  OR: [WhereConditions!]
 }

@@ -119,11 +119,11 @@
 </template>
 
 <script>
-import { exportFile, date, openURL } from 'quasar';
-// import ProjectMenu from '../components/projects/dropdowns/ProjectMenu.vue';
-import PageContainer from '@/ui/page/PageContainer.vue';
-import PageTitle from '@/ui/page/PageTitle.vue';
-// import { ALL_PROJECTS } from '@/graphql';
+import { exportFile, openURL } from 'quasar';
+import {
+  PageContainer,
+  PageTitle
+} from 'src/ui/page';
 import {
   BANNER_PROGRAMS,
   FETCH_PROJECT_STATUSES,
@@ -133,22 +133,13 @@ import {
 } from 'src/graphql';
 import { timeAgo, wrapCsvValue } from 'src/utils';
 
-// import {
-// 	FullscreenButton,
-// 	Search
-// } from '@/ui'
-// import IconButton from '../ui/buttons/IconButton'
-// import HelpButton from '../ui/buttons/HelpButton'
 import {projectService} from '../services'
 import gql from "graphql-tag";
 
 export default {
   components: {
-    // ProjectMenu,
     PageContainer,
-    PageTitle,
-    // Search,
-	  // FullscreenButton
+    PageTitle
   },
 
   name: 'ProjectsIndex',
@@ -199,6 +190,36 @@ export default {
       }
 
       return filteredProjects;
+    },
+    where() {
+      const OPERATING_UNIT_ID = 'OPERATING_UNIT_ID',
+        TYPE_ID = 'TYPE_ID',
+        IN = 'IN',
+        PROJECT_STATUS_ID = 'PROJECT_STATUS_ID',
+        BANNER_PROGRAM_ID = 'BANNER_PROGRAM_ID'
+      const AND = []
+      if (this.selectedTypes.length) {
+        AND.push(
+          { column: TYPE_ID, operator: IN, value: this.selectedTypes }
+        )
+      }
+      if (this.selectedBannerPrograms.length) {
+        AND.push(
+          { column: BANNER_PROGRAM_ID, operator: IN, value: this.selectedBannerPrograms }
+        )
+      }
+      if (this.selectedOperatingUnits.length) {
+        AND.push(
+          { column: OPERATING_UNIT_ID, operator: IN, value: this.selectedOperatingUnits }
+        )
+      }
+      if (this.selectedProjectStatuses.length) {
+        AND.push(
+          { column: PROJECT_STATUS_ID, operator: IN, value: this.selectedProjectStatuses }
+        )
+      }
+
+      return { AND: AND }
     }
   },
 
@@ -207,6 +228,7 @@ export default {
       query: PROJECTS,
       variables() {
         return {
+          where: this.where,
           orderBy: this.orderBy,
           first: this.first,
           page: this.page
@@ -301,102 +323,7 @@ export default {
         page: 1,
         rowsPerPage: 10,
       },
-      projects: [],
-      processing_statuses: [],
-      selected: [],
-      columns: [
-        {
-          name: 'pipol',
-          label: 'PIPOL',
-					field: row => row.pipol ? 'PIPOL' : '',
-					sortable: true,
-          align: 'center'
-        },
-				{
-					name: 'ou',
-					label: 'Operating Unit',
-					field: row => row.operating_unit && row.operating_unit.acronym,
-					align: 'center',
-					sortable: true
-				},
-        {
-          name: 'title',
-          label: 'PAP Title',
-          field: row => row.title,
-          sortable: true,
-          align: 'left'
-        },
-        {
-          name: 'type',
-          label: 'PAP Type',
-          field: row => (row.type ? row.type.name : 'N.S.'),
-          sortable: true,
-          align: 'center'
-        },
-	      {
-		      name: 'banner_program',
-		      label: 'Banner Program',
-		      field: row => row.banner_program && row.banner_program.name,
-		      align: 'left',
-		      sortable: true
-	      },
-        {
-          name: 'funding_source',
-          label: 'Main Funding Source',
-          field: row =>
-            row.main_funding_source ? row.main_funding_source.name : 'N.S.',
-          sortable: true,
-          align: 'center'
-        },
-        {
-          name: 'cost',
-          label: 'Total Project Cost',
-          field: row => row.investment_target_total,
-					format: (val) => val && val.toLocaleString(),
-					sortable: true
-        },
-				{
-					name: 'prexc_activity',
-					label: 'PREXC Activity',
-					field: row => row.prexc_activity_id,
-					format: val => val && `#${val}`,
-					sortable: true
-				},
-        {
-          name: 'created_by',
-          label: 'Added By',
-          field: row => (row.creator ? row.creator.nickname : ''),
-	        sortable: true
-        },
-        {
-          name: 'last_updated',
-          label: 'Last Updated',
-          field: row => Date.parse(row.updated_at),
-          sortable: true,
-          format: (val) => date.formatDate(val, 'MMM D, YYYY hh:mm A'),
-          align: 'center',
-          sort: (a, b) => a - b
-        },
-        {
-          name: 'submission_status',
-          label: 'Submission Status',
-          field: row => row.submission_status && row.submission_status.name,
-          sortable: true,
-          align: 'center'
-        },
-	      {
-		      name: 'pipol_status',
-		      label: 'PIPOL Status',
-		      field: row => row.pipol_status && row.pipol_status.name,
-		      sortable: true,
-		      align: 'center'
-	      },
-        {
-          name: 'actions',
-          label: 'Actions',
-          align: 'center'
-        }
-      ]
+      projects: []
     };
   },
   methods: {
@@ -547,6 +474,9 @@ export default {
     formatDate(val) {
       return timeAgo(val);
     }
+  },
+  mounted() {
+    console.log(this.where)
   }
 };
 </script>

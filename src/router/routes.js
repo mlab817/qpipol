@@ -1,5 +1,3 @@
-import ProjectsRoutes from './projects';
-
 const routes = [
   {
     path: '',
@@ -118,7 +116,17 @@ const routes = [
       },
     ]
   },
-  ProjectsRoutes,
+  {
+    path: '/projects',
+    component: () => import('@/layouts/AppLayout.vue'),
+    children: [
+      {
+        path: '',
+        name: 'project-index',
+        component: () => import('src/pages/ProjectIndex.vue')
+      }
+    ]
+  },
   {
     path: '/shared',
     component: () => import('@/layouts/PublicLayout.vue'),

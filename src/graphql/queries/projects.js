@@ -5,8 +5,18 @@ import {
 } from "src/graphql/fragments";
 
 export const PROJECTS = gql`
-    query ($orderBy: [ProjectsOrderByOrderByClause!], $first: Int!, $page: Int!) {
-      projects(orderBy: $orderBy, first: $first, page: $page) {
+    query (
+      $where: ProjectsWhereWhereConditions
+      $orderBy: [ProjectsOrderByOrderByClause!]
+      $first: Int!
+      $page: Int!
+    ) {
+      projects(
+        where: $where
+        orderBy: $orderBy
+        first: $first
+        page: $page
+      ) {
         data {
           ...basicInformation
         }
