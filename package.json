@@ -17,13 +17,11 @@
     "test:unit:ui": "majestic",
     "test:e2e": "cypress open",
     "test:e2e:CI": "cypress run",
-    "deploy:staging": "cross-env QENV=staging firebase deploy -P staging --only hosting",
-    "deploy:prod": "cross-env QENV=production firebase deploy -P default --only hosting",
+    "dev:local": "cross-env QENV=local quasar dev",
+    "dev:prod": "cross-env QENV=production quasar dev",
+    "dev:staging": "cross-env QENV=staging quasar dev",
     "build": "cross-env QENV=production quasar build -m pwa",
-    "dev": "cross-env QENV=local quasar dev",
-    "staging": "cross-env QENV=staging quasar dev",
-    "build:staging": "cross-env QENV=staging quasar build -m pwa",
-    "dev:local": "cross-env QENV=local quasar dev"
+    "deploy": "cross-env QENV=production firebase deploy -P default --only hosting"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",

@@ -1,5 +1,19 @@
 <template>
   <q-layout>
+    <q-header class="bg-white" elevated>
+      <q-toolbar style="height: 72px;" class="q-gutter-sm" >
+        <img src="../statics/app-logo-128x128.svg" height="32" class="gt-md">
+        <q-input placeholder="Search for projects" rounded outlined dense style="width: 100%">
+          <template v-slot:prepend>
+            <q-icon name="search" />
+          </template>
+        </q-input>
+        <q-space />
+        <q-space />
+        <q-btn outline label="Log in" no-caps color="secondary" style="width: 100%; max-width: 100px;" />
+        <q-btn color="secondary" label="Sign up" style="width: 100%; max-width: 100px;" />
+      </q-toolbar>
+    </q-header>
     <q-page-container>
       <q-page class="flex bg-image flex-center">
         <q-card v-bind:style="$q.screen.lt.sm?{'width': '80%'}:{'width':'380px'}">
@@ -55,7 +69,7 @@
               </div>
 
               <div class="row justify-center text-primary">
-                or <span @click="showForgotPasswordDialog" class="cursor-pointer text-blue-5"> &nbsp;Forgot Password</span>
+                or <span @click="showForgotPasswordDialog" class="cursor-pointer text-secondary"> &nbsp;Forgot Password</span>
               </div>
             </q-form>
           </q-card-section>
