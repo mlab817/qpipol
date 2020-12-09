@@ -39,14 +39,13 @@
         greedy
         style="margin-bottom: 70px;"
       >
-        <div class="row justify-end q-mb-md">
-          <q-badge color="blue"> v. {{ project.version }} </q-badge>
-        </div>
 
-        <section-header sectionTitle="Program Information"></section-header>
+        <q-card square bordered flat class="bg-grey-2">
+          <section-header
+            title="Program Information"
+            description="This will serve as tags for classification of the PAP." />
 
-        <q-card square bordered flat>
-          <q-card-section class="q-gutter-y-md">
+          <q-card-section class="row q-gutter-md">
             <prexc-programs v-model="project.prexc_program_id" />
 
   					<prexc-subprograms v-model="project.prexc_subprogram_id" :filter="project.prexc_program_id" />
@@ -55,15 +54,16 @@
           </q-card-section>
         </q-card>
 
-        <section-header sectionTitle="General Information"></section-header>
-
         <q-card square bordered flat>
+          <section-header title="General Information"></section-header>
+
           <q-card-section class="q-gutter-y-md">
             <text-input
               v-model="project.title"
               label="Project/Program Title"
               type="text"
               :rules="rules.required"
+              hint="PAP Title provided must match the title to be proposed to DBM."
             />
 
             <div class="row">
@@ -86,33 +86,21 @@
           </q-card-section>
         </q-card>
 
-        <section-header sectionTitle="Implementing Agency"></section-header>
-        <q-card square bordered flat>
+        <q-card square bordered flat class="bg-grey-2 q-mt-md">
+          <section-header title="Implementing Agency" icon="account_balance"></section-header>
+
           <q-card-section>
             <implementing-agency
-              v-model="project.operating_unit_id"
-              :rules="rules.required"
-              :readonly="true"
+              v-model="project.selected_implementing_agencies"
+              multiple
             ></implementing-agency>
           </q-card-section>
         </q-card>
 
-        <section-header sectionTitle="Spatial Coverage">
-          <q-btn icon="help" flat round dense>
-            <q-tooltip>
-              Nationwide - If spatial coverage/impact of a program or project
-              covers all regions (in parts or as a whole); Interregional - If
-              spatial coverage/impact of a program or project pertains to more
-              than one region (in parts or as a whole) but not all regions;
-              Region Specific - If spatial coverage/impact of a program or a
-              project pertains to one region (in parts or as a whole); Abroad -
-              If spatial coverage of a program or project is outside the country
-              that will have an impact to Filipinos outside of the country
-              (e.g., Overseas Filipino Workers).
-            </q-tooltip>
-          </q-btn>
-        </section-header>
-        <q-card square bordered flat>
+
+        <q-card square bordered flat class="bg-grey-2 q-mt-md">
+          <section-header title="Spatial Coverage" icon="map"></section-header>
+
           <q-card-section class="q-gutter-y-md">
             <spatial-coverage
               v-model="project.spatial_coverage_id"
@@ -121,16 +109,9 @@
 
             <regions
               v-model="project.selected_regions"
-              v-if="project.spatial_coverage_id === '2'"
-              label="Inter-regional"
+              v-if="project.spatial_coverage_id === '2' || project.spatial_coverage_id === '3'"
+              label="Region/s (select all that applies)"
             ></regions>
-
-            <region
-              v-model="project.region_id"
-              v-if="project.spatial_coverage_id === '3'"
-              :rules="rules.selectOne"
-              label="Region"
-            ></region>
           </q-card-section>
         </q-card>
 
@@ -216,13 +197,6 @@
 								type="textarea"
 								:rules="rules.required"
 							/>
-						</div>
-
-						<div class="row">
-							<fs-infrastructure
-								:data="project.funding_source_infrastructures"
-								:project-id="project.id"
-							></fs-infrastructure>
 						</div>
 					</q-card-section>
 				</q-card>
@@ -681,10 +655,6 @@
               <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <funding-institution
                   v-model="project.funding_institution_id"
-                  v-if="
-                    project.main_funding_source_id === '2' ||
-                      project.main_funding_source_id === '3'
-                  "
                   :rules="rules.required"
                 ></funding-institution>
 
@@ -697,9 +667,18 @@
           </q-card-section>
         </q-card>
 
-        <section-header sectionTitle="Project Cost"></section-header>
 
-        <q-card square flat bordered>
+
+        <q-card square flat bordered class="q-mt-md bg-grey-2">
+          <section-header title="Project Cost" description="Some description"></section-header>
+
+          <div class="row">
+            <fs-infrastructure
+              :data="project.funding_source_infrastructures"
+              :project-id="project.id"
+            ></fs-infrastructure>
+          </div>
+
           <div class="row">
             <fs-financials
               :data="project.funding_source_financials"
@@ -715,10 +694,12 @@
           </div>
         </q-card>
 
-        <section-header
-          sectionTitle="Financial Accomplishments"
-        ></section-header>
-        <q-card square bordered flat>
+        <q-card square bordered flat class="bg-grey-2 q-mt-md">
+          <section-header
+            title="Financial Accomplishments"
+            description="Only GAA funds are accounted for in the accomplishments"
+          ></section-header>
+
           <q-card-section class="q-gutter-y-md">
             <!-- Investment Requirements (Total, Infrastructure, GAA, NEP, Disbursement) -->
             <q-item-label class="text-h6 text-weight-lighter">
@@ -1192,11 +1173,10 @@
 <script>
 import {
   FETCH_FUNDING_SOURCES
-} from '@/graphql/queries';
+} from 'src/graphql';
 import BudgetTier from './dropdowns/BudgetTier';
 import CipTypes from './dropdowns/CipTypes';
 import Gad from './dropdowns/Gad';
-import Region from './dropdowns/Region';
 import FundingSource from './dropdowns/FundingSource';
 import FundingInstitution from './dropdowns/FundingInstitution';
 import ImplementationMode from './dropdowns/ImplementationMode';
@@ -1215,8 +1195,8 @@ import BannerProgram from './dropdowns/BannerProgram';
 import ProjectStatus from './dropdowns/ProjectStatus';
 import { SectionHeader } from '@/ui';
 import EditButton from './shared/EditButton';
-import CardHeader from '@/ui/cards/CardHeader';
-import CheckboxItem from '@/ui/form-inputs/CheckboxItem';
+import CardHeader from 'src/ui/cards/CardHeader';
+import CheckboxItem from 'src/ui/form-inputs/CheckboxItem';
 import RegionFinancials from './financials/RegionFinancials';
 import FsFinancials from './financials/FsFinancials';
 import Regions from './dropdowns/Regions';
@@ -1245,7 +1225,6 @@ export default {
     InfrastructureSectors,
     FundingInstitution,
     FundingSource,
-    Region,
     ProjectStatus,
     ImplementingAgency,
     DateInput,

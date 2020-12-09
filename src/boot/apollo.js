@@ -3,7 +3,7 @@ import { createUploadLink } from 'apollo-upload-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import VueApollo from 'vue-apollo';
 import localforage from 'localforage';
-import { CachePersistor } from 'apollo-cache-persist';
+import { CachePersistor, persistCache } from 'apollo-cache-persist';
 import { LocalStorage } from 'quasar';
 import errorLink from "boot/error-link";
 
@@ -62,11 +62,11 @@ const apolloProvider = new VueApollo({
 export default async ({ app, Vue }) => {
   Vue.use(VueApollo);
   // if this starts acting up, just delete this
-  // await persistCache({
-  //   cache,
-  //   storage: localforage
-  // }).then(() => {
-  //   app.apolloProvider = apolloProvider;
-  // });
-  app.apolloProvider = apolloProvider;
+  await persistCache({
+    cache,
+    storage: localforage
+  }).then(() => {
+    app.apolloProvider = apolloProvider;
+  });
+  // app.apolloProvider = apolloProvider;
 };

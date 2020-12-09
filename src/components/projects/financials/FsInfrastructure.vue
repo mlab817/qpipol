@@ -1,5 +1,5 @@
 <template>
-	<div class="col">
+	<div class="col q-pa-md">
 		<q-dialog v-model="addDialog" full-height
 							:position="$q.screen.xs ? void 0 : 'right'"
 							persistent
@@ -64,10 +64,6 @@
 				</q-tr>
 			</template>
 		</q-table>
-
-		<div class="row text-caption q-pt-sm justify-end">
-			Note: Each new and updated item are saved immediately in the database.
-		</div>
 	</div>
 </template>
 

@@ -346,15 +346,6 @@ export const FETCH_PROJECT_QUERY = gql`
   ${PROJECT_FRAGMENT}
 `;
 
-export const SEARCH_PROJECTS = gql`
-  query searchProjects($search: String!) {
-    searchProjects(search: $search) {
-      id
-      title
-    }
-  }
-`;
-
 /* Activities */
 
 export const FETCH_ACTIVITIES = gql`

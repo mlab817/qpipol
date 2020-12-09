@@ -93,7 +93,7 @@ export default {
     taken() {
       const fs = this.data;
 
-      const taken = fs.map(x => x.region_id);
+      const taken = fs && fs.map(x => x.region_id);
 
       return taken;
     },
@@ -114,7 +114,7 @@ export default {
         investment_target_total: 0
       };
 
-      arraySum = data.reduce((prev, cur) => {
+      arraySum = data && data.reduce((prev, cur) => {
         arraySum.investment_target_2016 += cur.investment_target_2016;
         arraySum.investment_target_2017 += cur.investment_target_2017;
         arraySum.investment_target_2018 += cur.investment_target_2018;

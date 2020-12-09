@@ -2,7 +2,7 @@
   <q-layout>
     <q-header class="bg-white" elevated>
       <q-toolbar style="height: 72px;" class="q-gutter-sm" >
-        <img src="../statics/app-logo-128x128.svg" height="32" class="gt-md">
+        <img src="../statics/app-logo-128x128.svg" height="32" class="gt-md" alt="ipms">
         <q-input placeholder="Search for projects" rounded outlined dense style="width: 100%">
           <template v-slot:prepend>
             <q-icon name="search" />
@@ -65,7 +65,14 @@
               </q-input>
 
               <div>
-                <q-btn type="submit" label="Log in" color="primary" class="full-width" size="lg" no-caps />
+                <q-btn
+                  :loading="$apollo.loading"
+                  type="submit"
+                  label="Log in"
+                  color="primary"
+                  class="full-width"
+                  size="lg"
+                  no-caps />
               </div>
 
               <div class="row justify-center text-primary">

@@ -194,6 +194,7 @@ type Query {
     # The offset from which elements are returned.
     page: Int
   ): ProjectPaginator
+  projectFindBySlug(slug: String): Project
   region_financials(project_id: ID!): [RegionFinancial]
   release(id: ID!): Release
   releases: [Release]
@@ -220,13 +221,13 @@ type Query {
 
   # Get all encoders
   encoders: [User]
+  appVersions: [AppVersion]
+  appVersion(id: ID!): AppVersion
+  currentAppVersion: AppVersion
   pdp_chapters: [PdpChapter]
   pdp_outcomes: [PdpOutcome]
   pdp_suboutcomes: [PdpSuboutcome]
   pdp_indicators: [PdpIndicator]
-  appVersions: [AppVersion]
-  appVersion(id: ID!): AppVersion
-  currentAppVersion: AppVersion
   node(id: ID!): Node
 }
 
@@ -1539,7 +1540,7 @@ type Mutation {
   # Restores soft deleted project
   restoreProject(id: ID!): Project
   acceptProject(id: ID!, remarks: String!): Project
-  shareProject(project_id: ID!, user_id: ID!): ShareProjectResponse
+  shareProject(url: String!, email: String!): ShareProjectResponse
 
   # Transfer ownership of project to another user
   transferProject(project_id: ID!, user_id: ID!): Project!

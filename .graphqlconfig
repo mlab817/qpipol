@@ -4,7 +4,7 @@
   "extensions": {
     "endpoints": {
       "Default GraphQL Endpoint": {
-        "url": "http://localhost:8000/graphql",
+        "url": "http://ipmsv2.test/graphql",
         "headers": {
           "user-agent": "JS GraphQL"
         },

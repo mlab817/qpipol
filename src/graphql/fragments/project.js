@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 export const PROJECT_FRAGMENT = gql`
   fragment projectFragment on Project {
     id
+    slug
     banner_program_id
     banner_program {
       id
@@ -23,7 +24,7 @@ export const PROJECT_FRAGMENT = gql`
     creator {
       id
       name
-      position
+      email
     }
     created_at
     description
@@ -39,10 +40,7 @@ export const PROJECT_FRAGMENT = gql`
     disbursement_2025
     disbursement_total
     employment_generated
-    encoded
-    endorsed
     expected_outputs
-    finalized
     fs_target_2017
     fs_target_2018
     fs_target_2019
@@ -201,15 +199,13 @@ export const PROJECT_FRAGMENT = gql`
     prexc_program {
       id
       name
+      acronym
     }
     prexc_subprogram_id
     prexc_subprogram {
       id
       name
-    }
-    project_preparation_document {
-      id
-      name
+      acronym
     }
     project_status_id
     project_status {
@@ -257,7 +253,6 @@ export const PROJECT_FRAGMENT = gql`
       investment_target_2025
       investment_target_total
     }
-    reviewed
     row_affected
     row_target_2017
     row_target_2018
@@ -320,24 +315,8 @@ export const PROJECT_FRAGMENT = gql`
 		  id
 		  name
 	  }
-    latest_status
     signed_copy
-    attachments {
-      id
-      attachment_type {
-        id
-        name
-      }
-      dropbox_link
-      file_size
-    }
     selected_bases
-    validation_data
-    validation_signed
-    validated
-    project_preparation_document_id
-    project_preparation_document_others
-    version
     submission_status {
       id
       name
@@ -348,7 +327,7 @@ export const PROJECT_FRAGMENT = gql`
 		  name
 	  }
 	  pipol_status_id
-	  pipol
 	  pipol_code
+    selected_implementing_agencies
   }
 `;

@@ -14,7 +14,7 @@
     <template v-if="!$apollo.loading">
       <div
         class="row justify-center q-pb-md"
-        v-if="project.finalized && !project.rendorsed && !project.signed_copy"
+        v-if="project.finalized && !project.endorsed && !project.signed_copy"
       >
         <q-banner
           class="bg-green-5 text-white col-xl-6 col-lg-6 col-md-8 col-sm-9 col-xs-12"
@@ -47,6 +47,34 @@
         />
       </div>
 
+      <div class="column q-pa-md q-mb-md bg-grey-9 text-white" style="min-height: 200px; background-color: #3c3b37">
+        <div class="row">
+          <q-breadcrumbs class="text-weight-bolder text-info">
+            <q-breadcrumbs-el :label="project.prexc_program && project.prexc_program.acronym" />
+            <q-breadcrumbs-el :label="project.prexc_subprogram && project.prexc_subprogram.acronym" />
+            <q-breadcrumbs-el :label="project.prexc_activity && project.prexc_activity.acronym" />
+          </q-breadcrumbs>
+        </div>
+
+        <div class="row text-h4">
+          {{ project.title }}
+        </div>
+        <div class="row text-subtitle1">
+          {{ project.description ? project.description.substr(0, 200) : '' }}
+        </div>
+        <div class="row text-subtitle2">
+          Created by <span class="text-info">&nbsp;{{ project.creator ? project.creator.name : '' }}</span>
+        </div>
+        <div class="row text-subtitle2 items-center">
+          <q-icon name="event" />  Last updated on {{ project.updated_at | showDate }}
+        </div>
+        <div class="row q-py-sm justify-start">
+          <q-btn icon="edit" label="Edit" outline :to="`/projects/${$route.params.slug}/edit`" />
+          <q-btn icon="delete" label="Delete" outline class="q-ml-sm" @click="confirmDelete" />
+          <q-btn icon="share" label="Share" outline class="q-ml-sm" @click="shareProject" />
+        </div>
+      </div>
+
       <view-pipol :project="project" />
 
       <div class="row justify-center q-gutter-sm">
@@ -75,7 +103,7 @@ import {
 	PageContainer
 } from '@/ui'
 import ViewPipol from '@/components/projects/ViewPipol';
-import { FETCH_PROJECT_QUERY } from '@/graphql/queries';
+// import { FETCH_PROJECT_QUERY } from '@/graphql/queries';
 import { showError, generateDocx } from '@/utils';
 import { openURL, exportFile } from 'quasar'
 import UploadSigned from '../components/projects/shared/UploadSigned';
@@ -83,6 +111,13 @@ import RefreshButton from '../ui/buttons/RefreshButton'
 import ArchiveButton from '../ui/buttons/ArchiveButton'
 import HelpButton from '../ui/buttons/HelpButton'
 import { projectService } from '@/services'
+import { PROJECT_FIND_BY_SLUG } from "src/graphql";
+import { date } from 'quasar'
+import ShareLink from "components/ShareLink";
+import {
+  showSuccessNotification,
+  showErrorNotification
+} from "src/functions";
 
 export default {
   components: {
@@ -96,15 +131,18 @@ export default {
   },
   name: 'ViewProject',
   apollo: {
-    project: {
-      query: FETCH_PROJECT_QUERY,
+    projectFindBySlug: {
+      query: PROJECT_FIND_BY_SLUG,
       variables() {
         return {
-          id: this.$route.params.id
+          slug: this.$route.params.slug
         };
       },
       error(error) {
         this.error = error;
+      },
+      result({ data }) {
+        this.project = data.projectFindBySlug
       }
     }
   },
@@ -240,6 +278,69 @@ export default {
         }))
         .finally(() => this.$q.loading.hide())
       })
+    },
+
+    shareProject() {
+      const link = window.location.href
+
+      this.$q.dialog({
+        component: ShareLink,
+        url: link
+      }).onOk(() => {
+        this.$q.dialog({
+          title: 'Share this project',
+          message: 'Enter email to send the project to',
+          prompt: {
+            model: '',
+            placeholder: 'email@example.com',
+            outlined: true
+          },
+          cancel: true,
+          square: true
+        }).onOk(data => {
+          this.$q.loading.show()
+          projectService.shareProject({
+            email: data,
+            url: link
+          }).then(() => this.$q.notify({
+            type: 'positive',
+            message: 'Success'
+          }))
+            .finally(() => this.$q.loading.hide())
+        })
+      })
+    },
+
+    confirmDelete() {
+      const id = this.project && this.project.id,
+        title = this.project && this.project.title
+
+      const message = `Are you sure you want to delete this project: <strong>${title}<\/strong>? Type <strong>Yes<\/strong> if you agree.`
+
+      this.$q.dialog({
+        title: 'Confirm delete',
+        message: message,
+        cancel: true,
+        html: true,
+        prompt: {
+          model: '',
+          isValid: val => val && val.toLowerCase() === 'yes'
+        }
+      }).onOk(() => {
+        this.$q.loading.show()
+        projectService.delete({id: id})
+          .then(() => showSuccessNotification())
+          .catch(err => showErrorNotification(err.message))
+          .finally(() => this.$q.loading.hide())
+      })
+    }
+  },
+  filters: {
+    showDate(val) {
+      if (!val) {
+        return ''
+      }
+      return date.formatDate(val, 'MM/D/YYYY')
     }
   }
 };

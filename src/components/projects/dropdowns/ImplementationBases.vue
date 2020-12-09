@@ -26,7 +26,10 @@ import MiniRefresh from '../../../ui/buttons/MiniRefresh'
 export default {
   name: 'ImplementationBases',
 	components: {MiniRefresh},
-	props: ['value', 'rules'],
+	props: {
+    value: Array,
+    rules: Array
+  },
   computed: {
     model: {
       get() {

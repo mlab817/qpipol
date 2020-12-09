@@ -118,13 +118,23 @@ const routes = [
   },
   {
     path: '/projects',
-    component: () => import('@/layouts/AppLayout.vue'),
+    component: () => import('@/layouts/MainLayout.vue'),
     beforeEnter: requireAuth,
     children: [
       {
         path: '',
         name: 'project-index',
         component: () => import('src/pages/ProjectIndex.vue')
+      },
+      {
+        path: ':slug/edit',
+        name: 'project-edit',
+        component: () => import('src/pages/ProjectEdit.vue')
+      },
+      {
+        path: ':slug',
+        name: 'project-view',
+        component: () => import('src/pages/ProjectView.vue')
       },
       {
         path: 'add',

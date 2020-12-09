@@ -21,3 +21,9 @@ export default {
   }
 };
 </script>
+
+<style>
+#q-app {
+  min-width: 380px;
+}
+</style>

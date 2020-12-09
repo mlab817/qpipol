@@ -1,23 +1,40 @@
 <template>
-  <single-select
-    v-model="model"
-    label="Implementing Agency"
-    :options="operating_units"
-    :rules="rules"
-		:loading="$apollo.loading"
-		with-refresh
-		@refetch="refetch"
-  />
+  <q-list bordered>
+    <q-expansion-item>
+      <template v-slot:header>
+        <q-item-section>
+          Implementing Agencies (including your agency)
+        </q-item-section>
+
+        <q-item-section side>
+          <div class="row items-center">
+            {{model.length}} selected
+          </div>
+        </q-item-section>
+      </template>
+      <list-option-group
+        v-model="model"
+        :options="operating_units"
+        :rules="rules"
+        :loading="$apollo.loading"
+        with-refresh
+        @refetch="refetch"
+      />
+    </q-expansion-item>
+  </q-list>
 </template>
 
 <script>
-import { SingleSelect } from 'src/ui';
 import gql from "graphql-tag";
+import ListOptionGroup from "src/ui/form-inputs/ListOptionGroup";
 
 export default {
-  components: { SingleSelect },
+  components: { ListOptionGroup },
   name: 'OperatingUnit',
-  props: ['value', 'rules', 'readonly'],
+  props: {
+    value: Array,
+    rules: Array
+  },
   computed: {
     model: {
       get() {
@@ -33,11 +50,20 @@ export default {
       query: gql`
         query {
           operating_units {
-              id
-              name
+            id
+            acronym
           }
         }
-      `
+      `,
+      result({ data }) {
+        console.log(data)
+        this.operating_units = data.operating_units && data.operating_units.map(ou => {
+          return {
+            value: ou.id,
+            label: ou.acronym
+          }
+        })
+      }
     }
   },
   data() {

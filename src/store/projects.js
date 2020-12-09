@@ -17,6 +17,9 @@ const state = () => {
 };
 
 const actions = {
+  setSearch({ commit }, value) {
+    commit('SET_SEARCH', value)
+  },
   fetchProjects({}) {
     return projectService.index();
   },
@@ -97,7 +100,11 @@ const actions = {
   }
 };
 
-const mutations = {};
+const mutations = {
+  SET_SEARCH(state, value) {
+    state.search = value
+  }
+};
 
 const getters = {};
 

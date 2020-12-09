@@ -35,14 +35,14 @@ import {
   UPLOAD_SIGNED_COPY,
   EXPORT_PROJECT_DOCX_MUTATION,
   REVERT_TO_DRAFT_PROJECT,
-	EXPORT_PROJECTS,
+  EXPORT_PROJECTS,
   RECLASSIFY_PROJECT,
-	CREATE_PREXC_ACTIVITY_FROM_PROJECT,
-	ENCODE_PROJECT,
-	OU_PREXC_ACTIVITIES,
-	PREXC_ACTIVITIES,
-	UPDATE_PIPOL_STATUS,
-  PROJECTS
+  CREATE_PREXC_ACTIVITY_FROM_PROJECT,
+  ENCODE_PROJECT,
+  OU_PREXC_ACTIVITIES,
+  PREXC_ACTIVITIES,
+  UPDATE_PIPOL_STATUS,
+  PROJECTS, SHARE_PROJECT
 } from 'src/graphql'
 
 export const projectService = {
@@ -93,43 +93,7 @@ export const projectService = {
 		return client
 			.mutate({
 				mutation: DELETE_PROJECT_MUTATION,
-				variables: payload,
-				update: (store, {data: {deleteProject}}) => {
-					// assigned the deleted id to target id and return id
-					const deletedId = deleteProject
-						? deleteProject.project.id
-						: payload.id;
-
-					// retrieve the paginated query
-					// variables are required
-					const data = store.readQuery({
-						query: ALL_PROJECTS
-					});
-
-					// console.log('is store being run?');
-
-					// filter out the deleted id from the list
-					data.allProjects = data.allProjects.filter(
-						project => project.id !== deletedId
-					);
-
-					// save the query
-					store.writeQuery({
-						query: ALL_PROJECTS,
-						data
-					});
-
-					const data2 = store.readQuery({
-						query: DELETED_PROJECTS_QUERY
-					})
-
-					data2.allProjects.push(deleteProject)
-
-					store.writeQuery({
-						query: DELETED_PROJECTS_QUERY,
-						data2
-					})
-				}
+				variables: payload
 			})
 			.then(handleResponse)
 			.catch(handleError);
@@ -142,7 +106,7 @@ export const projectService = {
 				variables: {
 					id: id
 				},
-				update: (store, {data: {restoreProject}}) => {
+				update: (store, {data: { restoreProject } }) => {
 					const data = store.readQuery({
 						query: ALL_PROJECTS
 					});
@@ -867,5 +831,14 @@ export const projectService = {
 			})
 			.then(handleResponse)
 			.catch(handleError)
-	}
+	},
+  shareProject(payload) {
+	  return client
+      .mutate({
+        mutation: SHARE_PROJECT,
+        variables: payload
+      })
+      .then(handleResponse)
+      .catch(handleError)
+  }
 }

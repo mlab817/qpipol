@@ -8,15 +8,15 @@
         :key="index"
         v-ripple
         clickable
-        :dense="dense"
+        dense
         class="col-xl-3 col-lg-3 col-md-4 col-sm-6 col-xs-12"
       >
         <q-item-section avatar>
-          <q-checkbox color="secondary" v-model="model" :val="option.id" />
+          <q-checkbox color="secondary" v-model="model" :val="option.id || option.value" />
         </q-item-section>
         <q-item-section>
           <q-item-label>
-            {{ option.name }}
+            {{ option.name || option.label }}
           </q-item-label>
         </q-item-section>
       </q-item>

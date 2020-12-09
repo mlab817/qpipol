@@ -13,11 +13,15 @@
     </template>
 
     <div class="row">
-      <div class="col">
+      <!-- hide sort and filter if search is on -->
+      <div class="col" v-if="!search">
         <div class="row q-gutter-sm">
-          <q-btn dense label="Filter" icon="filter_list" outline color="blue" @click="filter = !filter" />
+          <q-btn dense label="Filter" icon="filter_list" outline color="secondary" @click="filter = !filter" />
           <q-select label="Order By" dense outlined v-model="sortBy" :options="orders" style="min-width: 200px;" />
         </div>
+      </div>
+      <div class="text-h6" v-else>
+        Showing results for "{{ search }}"...
       </div>
       <div class="col">
         <div class="row justify-end text-h6 text-weight-bold">
@@ -27,10 +31,16 @@
     </div>
 
     <div class="row q-mt-sm q-col-gutter-sm">
-      <div class="col-3" v-if="filter">
+      <transition
+        appear
+        enter-active-class="animated slideInLeft"
+        leave-active-class="animated slideOutLeft"
+      >
+      <!-- hide if filter is off or search is on (since they are not compatible) -->
+      <div class="col-3" v-if="filter && !search">
         <div class="row q-gutter-sm q-py-sm justify-end">
           <q-btn label="Clear Filters" color="red" size="sm" @click="clearFilters" />
-          <q-btn label="Apply Filters" color="blue" size="sm" @click="applyFilters" />
+<!--          <q-btn label="Apply Filters" color="blue" size="sm" @click="applyFilters" />-->
         </div>
         <q-separator />
         <q-expansion-item label="PAP Types">
@@ -50,6 +60,7 @@
         </q-expansion-item>
         <q-separator />
       </div>
+      </transition>
 
       <div class="col">
         <q-list separator>
@@ -88,7 +99,7 @@
                 </template>
               </q-banner>
             </template>
-            <q-item v-for="project in projects" :key="project.id" v-else>
+            <q-item v-for="project in projects" :key="project.id" v-else clickable :to="`/projects/${project.slug}`">
               <q-item-section>
                 <q-item-label class="text-weight-bold">
                   {{ project.title }}
@@ -109,7 +120,7 @@
                 </q-item-label>
               </q-item-section>
               <q-item-section side top class="text-weight-bold">
-                PhP {{ project.investment_target_total }}
+                PhP {{ project.investment_target_total ? project.investment_target_total.toLocaleString() : 0 }}
               </q-item-section>
             </q-item>
           </template>
@@ -119,8 +130,10 @@
 
     <div class="row justify-center q-mt-md">
       <q-pagination
+        color="secondary"
         v-model="page"
         :max="lastPage"
+        :max-pages="10"
         :boundary-links="true"
       >
       </q-pagination>
@@ -138,7 +151,7 @@ import {
   BANNER_PROGRAMS,
   FETCH_PROJECT_STATUSES,
   FETCH_TYPES,
-  PROJECTS,
+  PROJECTS, SEARCH_PROJECTS,
   SUBMISSION_STATUSES
 } from 'src/graphql';
 import { timeAgo, wrapCsvValue } from 'src/utils';
@@ -155,6 +168,9 @@ export default {
   name: 'ProjectsIndex',
 
   computed: {
+    search() {
+      return this.$store.state.projects.search
+    },
     orderBy() {
       const sortBy = this.sortBy
       const UPDATED_AT = "UPDATED_AT"
@@ -235,21 +251,59 @@ export default {
 
   apollo: {
     projects: {
-      query: PROJECTS,
-      variables() {
-        return {
-          where: this.where,
-          orderBy: this.orderBy,
-          first: this.first,
-          page: this.page
+      query() {
+        if (this.search) {
+          // run search projects
+          return SEARCH_PROJECTS
+        } else {
+          // run index
+          return PROJECTS
         }
       },
+      variables() {
+        if (this.search) {
+          return {
+            search: this.search,
+            first: this.first,
+            page: this.page
+          }
+        } else {
+          return {
+            where: this.where,
+            orderBy: this.orderBy,
+            first: this.first,
+            page: this.page
+          }
+        }
+      },
+      update: data => data.projects || data.searchProjects,
       result({ data }) {
-        console.log(data.projects)
-        this.projects = data.projects.data
-        this.lastPage = data.projects.paginatorInfo.lastPage
-        this.total = data.projects.paginatorInfo.total
-      }
+        if (this.search) {
+          this.projects = data.searchProjects && data.searchProjects.data
+          this.lastPage = data.searchProjects.paginatorInfo.lastPage
+          this.total = data.searchProjects.paginatorInfo.total
+        } else {
+          this.projects = data.projects && data.projects.data
+          this.lastPage = data.projects.paginatorInfo.lastPage
+          this.total = data.projects.paginatorInfo.total
+        }
+      },
+      fetchPolicy: 'network-only'
+      // query: PROJECTS,
+      // variables() {
+      //   return {
+      //     where: this.where,
+      //     orderBy: this.orderBy,
+      //     first: this.first,
+      //     page: this.page
+      //   }
+      // },
+      // result({ data }) {
+      //   console.log(data.projects)
+      //   this.projects = data.projects.data
+      //   this.lastPage = data.projects.paginatorInfo.lastPage
+      //   this.total = data.projects.paginatorInfo.total
+      // }
     },
     submission_statuses: {
       query: SUBMISSION_STATUSES
@@ -461,13 +515,13 @@ export default {
           return 'red';
           break;
         case 'program':
-          return 'yellow';
+          return 'primary';
           break;
-        case 'ongoing project':
+        case 'locally funded project':
           return 'green';
           break;
-        case 'new project':
-          return 'blue';
+        case 'foreign assisted project':
+          return 'secondary';
           break;
         default:
           return 'white';

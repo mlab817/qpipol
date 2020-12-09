@@ -1,17 +1,29 @@
 <template>
-  <q-toolbar style="height: 84px;" class="text-grey-8">
+  <q-toolbar style="height: 72px;">
     <q-avatar>
-      <q-img
-        src="~assets/app-logo-128x128.png"
+      <img
+        height="32"
+        src="src/statics/app-logo-128x128.svg"
         @click="$router.push({ name: 'home' })"
-        class="cursor-pointer"
-      />
+        class="cursor-pointer gt-md"
+        alt="ipms"
+      >
     </q-avatar>
 
-    <q-toolbar-title class="text-red-5">
-      <span class="gt-md">{{ appName }}</span>
-      <span class="lt-md">{{ appShortname }}</span>
-    </q-toolbar-title>
+    <q-input
+      v-model="search"
+      placeholder="Search for projects"
+      rounded
+      outlined
+      dense
+      style="width: 100%; max-width: 380px;"
+      debounce="500"
+    >
+      <template v-slot:prepend>
+        <q-icon name="search" />
+      </template>
+    </q-input>
+
     <q-space />
 
     <q-btn color="red-5" flat label="Dashboard"></q-btn>
@@ -26,6 +38,14 @@ export default {
   name: 'AppHeader',
   props: ['user'],
   computed: {
+    search: {
+      get() {
+        return this.$store.state.projects.search
+      },
+      set(val) {
+        this.$store.dispatch('projects/setSearch', val)
+      }
+    },
     isEncoder() {
       return this.$store.getters['auth/isEncoder'];
     }

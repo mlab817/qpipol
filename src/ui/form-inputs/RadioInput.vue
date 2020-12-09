@@ -12,7 +12,6 @@
         type="radio"
         :options="recodedOptions"
         v-model="model"
-        inline
       >
       </q-option-group>
     </template>

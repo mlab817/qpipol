@@ -4,6 +4,11 @@ export const BASIC_INFORMATION_FRAGMENT = gql`
   fragment basicInformation on Project {
     id
     title
+    slug
+    type {
+      id
+      name
+    }
     operating_unit {
       id
       name
@@ -17,7 +22,7 @@ export const BASIC_INFORMATION_FRAGMENT = gql`
     }
     target_start_year
     target_end_year
-    total_project_cost
+    investment_target_total
     creator {
       id
       name

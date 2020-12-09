@@ -343,12 +343,8 @@ export const ENDORSE_PROJECTS_MUTATION = gql`
 export const DELETE_PROJECT_MUTATION = gql`
   mutation deleteProject($id: ID!) {
     deleteProject(id: $id) {
-      status
-      message
-      project {
-        id
-        title
-      }
+      id
+      title
     }
   }
 `;
@@ -581,8 +577,14 @@ export const UPLOAD_SIGNED_COPY = gql`
 `;
 
 export const SHARE_PROJECT = gql`
-  mutation($project_id: ID!, $email: String!) {
-    shareProject(input: { project_id: $project_id, email: $email }) {
+  mutation (
+    $email: String!
+    $url: String!
+  ) {
+    shareProject(
+      email: $email,
+      url: $url
+    ) {
       status
       message
     }

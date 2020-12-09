@@ -8,7 +8,32 @@
 
     <div style="position: relative;">
       <div class="text-h6" v-if="$apollo.loading">Loading...</div>
-      <edit-pipol @saved="saved = true" :project="project" v-else></edit-pipol>
+      <template v-else>
+        <div class="column q-pa-md q-mb-md bg-grey-9 text-white" style="min-height: 200px; background-color: #3c3b37">
+          <div class="row">
+            <q-breadcrumbs class="text-weight-bolder text-info">
+              <q-breadcrumbs-el :label="project.prexc_program && project.prexc_program.acronym" />
+              <q-breadcrumbs-el :label="project.prexc_subprogram && project.prexc_subprogram.acronym" />
+              <q-breadcrumbs-el :label="project.prexc_activity && project.prexc_activity.acronym" />
+            </q-breadcrumbs>
+          </div>
+
+          <div class="row text-h4">
+            {{ project.title }}
+          </div>
+          <div class="row text-subtitle1">
+            {{ project.description ? project.description.substr(0, 200) : '' }}
+          </div>
+          <div class="row text-subtitle2">
+            Created by <span class="text-info">&nbsp;{{ project.creator ? project.creator.name : '' }}</span>
+          </div>
+          <div class="row text-subtitle2 items-center">
+            <q-icon name="event" />  Last updated on {{ project.updated_at | showDate }}
+          </div>
+        </div>
+
+        <edit-pipol @saved="saved = true" :project="project" ></edit-pipol>
+      </template>
     </div>
   </page-container>
 </template>
@@ -19,6 +44,7 @@ import PageContainer from '@/ui/page/PageContainer';
 import EditPipol from '../components/projects/EditPipol';
 import { FETCH_PROJECT_QUERY } from '@/graphql';
 import RefreshButton from '../ui/buttons/RefreshButton'
+import {PROJECT_FIND_BY_SLUG} from "src/graphql";
 
 export default {
   components: {
@@ -31,19 +57,16 @@ export default {
   name: 'PageEditProject',
 
   apollo: {
-    project: {
-      query: FETCH_PROJECT_QUERY,
+    projectFindBySlug: {
+      query: PROJECT_FIND_BY_SLUG,
       variables() {
         return {
-          id: this.$route.params.id
+          slug: this.$route.params.slug
         };
       },
       result({ data }) {
         // if project is not found
-        if (data.project === null) {
-          this.error = true;
-          this.errorMessage = 'Project not found.';
-        }
+        this.project = data.projectFindBySlug
       },
       error(error) {
         this.error = JSON.stringify(error.message);
