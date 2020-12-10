@@ -1,24 +1,24 @@
 <template>
-	<q-item>
-		<q-item-section class="col-2">
-			<q-item-label>{{ label }}:</q-item-label>
-		</q-item-section>
-		<q-item-section>
-			<textarea-copy :value="renderValue"></textarea-copy>
-			<slot></slot>
-		</q-item-section>
+	<q-item clickable @click="copyValue">
+    <q-item-section>
+      <q-item-label class="text-weight-bold text-uppercase text-blue-grey-6">
+        {{ label }}
+      </q-item-label>
+      <q-item-label>
+        {{ renderValue }}
+      </q-item-label>
+    </q-item-section>
 	</q-item>
 </template>
 
 <script>
-	import TextareaCopy from '../../components/projects/shared/TextareaCopy'
+  import { copyToClipboard } from 'quasar'
 
 	export default {
 		name: 'LabelValue',
-		components: {TextareaCopy},
 		props: {
 			label: String,
-			value: [String, Number, Object, Boolean]
+			value: [String, Number, Object, Boolean, Array]
 		},
 		computed: {
 			renderValue() {
@@ -31,7 +31,11 @@
 					if (typeof value === 'string') {
 						renderValue = value
 					} else if (typeof value === 'object') {
-						renderValue =  value && value.name
+					  if (value instanceof Array) {
+              renderValue = value && value.length && value.map(v => v.name).join('; ')
+            } else {
+              renderValue =  value && value.name
+            }
 					} else if (typeof value === 'boolean') {
 						renderValue = !value ? 'No' : 'Yes'
 					} else if (typeof value === 'number') {
@@ -43,6 +47,18 @@
 				// console.info(`${value} : ${typeof value} render ${renderValue}`)
 				return renderValue
 			}
-		}
+		},
+    methods: {
+      copyToClipboard,
+      copyValue() {
+        this.copyToClipboard(this.renderValue)
+          .then(() => {
+            this.$q.notify({
+              type: 'positive',
+              message: 'Successfully copied to clipboard'
+            })
+          })
+      }
+    }
 	}
 </script>

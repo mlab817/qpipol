@@ -341,10 +341,11 @@
           </q-card-section>
         </q-card>
 
-        <section-header
-          sectionTitle="Philippine Development (PDP) Chapter"
-        ></section-header>
-        <q-card square flat bordered>
+        <card-info>
+          <section-header
+            title="Philippine Development (PDP) Chapter"
+          ></section-header>
+
           <q-card-section class="q-gutter-sm">
             <pdp-chapter v-model="project.pdp_chapter_id" :rules="rules.required"></pdp-chapter>
 
@@ -366,19 +367,20 @@
               ></pdp-chapters>
             </template>
           </q-card-section>
-        </q-card>
+        </card-info>
 
-        <section-header
-          sectionTitle="Philippine Development (PDP) Results Matrices"
-        ></section-header>
-        <q-card square flat bordered>
+        <card-info>
+          <section-header
+            title="Philippine Development (PDP) Results Matrices"
+          ></section-header>
+
           <q-card-section class="q-gutter-sm">
             <pdp-indicators
               v-model="project.selected_pdp_indicators"
               :filter="project.pdp_chapter_id"
             ></pdp-indicators>
           </q-card-section>
-        </q-card>
+        </card-info>
 
         <text-input
           class="q-my-sm"
@@ -389,25 +391,27 @@
           hint="Actual Deliverables, i.e. 100km of paved roads"
         />
 
-        <section-header sectionTitle="Ten Point Agenda"></section-header>
-        <q-card square flat bordered>
+        <card-info>
+          <section-header title="Ten Point Agenda"></section-header>
           <q-card-section class="q-gutter-sm">
             <ten-point-agenda
               v-model="project.selected_ten_point_agenda"
             ></ten-point-agenda>
           </q-card-section>
-        </q-card>
+        </card-info>
 
-        <section-header
-          sectionTitle="Sustainable Development Goals"
-        ></section-header>
-        <q-card square flat bordered>
+
+        <card-info>
+          <section-header
+            title="Sustainable Development Goals"
+          ></section-header>
+
           <q-card-section class="q-gutter-sm">
             <sd-goals
               v-model="project.selected_sustainable_development_goals"
             />
           </q-card-section>
-        </q-card>
+        </card-info>
 
         <template v-if="project.cip">
           <section-header
@@ -1212,9 +1216,11 @@ import ImplementationBases from './dropdowns/ImplementationBases';
 import TdMoney from '../../ui/components/TdMoney'
 import Years from './dropdowns/Years'
 import Types from './dropdowns/Types'
+import CardInfo from "components/projects/shared/CardInfo";
 
 export default {
   components: {
+    CardInfo,
 	  Years,
 	  TdMoney,
     BudgetTier,

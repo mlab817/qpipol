@@ -150,7 +150,6 @@
 					<q-item-section>
 						<q-item-label caption>
 							Submission Status
-							<mini-help @click="history = true" />
 						</q-item-label>
 						<q-item-label class="text-body2">
 							<q-badge>

@@ -2,13 +2,7 @@
   <q-layout>
     <q-header class="bg-white" elevated>
       <q-toolbar style="height: 72px;" class="q-gutter-sm" >
-        <img src="../statics/app-logo-128x128.svg" height="32" class="gt-md" alt="ipms">
-        <q-input placeholder="Search for projects" rounded outlined dense style="width: 100%">
-          <template v-slot:prepend>
-            <q-icon name="search" />
-          </template>
-        </q-input>
-        <q-space />
+        <img src="../statics/app-logo-128x128.svg" height="32" alt="ipms">
         <q-space />
         <q-btn outline label="Log in" no-caps color="secondary" style="width: 100%; max-width: 100px;" />
         <q-btn color="secondary" label="Sign up" style="width: 100%; max-width: 100px;" />
@@ -169,7 +163,7 @@ export default {
             LocalStorage.set('token', access_token)
             LocalStorage.set('user', user)
             LocalStorage.set('loggedIn', true)
-            this.$router.replace('/')
+            this.$router.replace('/dashboard')
           })
           .catch(err => {
             showErrorNotification(err.message)

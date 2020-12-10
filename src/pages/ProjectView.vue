@@ -1,92 +1,63 @@
 <template>
   <page-container>
-
-    <div class="text-h6" v-if="$apollo.loading">Loading...</div>
-
-    <template v-slot:title>
-      <page-title title="Project/Program Profile" icon="search">
-				<archive-button @click="downloadFile" />
-				<refresh-button @click="refetch" />
-				<help-button @click="help" />
-      </page-title>
-    </template>
-
-    <template v-if="!$apollo.loading">
-      <div
-        class="row justify-center q-pb-md"
-        v-if="project.finalized && !project.endorsed && !project.signed_copy"
+    <div
+      class="row justify-center q-pb-md relative-position"
+      v-if="project.finalized && !project.endorsed && !project.signed_copy"
+    >
+      <q-banner
+        class="bg-green-5 text-white col-xl-6 col-lg-6 col-md-8 col-sm-9 col-xs-12"
       >
-        <q-banner
-          class="bg-green-5 text-white col-xl-6 col-lg-6 col-md-8 col-sm-9 col-xs-12"
-        >
-          <template v-slot:avatar>
-            <q-icon name="info" color="white" />
-          </template>
-          This project has been finalized. It cannot be edited. Upload a signed
-          copy to endorse it to IPD.
-          <template v-slot:action>
-            <!-- <q-btn flat label="Changed my Mind" @click="revertToDraftProject" color="negative" /> -->
-            <q-btn flat label="Download" @click="downloadFile" />
-            <q-btn
-              flat
-              color="white"
-              label="Upload Signed Copy"
-              @click="uploadSignedCopyDialog = true"
-            />
-          </template>
-        </q-banner>
+        <template v-slot:avatar>
+          <q-icon name="info" color="white" />
+        </template>
+        This project has been finalized. It cannot be edited. Upload a signed
+        copy to endorse it to IPD.
+        <template v-slot:action>
+          <!-- <q-btn flat label="Changed my Mind" @click="revertToDraftProject" color="negative" /> -->
+          <q-btn flat label="Download" @click="downloadFile" />
+          <q-btn
+            flat
+            color="white"
+            label="Upload Signed Copy"
+            @click="uploadSignedCopyDialog = true"
+          />
+        </template>
+      </q-banner>
+
+      <q-inner-loading :showing="$apollo.loading">
+        <q-spinner />
+      </q-inner-loading>
+    </div>
+
+    <div class="column q-pa-md q-mb-md bg-grey-9 text-white" style="min-height: 200px; background-color: #3c3b37">
+      <div class="row">
+        <q-breadcrumbs class="text-weight-bolder text-info">
+          <q-breadcrumbs-el :label="project.prexc_program && project.prexc_program.acronym" />
+          <q-breadcrumbs-el :label="project.prexc_subprogram && project.prexc_subprogram.acronym" />
+          <q-breadcrumbs-el :label="project.prexc_activity && project.prexc_activity.acronym" />
+        </q-breadcrumbs>
       </div>
 
-      <div class="row justify-center q-gutter-sm q-mb-md">
-        <q-btn
-          label="Edit"
-					icon="edit"
-					color="blue"
-          @click="$router.push(`/projects/${$route.params.id}/edit`)"
-          v-if="owner && !project.finalized"
-        />
+      <div class="row text-h4">
+        {{ project.title }}
       </div>
-
-      <div class="column q-pa-md q-mb-md bg-grey-9 text-white" style="min-height: 200px; background-color: #3c3b37">
-        <div class="row">
-          <q-breadcrumbs class="text-weight-bolder text-info">
-            <q-breadcrumbs-el :label="project.prexc_program && project.prexc_program.acronym" />
-            <q-breadcrumbs-el :label="project.prexc_subprogram && project.prexc_subprogram.acronym" />
-            <q-breadcrumbs-el :label="project.prexc_activity && project.prexc_activity.acronym" />
-          </q-breadcrumbs>
-        </div>
-
-        <div class="row text-h4">
-          {{ project.title }}
-        </div>
-        <div class="row text-subtitle1">
-          {{ project.description ? project.description.substr(0, 200) : '' }}
-        </div>
-        <div class="row text-subtitle2">
-          Created by <span class="text-info">&nbsp;{{ project.creator ? project.creator.name : '' }}</span>
-        </div>
-        <div class="row text-subtitle2 items-center">
-          <q-icon name="event" />  Last updated on {{ project.updated_at | showDate }}
-        </div>
-        <div class="row q-py-sm justify-start">
-          <q-btn icon="edit" label="Edit" outline :to="`/projects/${$route.params.slug}/edit`" />
-          <q-btn icon="delete" label="Delete" outline class="q-ml-sm" @click="confirmDelete" />
-          <q-btn icon="share" label="Share" outline class="q-ml-sm" @click="shareProject" />
-        </div>
+      <div class="row text-subtitle1">
+        {{ project.description ? project.description.substr(0, 200) + '...' : '' }}
       </div>
-
-      <view-pipol :project="project" />
-
-      <div class="row justify-center q-gutter-sm">
-        <q-btn
-          label="Edit"
-					icon="edit"
-          color="blue"
-          @click="$router.push(`/projects/${$route.params.id}/edit`)"
-          v-if="owner && !project.finalized"
-        />
+      <div class="row text-subtitle2">
+        Created by <span class="text-info">&nbsp;{{ project.creator ? project.creator.name : '' }}</span>
       </div>
-    </template>
+      <div class="row text-subtitle2 items-center">
+        <q-icon name="event" />  Last updated on {{ project.updated_at | showDate }}
+      </div>
+      <div class="row q-py-sm justify-start">
+        <q-btn v-if="project.can_edit" icon="edit" label="Edit" outline :to="`/projects/${$route.params.slug}/edit`" />
+        <q-btn v-if="project.can_delete" icon="delete" label="Delete" outline class="q-ml-sm" @click="confirmDelete" />
+        <q-btn icon="share" label="Share" outline class="q-ml-sm" @click="shareProject" />
+      </div>
+    </div>
+
+    <view-pipol :project="project" />
 
     <q-dialog v-model="uploadSignedCopyDialog">
       <upload-signed
@@ -107,9 +78,6 @@ import ViewPipol from '@/components/projects/ViewPipol';
 import { showError, generateDocx } from '@/utils';
 import { openURL, exportFile } from 'quasar'
 import UploadSigned from '../components/projects/shared/UploadSigned';
-import RefreshButton from '../ui/buttons/RefreshButton'
-import ArchiveButton from '../ui/buttons/ArchiveButton'
-import HelpButton from '../ui/buttons/HelpButton'
 import { projectService } from '@/services'
 import { PROJECT_FIND_BY_SLUG } from "src/graphql";
 import { date } from 'quasar'
@@ -121,12 +89,8 @@ import {
 
 export default {
   components: {
-	  HelpButton,
-	  ArchiveButton,
-	  RefreshButton,
     UploadSigned,
     PageContainer,
-    PageTitle,
 	  ViewPipol
   },
   name: 'ViewProject',
@@ -144,27 +108,6 @@ export default {
       result({ data }) {
         this.project = data.projectFindBySlug
       }
-    }
-  },
-  computed: {
-    selectedProjects() {
-      return this.$store.state.projects.selectedProjects;
-    },
-    added() {
-      return this.selectedProjects.includes(this.project);
-    },
-    finalized() {
-      return this.project ? this.project.finalized : false;
-    },
-    endorsed() {
-      return this.project ? this.project.endorsed : false;
-    },
-    user() {
-      return this.$store.getters['auth/user'];
-    },
-    owner() {
-      // fixed error #50
-      return this.project.creator && this.project.creator.id === this.user.id;
     }
   },
   data() {

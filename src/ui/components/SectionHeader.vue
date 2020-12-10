@@ -1,7 +1,7 @@
 <template>
   <div class="column q-pa-md">
     <div class="row text-h5 text-grey-9 text-weight-bold items-center">
-      <q-icon :name="icon" color="primary" v-if="icon" />
+      <q-icon :name="icon" color="secondary" v-if="icon" />
       {{ title }}
     </div>
     <div class="row text-caption" v-if="description">

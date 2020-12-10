@@ -20,9 +20,11 @@
           dense
           style="width: 100%; max-width: 380px;"
           debounce="500"
+          @keyup.enter="searchProjects"
+          v-if="loggedIn"
         >
           <template v-slot:prepend>
-            <q-icon name="search" />
+            <q-icon name="search" @click="searchProjects" />
           </template>
         </q-input>
 
@@ -46,7 +48,7 @@
                   </q-item-section>
                 </q-item>
 
-                <q-item clickable v-close-popup>
+                <q-item clickable v-close-popup @click="confirmLogout">
                   <q-item-section avatar>
                     <q-icon name="exit_to_app" />
                   </q-item-section>
@@ -96,6 +98,9 @@ export default {
     }
   },
   computed: {
+    loggedIn() {
+      return this.$store.state.auth.loggedIn
+    },
     search: {
       get() {
         return this.$store.state.projects.search
@@ -106,7 +111,23 @@ export default {
     }
   },
   methods: {
-    openURL
+    openURL,
+    confirmLogout() {
+      this.$q.dialog({
+        title: 'Confirm Logout',
+        message: 'Are you sure you want to logout?',
+        cancel: true
+      }).onOk(() => {
+        this.$store.dispatch('auth/signoutUser')
+          .then(() => {
+            this.$router.replace('/login')
+          })
+          .catch(err => console.log(err.message))
+      })
+    },
+    searchProjects() {
+      this.$router.push('/projects')
+    }
   }
 }
 </script>

@@ -1,572 +1,587 @@
 <template>
 	<div v-if="project" style="margin-bottom: 70px;">
-			<key-facts :project="project" />
+    <key-facts :project="project" />
 
-			<!-- hide if project is finalized or endorsed and if the user is not a reviewer -->
-			<template v-if="error">
-				<q-banner class="bg-grey-2">
-					<template v-slot:avatar>
-						<q-icon name="warning" color="red" />
-					</template>
-					{{ errorMessage }}
-					<template v-slot:action>
-						<q-btn
-								flat
-								label="GO TO PROJECTS"
-								color="negative"
-								to="/projects/draft"
-						></q-btn>
-					</template>
-				</q-banner>
-			</template>
+    <!-- hide if project is finalized or endorsed and if the user is not a reviewer -->
+    <template v-if="error">
+      <q-banner class="bg-grey-2">
+        <template v-slot:avatar>
+          <q-icon name="warning" color="red" />
+        </template>
+        {{ errorMessage }}
+        <template v-slot:action>
+          <q-btn
+              flat
+              label="GO TO PROJECTS"
+              color="negative"
+              to="/projects/draft"
+          ></q-btn>
+        </template>
+      </q-banner>
+    </template>
 
+    <card-info>
+      <section-header title="Program Information"></section-header>
 
-					<div class="row justify-end q-mb-md">
-						<q-badge color="blue"> v. {{ project.version }} </q-badge>
-					</div>
+      <q-card-section class="q-gutter-y-md">
+        <label-value label="Program" :value="project.prexc_program ? project.prexc_program.name : ''" />
 
-					<section-header sectionTitle="Program Information"></section-header>
-					<q-card square bordered flat>
-						<q-card-section class="q-gutter-y-md">
-							<label-value label="Program" :value="project.prexc_program ? project.prexc_program.name : ''" />
+        <label-value label="Subprogram" :value="project.prexc_subprogram ? project.prexc_subprogram.name : ''" />
 
-							<label-value label="Subprogram" :value="project.prexc_subprogram ? project.prexc_subprogram.name : ''" />
+        <label-value label="Banner Program" :value="project.banner_program ? project.banner_program.name : ''" />
+      </q-card-section>
+    </card-info>
 
-							<label-value label="Banner Program" :value="project.banner_program ? project.banner_program.name : ''" />
-						</q-card-section>
-					</q-card>
+    <card-info>
+      <section-header title="General Information"></section-header>
 
-					<section-header sectionTitle="General Information"></section-header>
-					<q-card square bordered flat>
-						<q-card-section class="q-gutter-y-md">
+      <q-card-section class="q-gutter-y-md">
 
-							<label-value label="PAP Title" :value="project.title" />
+        <label-value label="PAP Title" :value="project.title" />
 
-							<label-value label="Locally-Funded or Foreign Assisted" :value="project.type ? project.type.name : null" />
+        <label-value label="PAP Type" :value="project.type ? project.type.name : null" />
 
-							<label-list label="Basis for Implementation" :value="project.bases" />
+        <label-value label="Basis for Implementation" :value="project.bases" />
 
-							<label-value label="Project Component and Objectives" :value="project.description"></label-value>
-						</q-card-section>
-					</q-card>
+        <label-value label="Project Component and Objectives" :value="project.description"></label-value>
+      </q-card-section>
+    </card-info>
 
-					<section-header sectionTitle="Implementing Agency"></section-header>
-					<q-card square bordered flat>
-						<q-card-section>
-							<label-value label="Implementing Agency" :value="project.operating_unit" />
-						</q-card-section>
-					</q-card>
+    <card-info>
+      <section-header title="Implementing Agency"></section-header>
 
-					<section-header sectionTitle="Spatial Coverage" />
-					<q-card square bordered flat>
-						<q-card-section class="q-gutter-y-md">
-							<label-value label="Spatial Coverage" :value="project.spatial_coverage" />
+      <q-card-section>
+        <label-value label="Implementing Agency" :value="project.operating_unit" />
+      </q-card-section>
+    </card-info>
 
-							<label-list label="Inter-regional" :value="project.regions" v-if="project.spatial_coverage_id === '2'"></label-list>
+    <card-info>
+      <section-header title="Spatial Coverage" icon="map" />
 
-							<label-value label="Region" :value="project.region" v-if="project.spatial_coverage_id === '3'" />
-						</q-card-section>
-					</q-card>
+      <q-card-section class="q-gutter-y-md">
+        <label-value label="Spatial Coverage" :value="project.spatial_coverage" />
 
-					<section-header
-							sectionTitle="Project for Inclusion in Which Programming Document"
-					></section-header>
-					<q-card square bordered flat>
-						<q-card-section>
-							<label-value label="Public Investment Program" :value="project.pip" />
-							<label-value label="Typology" :value="project.typology" />
-							<label-value label="Core Investment Program/Project" :value="project.cip" />
-							<label-value label="CIP Type" :value="project.cip_type" />
-							<label-value
-								label="Three-Year Rolling Infrastructure Program"
-								:value="project.trip"
-							/>
-							<label-value
-								label="Regional Development Investment Program"
-								v-model="project.rdip"
-							/>
-							<label-value
-								label="RDC Endorsed"
-								:value="project.rdc_endorsed"
-							/>
-							<label-value
-								label="RDC Endorsement Date"
-								:value="project.rdc_endorsed_date"
-							/>
-						</q-card-section>
-					</q-card>
+        <label-value label="Regions" :value="project.regions" />
+      </q-card-section>
+    </card-info>
 
-					<template v-if="project.trip">
-						<section-header
-							sectionTitle="Three-Year Rolling Investment Program"
-						></section-header>
-						<q-card square bordered flat>
-							<q-card-section class="q-gutter-sm">
-								<label-list label="Infrastructure Sectors" :value="project.infrastructure_subsectors"></label-list>
-								<label-list label="Technical Readiness" :value="project.technical_readinesses"></label-list>
-								<label-value label="Implementation Risk &amp; Mitigation Strategy" :value="project.implementation_risk" />
-								<label-table label="Infrastructure Investment by Funding Source">
-									<vfs-infrastructures :data="project.funding_source_infrastructures" />
-								</label-table>
-							</q-card-section>
-						</q-card>
-					</template>
+    <card-info>
+      <section-header
+        title="Project for Inclusion in Which Programming Document"
+        icon="description"
+      ></section-header>
 
-					<section-header
-							sectionTitle="Physical and Financial Status"
-					></section-header>
-					<q-card square bordered flat>
-						<q-card-section class="q-gutter-sm">
-							<label-value label="Project Status" :value="project.project_status" />
-							<label-value label="Will require Investment Coordination Committee/NEDA Board Approval (ICC-able)?" :value="project.iccable" />
-							<template v-if="project.iccable">
-								<label-value label="Approved by DA-wide Clearinghouse" :value="`${project.clearinghouse ? 'Yes' : 'No' } on ${project.clearinghouse_date}`" />
-								<label-value label="Yet to be submitted to the NEDA Secretariat" :value="`${project.neda_submission ? 'Yes' : 'No' } on ${project.neda_submission_date}`" />
-								<label-value label="Under the NEDA Secretariat Review" :value="`${project.neda_secretariat_review_date ? 'Yes' : 'No' } on ${project.neda_secretariat_review_date}`" />
-								<label-value label="ICC-TB Endorsed" :value="`${project.clearinghouse ? 'Yes' : 'No' } on ${project.clearinghouse_date}`" />
-								<label-value label="ICC-CC Approved" :value="`${project.icc_approved ? 'Yes' : 'No' } on ${project.icc_approved_date}`" />
-								<label-value label="NEDA Board Confirmed" :value="`${project.neda_board ? 'Yes' : 'No' } on ${project.neda_board_date}`" />
-							</template>
-							<label-value label="Budget Tier" :value="project.tier" />
-							<label-value
-								label="UACS Code"
-								:value="project.uacs_code"
-							></label-value>
+      <q-card-section>
+        <label-value label="Public Investment Program" :value="project.pip" />
+        <label-value label="Typology" :value="project.typology" />
+        <label-value label="Core Investment Program/Project" :value="project.cip" />
+        <label-value label="CIP Type" :value="project.cip_type" />
+        <label-value
+          label="Three-Year Rolling Infrastructure Program"
+          :value="project.trip"
+        />
+        <label-value
+          label="Regional Development Investment Program"
+          v-model="project.rdip"
+        />
+        <label-value
+          label="RDC Endorsed"
+          :value="project.rdc_endorsed"
+        />
+        <label-value
+          label="RDC Endorsement Date"
+          :value="project.rdc_endorsed_date"
+        />
+      </q-card-section>
+    </card-info>
 
-							<label-value
-								:value="project.updates"
-								label="Updates"
-							/>
+    <template v-if="project.trip">
+      <card-info>
+        <section-header
+          title="Three-Year Rolling Investment Program"
+          icon="construction"
+        ></section-header>
 
-							<label-value
-								:value="project.updates_date"
-								label="As of"
-							/>
-						</q-card-section>
-					</q-card>
+        <q-card-section class="q-gutter-sm">
+          <label-value label="Infrastructure Sectors" :value="project.infrastructure_subsectors"></label-value>
+          <label-value label="Technical Readiness" :value="project.technical_readinesses"></label-value>
+          <label-value label="Implementation Risk &amp; Mitigation Strategy" :value="project.implementation_risk" />
+        </q-card-section>
+      </card-info>
+    </template>
 
-					<section-header
-							sectionTitle="Philippine Development (PDP) Chapter"
-					></section-header>
-					<q-card square bordered flat>
-						<q-card-section class="q-gutter-sm">
-							<label-value label="Main PDP Chapter" :value="project.pdp_chapter"></label-value>
-							<label-list label="Other PDP Chapters" :value="project.pdp_chapters"></label-list>
-						</q-card-section>
-					</q-card>
+    <card-info>
+      <section-header
+        title="Physical and Financial Status"
+        icon="update"
+      ></section-header>
 
-					<section-header
-							sectionTitle="Philippine Development (PDP) Results Matrices"
-					></section-header>
-					<q-card square bordered flat>
-						<q-card-section class="q-gutter-sm">
-							<label-list
-									label="Results Matrices Indicators"
-									v-model="project.pdp_indicators"
-							></label-list>
-						</q-card-section>
-					</q-card>
+      <q-card-section class="q-gutter-sm">
+        <label-value label="Project Status" :value="project.project_status" />
+        <label-value label="Will require Investment Coordination Committee/NEDA Board Approval (ICC-able)?" :value="project.iccable" />
+        <template v-if="project.iccable">
+          <label-value label="Approved by DA-wide Clearinghouse" :value="`${project.clearinghouse ? 'Yes' : 'No' } on ${project.clearinghouse_date}`" />
+          <label-value label="Yet to be submitted to the NEDA Secretariat" :value="`${project.neda_submission ? 'Yes' : 'No' } on ${project.neda_submission_date}`" />
+          <label-value label="Under the NEDA Secretariat Review" :value="`${project.neda_secretariat_review_date ? 'Yes' : 'No' } on ${project.neda_secretariat_review_date}`" />
+          <label-value label="ICC-TB Endorsed" :value="`${project.clearinghouse ? 'Yes' : 'No' } on ${project.clearinghouse_date}`" />
+          <label-value label="ICC-CC Approved" :value="`${project.icc_approved ? 'Yes' : 'No' } on ${project.icc_approved_date}`" />
+          <label-value label="NEDA Board Confirmed" :value="`${project.neda_board ? 'Yes' : 'No' } on ${project.neda_board_date}`" />
+        </template>
+        <label-value label="Budget Tier" :value="project.tier" />
+        <label-value
+          label="UACS Code"
+          :value="project.uacs_code"
+        ></label-value>
 
-					<label-value
-						class="q-my-sm"
-						:value="project.expected_outputs"
-						label="Expected Outputs"
-					/>
+        <label-value
+          :value="project.updates"
+          label="Updates"
+        />
 
-					<section-header sectionTitle="Ten Point Agenda"></section-header>
-					<q-card square bordered flat>
-						<q-card-section class="q-gutter-sm">
-							<label-list label="Ten Point Agenda" :value="project.ten_point_agenda"></label-list>
-						</q-card-section>
-					</q-card>
+        <label-value
+          :value="project.updates_date"
+          label="As of"
+        />
+      </q-card-section>
+    </card-info>
 
-					<section-header
-							sectionTitle="Sustainable Development Goals"
-					></section-header>
-					<q-card square bordered flat>
-						<q-card-section class="q-gutter-sm">
-							<label-list
-								label="Sustainable Development Goals"
-								:value="project.sustainable_development_goals"
-							/>
-						</q-card-section>
-					</q-card>
+    <card-info>
+      <section-header
+        title="Philippine Development (PDP) Chapter"
+        icon=""
+      ></section-header>
 
-					<template v-if="project.cip">
-						<section-header
-								sectionTitle="Gender and Development Responsiveness"
-						></section-header>
-						<q-card square bordered flat>
-							<q-card-section>
-								<label-value label="GAD Responsiveness" :value="project.gad" />
-							</q-card-section>
-						</q-card>
-					</template>
+      <q-card-section class="q-gutter-sm">
+        <label-value label="Main PDP Chapter" :value="project.pdp_chapter"></label-value>
+        <label-value label="Other PDP Chapters" :value="project.pdp_chapters"></label-value>
+        <label-value
+            label="Results Matrices Indicators"
+            v-model="project.pdp_indicators"
+        ></label-value>
+      </q-card-section>
+    </card-info>
 
-					<section-header sectionTitle="Implementation Period"></section-header>
-					<q-card square>
-						<q-card-section class="row q-col-gutter-sm">
-							<div class="col">
-								<label-value label="Start of Project Implementation" :value="project.target_start_year" />
-							</div>
+    <card-info>
+      <section-header
+        title="Expected Outputs"
+        icon=""
+      ></section-header>
 
-							<div class="col">
-								<label-value label="Year of Project Completion" :value="project.target_end_year" />
-							</div>
-						</q-card-section>
-					</q-card>
+      <q-card-section class="q-gutter-sm">
+        <label-value
+          label="Expected Outputs"
+          :value="project.expected_outputs"
+        />
+      </q-card-section>
+    </card-info>
 
-					<section-header
-							sectionTitle="Project Preparation Details"
-					></section-header>
-					<q-card square bordered flat>
-						<q-card-section class="q-gutter-sm">
-							<label-value label="Project Preparation Document" :value="project.project_preparation_document" />
+    <card-info>
+      <section-header title="Ten Point Agenda"></section-header>
 
-							<template v-if="project.project_preparation_document_id === '1'">
-								<q-item-label class="text-weight-bold text-caption"
-								>Feasibility Study Cost (in absolute PhP)</q-item-label
-								>
-								<q-markup-table flat bordered class="col bg-transparent">
-									<thead>
-									<tr>
-										<th></th>
-										<th>Item</th>
-										<th>2017</th>
-										<th>2018</th>
-										<th>2019</th>
-										<th>2020</th>
-										<th>2021</th>
-										<th>2022</th>
-										<th>Total</th>
-									</tr>
-									</thead>
-									<tbody>
-									<tr>
-										<td>Feasibility Study</td>
-										<copy-td :copy-mode="copyMode" :value="project.fs_target_2017" />
-										<copy-td :copy-mode="copyMode" :value="project.fs_target_2018" />
-										<copy-td :copy-mode="copyMode" :value="project.fs_target_2019" />
-										<copy-td :copy-mode="copyMode" :value="project.fs_target_2020" />
-										<copy-td :copy-mode="copyMode" :value="project.fs_target_2021" />
-										<copy-td :copy-mode="copyMode" :value="project.fs_target_2022" />
-										<copy-td :copy-mode="copyMode" :value="project.fs_target_total" />
-									</tr>
-									</tbody>
-								</q-markup-table>
-							</template>
+      <q-card-section class="q-gutter-sm">
+        <label-value label="Ten Point Agenda" :value="project.ten_point_agenda"></label-value>
+      </q-card-section>
+    </card-info>
 
-							<label-value
-									label="Other preparation document"
-									:value="project.project_preparation_document_others"
-									v-if="project.project_preparation_document_id === '99'"
-							/>
-						</q-card-section>
-					</q-card>
+    <card-info>
+      <section-header
+        title="Sustainable Development Goals"
+      ></section-header>
 
-					<section-header sectionTitle="Pre-construction Costs"></section-header>
-					<q-card square bordered flat>
-						<q-card-section>
-							<label-value label="Right of Way" :value="project.has_row"></label-value>
+      <q-card-section class="q-gutter-sm">
+        <label-value
+          label="Sustainable Development Goals"
+          :value="project.sustainable_development_goals"
+        />
+      </q-card-section>
+    </card-info>
 
-							<div class="row" v-if="project.has_row">
-								<q-markup-table
-										flat
-										bordered
-										class="col bg-transparent"
-										wrap-cells
-								>
-									<thead>
-									<tr>
-										<th></th>
-										<th>2017</th>
-										<th>2018</th>
-										<th>2019</th>
-										<th>2020</th>
-										<th>2021</th>
-										<th>2022</th>
-										<th>Total</th>
-									</tr>
-									</thead>
-									<tbody>
-									<tr>
-										<td>Right of Way</td>
-										<copy-td :value="project.row_target_2017" />
-										<copy-td :value="project.row_target_2018" />
-										<copy-td :value="project.row_target_2019" />
-										<copy-td :value="project.row_target_2020" />
-										<copy-td :value="project.row_target_2021" />
-										<copy-td :value="project.row_target_2022" />
-										<copy-td :value="project.row_target_total" />
-									</tr>
-									</tbody>
-								</q-markup-table>
-							</div>
+    <template v-if="project.cip">
+      <card-info square bordered flat>
+        <section-header
+          title="Gender and Development Responsiveness"
+        ></section-header>
 
-							<template v-if="project.has_row">
-								<label-value
-										label="Affected Households (No.)"
-										:value="project.row_affected"
-								></label-value>
-							</template>
+        <q-card-section>
+          <label-value label="GAD Responsiveness" :value="project.gad" />
+        </q-card-section>
+      </card-info>
+    </template>
 
-							<label-value
-								:value="project.has_rap"
-								label="Resettlement Action Plan"
-							/>
+    <card-info>
+      <section-header title="Implementation Period"></section-header>
 
-							<div class="row" v-if="project.has_rap">
-								<q-markup-table flat bordered class="col bg-transparent">
-									<thead>
-									<tr>
-										<th></th>
-										<th>2017</th>
-										<th>2018</th>
-										<th>2019</th>
-										<th>2020</th>
-										<th>2021</th>
-										<th>2022</th>
-										<th>Total</th>
-									</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>Resettlement Action Plan</td>
-											<copy-td :value="project.rap_target_2017" />
-											<copy-td :value="project.rap_target_2018" />
-											<copy-td :value="project.rap_target_2019" />
-											<copy-td :value="project.rap_target_2020" />
-											<copy-td :value="project.rap_target_2021" />
-											<copy-td :value="project.rap_target_2022" />
-											<copy-td :value="project.rap_target_total" />
-										</tr>
-									</tbody>
-								</q-markup-table>
-							</div>
+      <q-card-section class="row q-col-gutter-sm">
+        <div class="col">
+          <label-value label="Start of Project Implementation" :value="project.target_start_year" />
+        </div>
 
-							<template v-if="project.has_rap">
-								<label-value
-									label="Affected Households (No.)"
-									:value="project.rap_affected"
-								></label-value>
-							</template>
-						</q-card-section>
-					</q-card>
+        <div class="col">
+          <label-value label="Year of Project Completion" :value="project.target_end_year" />
+        </div>
+      </q-card-section>
+    </card-info>
 
-					<section-header sectionTitle="Employment Generation"></section-header>
-					<q-card square bordered flat>
-						<q-card-section>
-							<label-value
-								:value="project.employment_generated"
-								label="No. of persons to be employed"
-							/>
-						</q-card-section>
-					</q-card>
+    <card-info>
+      <section-header
+        title="Project Preparation Details"
+      ></section-header>
 
-					<section-header
-							sectionTitle="Funding Source and Mode of Implementation"
-					></section-header>
-					<q-card square bordered flat>
-						<q-card-section>
-							<div class="row q-col-gutter-sm">
-								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
-									<label-value
-											label="Main Funding Source"
-											:value="project.main_funding_source"
-											class="q-mb-sm"
-									/>
-									<label-list
-										:value="project.funding_sources"
-										label="Other Funding Sources"
-									></label-list>
-								</div>
-								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
-									<label-value label="Funding Institution" :value="project.funding_institution" />
-									<label-value label="Mode of Implementation" :value="project.implementation_mode" />
-								</div>
-							</div>
-						</q-card-section>
-					</q-card>
+      <q-card-section class="q-gutter-sm">
+        <label-value label="Project Preparation Document" :value="project.project_preparation_document" />
 
-					<section-header sectionTitle="Project Cost"></section-header>
-					<q-card square bordered flat>
-						<div class="row">
-							<label-table
-									label="Investment Requirements by Funding Source">
-								<vfs-financials :data="project.funding_source_financials" />
-							</label-table>
-						</div>
+        <template v-if="project.project_preparation_document_id === '1'">
+          <q-item-label class="text-weight-bold text-caption"
+          >Feasibility Study Cost (in absolute PhP)</q-item-label
+          >
+          <q-markup-table flat bordered class="col bg-transparent">
+            <thead>
+            <tr>
+              <th></th>
+              <th>Item</th>
+              <th>2017</th>
+              <th>2018</th>
+              <th>2019</th>
+              <th>2020</th>
+              <th>2021</th>
+              <th>2022</th>
+              <th>Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>Feasibility Study</td>
+              <copy-td :copy-mode="copyMode" :value="project.fs_target_2017" />
+              <copy-td :copy-mode="copyMode" :value="project.fs_target_2018" />
+              <copy-td :copy-mode="copyMode" :value="project.fs_target_2019" />
+              <copy-td :copy-mode="copyMode" :value="project.fs_target_2020" />
+              <copy-td :copy-mode="copyMode" :value="project.fs_target_2021" />
+              <copy-td :copy-mode="copyMode" :value="project.fs_target_2022" />
+              <copy-td :copy-mode="copyMode" :value="project.fs_target_total" />
+            </tr>
+            </tbody>
+          </q-markup-table>
+        </template>
 
-						<div class="row">
-							<label-table
-								label="Investment Requirements by Region">
-								<vr-financials :data="project.region_financials" />
-							</label-table>
-						</div>
-					</q-card>
-
-					<section-header
-							sectionTitle="Financial Accomplishments"
-					></section-header>
-					<q-card square bordered flat>
-						<q-card-section class="q-gutter-y-md">
-							<!-- Investment Requirements (Total, Infrastructure, GAA, NEP, Disbursement) -->
-							<div class="row">
-								<q-item-label class="text-h6 text-weight-lighter">
-									Investment Requirements (in absolute PhP)
-								</q-item-label>
-								<q-space />
-								<q-toggle :value="copyMode" @input="copyMode = !copyMode" label="Toggle Copy" color="secondary" />
-							</div>
-
-							<div class="row">
-								<q-markup-table
-										flat
-										bordered
-										class="col bg-transparent"
-										wrap-cells
-										square
-								>
-									<thead>
-									<tr>
-										<th>Item</th>
-										<th>2016 &amp; Prior</th>
-										<th>2017</th>
-										<th>2018</th>
-										<th>2019</th>
-										<th>2020</th>
-										<th>2021</th>
-										<th>2022</th>
-										<th>2023</th>
-										<th>2024</th>
-										<th>2025 &amp; Beyond</th>
-										<th>Total</th>
-									</tr>
-									</thead>
-									<tbody>
-									<tr>
-										<td colspan="12">
-											Target Investment Requirements (auto-computed from
-											breakdown)
-										</td>
-									</tr>
-									<tr>
-										<td>
-											Total
-										</td>
-										<copy-td :value="investTotal.investment_target_2016" :copy-mode="copyMode" />
-										<copy-td :value="investTotal.investment_target_2017" :copy-mode="copyMode" />
-										<copy-td :value="investTotal.investment_target_2018" :copy-mode="copyMode" />
-										<copy-td :value="investTotal.investment_target_2019" :copy-mode="copyMode" />
-										<copy-td :value="investTotal.investment_target_2020" :copy-mode="copyMode" />
-										<copy-td :value="investTotal.investment_target_2021" :copy-mode="copyMode" />
-										<copy-td :value="investTotal.investment_target_2022" :copy-mode="copyMode" />
-										<copy-td :value="investTotal.investment_target_2023" :copy-mode="copyMode" />
-										<copy-td :value="investTotal.investment_target_2024" :copy-mode="copyMode" />
-										<copy-td :value="investTotal.investment_target_2025" :copy-mode="copyMode" />
-										<copy-td :value="investTotal.investment_target_total" :copy-mode="copyMode" />
-									</tr>
-									<tr>
-										<td>
-											Infrastructure
-										</td>
-										<copy-td :value="infraTotal.infrastructure_target_2016" :copy-mode="copyMode" />
-										<copy-td :value="infraTotal.infrastructure_target_2017" :copy-mode="copyMode" />
-										<copy-td :value="infraTotal.infrastructure_target_2018" :copy-mode="copyMode" />
-										<copy-td :value="infraTotal.infrastructure_target_2019" :copy-mode="copyMode" />
-										<copy-td :value="infraTotal.infrastructure_target_2020" :copy-mode="copyMode" />
-										<copy-td :value="infraTotal.infrastructure_target_2021" :copy-mode="copyMode" />
-										<copy-td :value="infraTotal.infrastructure_target_2022" :copy-mode="copyMode" />
-										<copy-td :value="infraTotal.infrastructure_target_2023" :copy-mode="copyMode" />
-										<copy-td :value="infraTotal.infrastructure_target_2024" :copy-mode="copyMode"/>
-										<copy-td :value="infraTotal.infrastructure_target_2025" :copy-mode="copyMode" />
-										<copy-td :value="infraTotal.infrastructure_target_total" :copy-mode="copyMode" />
-									</tr>
-									<tr>
-										<td colspan="12">
-											Actual Investments
-										</td>
-									</tr>
-									<tr>
-										<td>
-											NEP
-										</td>
-										<copy-td :value="project.nep_2016" :copy-mode="copyMode" />
-										<copy-td :value="project.nep_2017" :copy-mode="copyMode" />
-										<copy-td :value="project.nep_2018" :copy-mode="copyMode" />
-										<copy-td :value="project.nep_2019" :copy-mode="copyMode" />
-										<copy-td :value="project.nep_2020" :copy-mode="copyMode" />
-										<copy-td :value="project.nep_2021" :copy-mode="copyMode" />
-										<copy-td :value="project.nep_2022" :copy-mode="copyMode" />
-										<copy-td :value="project.nep_2023" :copy-mode="copyMode" />
-										<copy-td :value="project.nep_2024" :copy-mode="copyMode" />
-										<copy-td :value="project.nep_2025" :copy-mode="copyMode" />
-										<copy-td :value="project.nep_total" :copy-mode="copyMode" />
-									</tr>
-									<tr>
-										<td>
-											GAA
-										</td>
-										<copy-td :value="project.gaa_2016" :copy-mode="copyMode" />
-										<copy-td :value="project.gaa_2017" :copy-mode="copyMode" />
-										<copy-td :value="project.gaa_2018" :copy-mode="copyMode" />
-										<copy-td :value="project.gaa_2019" :copy-mode="copyMode" />
-										<copy-td :value="project.gaa_2020" :copy-mode="copyMode" />
-										<copy-td :value="project.gaa_2021" :copy-mode="copyMode" />
-										<copy-td :value="project.gaa_2022" :copy-mode="copyMode" />
-										<copy-td :value="project.gaa_2023" :copy-mode="copyMode" />
-										<copy-td :value="project.gaa_2024" :copy-mode="copyMode" />
-										<copy-td :value="project.gaa_2025" :copy-mode="copyMode" />
-										<copy-td :value="project.gaa_total" :copy-mode="copyMode" />
-									</tr>
-									<tr>
-										<td>
-											Disbursement
-										</td>
-										<copy-td :value="project.disbursement_2016" :copy-mode="copyMode" />
-										<copy-td :value="project.disbursement_2017" :copy-mode="copyMode" />
-										<copy-td :value="project.disbursement_2018" :copy-mode="copyMode" />
-										<copy-td :value="project.disbursement_2019" :copy-mode="copyMode" />
-										<copy-td :value="project.disbursement_2020" :copy-mode="copyMode" />
-										<copy-td :value="project.disbursement_2021" :copy-mode="copyMode" />
-										<copy-td :value="project.disbursement_2022" :copy-mode="copyMode" />
-										<copy-td :value="project.disbursement_2023" :copy-mode="copyMode" />
-										<copy-td :value="project.disbursement_2024" :copy-mode="copyMode" />
-										<copy-td :value="project.disbursement_2025" :copy-mode="copyMode" />
-										<copy-td :value="project.disbursement_total" :copy-mode="copyMode" />
-									</tr>
-									</tbody>
-								</q-markup-table>
-
-							</div>
-						</q-card-section>
-					</q-card>
+        <label-value
+            label="Other preparation document"
+            :value="project.project_preparation_document_others"
+            v-if="project.project_preparation_document_id === '99'"
+        />
+      </q-card-section>
+    </card-info>
 
 
-		</div>
+    <card-info>
+      <section-header title="Pre-construction Costs"></section-header>
+
+      <q-card-section>
+        <label-value label="Right of Way" :value="project.has_row"></label-value>
+
+        <div class="row" v-if="project.has_row">
+          <q-markup-table
+              flat
+              bordered
+              class="col bg-transparent"
+              wrap-cells
+          >
+            <thead>
+            <tr>
+              <th></th>
+              <th>2017</th>
+              <th>2018</th>
+              <th>2019</th>
+              <th>2020</th>
+              <th>2021</th>
+              <th>2022</th>
+              <th>Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>Right of Way</td>
+              <copy-td :value="project.row_target_2017" />
+              <copy-td :value="project.row_target_2018" />
+              <copy-td :value="project.row_target_2019" />
+              <copy-td :value="project.row_target_2020" />
+              <copy-td :value="project.row_target_2021" />
+              <copy-td :value="project.row_target_2022" />
+              <copy-td :value="project.row_target_total" />
+            </tr>
+            </tbody>
+          </q-markup-table>
+        </div>
+
+        <template v-if="project.has_row">
+          <label-value
+              label="Affected Households (No.)"
+              :value="project.row_affected"
+          ></label-value>
+        </template>
+
+        <label-value
+          :value="project.has_rap"
+          label="Resettlement Action Plan"
+        />
+
+        <div class="row" v-if="project.has_rap">
+          <q-markup-table flat bordered class="col bg-transparent">
+            <thead>
+            <tr>
+              <th></th>
+              <th>2017</th>
+              <th>2018</th>
+              <th>2019</th>
+              <th>2020</th>
+              <th>2021</th>
+              <th>2022</th>
+              <th>Total</th>
+            </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Resettlement Action Plan</td>
+                <copy-td :value="project.rap_target_2017" />
+                <copy-td :value="project.rap_target_2018" />
+                <copy-td :value="project.rap_target_2019" />
+                <copy-td :value="project.rap_target_2020" />
+                <copy-td :value="project.rap_target_2021" />
+                <copy-td :value="project.rap_target_2022" />
+                <copy-td :value="project.rap_target_total" />
+              </tr>
+            </tbody>
+          </q-markup-table>
+        </div>
+
+        <template v-if="project.has_rap">
+          <label-value
+            label="Affected Households (No.)"
+            :value="project.rap_affected"
+          ></label-value>
+        </template>
+      </q-card-section>
+    </card-info>
+
+    <card-info>
+      <section-header title="Employment Generation"></section-header>
+
+      <q-card-section>
+        <label-value
+          :value="project.employment_generated"
+          label="No. of persons to be employed"
+        />
+      </q-card-section>
+    </card-info>
+
+    <card-info>
+      <section-header
+        title="Funding Source and Mode of Implementation"
+      ></section-header>
+
+      <q-card-section>
+        <div class="row q-col-gutter-sm">
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <label-value
+              label="Main Funding Source"
+              :value="project.main_funding_source"
+              class="q-mb-sm"
+            />
+            <label-value
+              :value="project.funding_sources"
+              label="Other Funding Sources"
+            ></label-value>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <label-value label="Funding Institution" :value="project.funding_institution" />
+            <label-value label="Mode of Implementation" :value="project.implementation_mode" />
+          </div>
+        </div>
+      </q-card-section>
+    </card-info>
+
+    <card-info>
+      <section-header title="Infrastructure Requirements by Funding Source (in absolute PhP)"></section-header>
+
+      <q-card-section class="q-pa-md">
+        <vfs-infrastructures :data="project.funding_source_infrastructures" />
+      </q-card-section>
+
+    </card-info>
+
+    <card-info>
+      <section-header
+        title="Investment Requirements by Funding Source (in absolute PhP)"
+      ></section-header>
+
+      <q-card-section class="q-pa-md">
+        <vfs-financials :data="project.funding_source_financials" />
+      </q-card-section>
+    </card-info>
+
+    <card-info>
+      <section-header
+        title="Investment Requirements by Region (in absolute PhP)"
+      ></section-header>
+
+      <q-card-section class="q-pa-md">
+        <vr-financials :data="project.region_financials" />
+      </q-card-section>
+    </card-info>
+
+    <card-info>
+      <section-header
+        title="Financial Accomplishments (in absolute PhP)"
+      ></section-header>
+
+      <q-card-section class="q-gutter-y-md">
+
+        <div class="row">
+          <q-markup-table
+            flat
+            bordered
+            class="col bg-transparent"
+            wrap-cells
+            square
+          >
+            <thead>
+            <tr>
+              <th>Item</th>
+              <th>2016 &amp; Prior</th>
+              <th>2017</th>
+              <th>2018</th>
+              <th>2019</th>
+              <th>2020</th>
+              <th>2021</th>
+              <th>2022</th>
+              <th>2023</th>
+              <th>2024</th>
+              <th>2025 &amp; Beyond</th>
+              <th>Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td colspan="12">
+                Target Investment Requirements (auto-computed from
+                breakdown)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Total
+              </td>
+              <td-click :value="investTotal.investment_target_2016"></td-click>
+              <td-click :value="investTotal.investment_target_2017"></td-click>
+              <td-click :value="investTotal.investment_target_2018"></td-click>
+              <td-click :value="investTotal.investment_target_2019"></td-click>
+              <td-click :value="investTotal.investment_target_2020"></td-click>
+              <td-click :value="investTotal.investment_target_2021"></td-click>
+              <td-click :value="investTotal.investment_target_2022"></td-click>
+              <td-click :value="investTotal.investment_target_2023"></td-click>
+              <td-click :value="investTotal.investment_target_2024"></td-click>
+              <td-click :value="investTotal.investment_target_2025"></td-click>
+              <td-click :value="investTotal.investment_target_total"></td-click>
+            </tr>
+            <tr>
+              <td>
+                Infrastructure
+              </td>
+              <td-click :value="infraTotal.infrastructure_target_2016"></td-click>
+              <td-click :value="infraTotal.infrastructure_target_2017"></td-click>
+              <td-click :value="infraTotal.infrastructure_target_2018"></td-click>
+              <td-click :value="infraTotal.infrastructure_target_2019"></td-click>
+              <td-click :value="infraTotal.infrastructure_target_2020"></td-click>
+              <td-click :value="infraTotal.infrastructure_target_2021"></td-click>
+              <td-click :value="infraTotal.infrastructure_target_2022"></td-click>
+              <td-click :value="infraTotal.infrastructure_target_2023"></td-click>
+              <td-click :value="infraTotal.infrastructure_target_2024"></td-click>
+              <td-click :value="infraTotal.infrastructure_target_2025"></td-click>
+              <td-click :value="infraTotal.infrastructure_target_total"></td-click>
+            </tr>
+            <tr>
+              <td colspan="12">
+                Actual Investments
+              </td>
+            </tr>
+            <tr>
+              <td>
+                NEP
+              </td>
+              <td-click :value="project.nep_2016" />
+              <td-click :value="project.nep_2017" />
+              <td-click :value="project.nep_2018" />
+              <td-click :value="project.nep_2019" />
+              <td-click :value="project.nep_2020" />
+              <td-click :value="project.nep_2021" />
+              <td-click :value="project.nep_2022" />
+              <td-click :value="project.nep_2023" />
+              <td-click :value="project.nep_2024" />
+              <td-click :value="project.nep_2025" />
+              <td-click :value="project.nep_total" />
+            </tr>
+            <tr>
+              <td>
+                GAA
+              </td>
+              <td-click :value="project.gaa_2016" />
+              <td-click :value="project.gaa_2017" />
+              <td-click :value="project.gaa_2018" />
+              <td-click :value="project.gaa_2019" />
+              <td-click :value="project.gaa_2020" />
+              <td-click :value="project.gaa_2021" />
+              <td-click :value="project.gaa_2022" />
+              <td-click :value="project.gaa_2023" />
+              <td-click :value="project.gaa_2024" />
+              <td-click :value="project.gaa_2025" />
+              <td-click :value="project.gaa_total" />
+            </tr>
+            <tr>
+              <td>
+                Disbursement
+              </td>
+              <td-click :value="project.disbursement_2016" />
+              <td-click :value="project.disbursement_2017" />
+              <td-click :value="project.disbursement_2018" />
+              <td-click :value="project.disbursement_2019" />
+              <td-click :value="project.disbursement_2020" />
+              <td-click :value="project.disbursement_2021" />
+              <td-click :value="project.disbursement_2022" />
+              <td-click :value="project.disbursement_2023" />
+              <td-click :value="project.disbursement_2024" />
+              <td-click :value="project.disbursement_2025" />
+              <td-click :value="project.disbursement_total" />
+            </tr>
+            </tbody>
+          </q-markup-table>
+
+        </div>
+      </q-card-section>
+    </card-info>
+  </div>
 </template>
 
 <script>
 	import { date } from 'quasar';
 	import CopyTd from './financials/CopyTd';
-	import { LabelValue,
-		LabelList,
-		LabelTable,
-		SectionHeader} from '@/ui'
+	import {
+	  LabelValue,
+		SectionHeader} from 'src/ui'
 	import VfsFinancials from './financials/VfsFinancials'
 	import VrFinancials from './financials/VrFinancials'
 	import VfsInfrastructures from './financials/VfsInfrastructures'
 	import KeyFacts from './shared/KeyFacts'
+  import CardInfo from "components/projects/shared/CardInfo";
+  import TdClick from "components/projects/shared/TdClick";
 
 	export default {
 		components: {
+      TdClick,
+      CardInfo,
 			KeyFacts,
 			VfsInfrastructures,
 			VrFinancials,
 			VfsFinancials,
 			CopyTd,
-			LabelTable,
-			LabelList,
 			LabelValue,
 			SectionHeader
 		},

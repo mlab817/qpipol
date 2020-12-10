@@ -1,7 +1,7 @@
 <template>
-	<div>
+	<div class="column">
 		<div class="row">
-			<q-item-label header>{{label}}</q-item-label>
+			<q-item-label header>{{ label }}</q-item-label>
 		</div>
 		<div class="row text-black q-pa-md">
 			<slot />

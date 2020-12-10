@@ -7,42 +7,41 @@
 		:columns="columns"
 		bordered
 		flat>
-		<template v-slot:top-right>
-			<q-toggle label="Toggle Copy" @input="copyMode = !copyMode" :value="copyMode" color="secondary" />
-		</template>
 		<template v-slot:body="props">
 			<q-tr :props="props">
 				<q-td>
 					{{props.row.funding_source && props.row.funding_source.name}}
 				</q-td>
-				<copy-td :value="col.value" v-for="(col, index) in props.cols.filter(c => c.name !== 'funding_source')" :key="index" :copy-mode="copyMode" />
+				<td-click :value="col.value" v-for="(col, index) in props.cols.filter(c => c.name !== 'funding_source')" :key="index" />
 			</q-tr>
 		</template>
 		<template v-slot:bottom-row>
 			<q-tr>
 				<q-td>Total</q-td>
-				<copy-td :value="totalRow.investment_target_2016" :copy-mode="copyMode" />
-				<copy-td :value="totalRow.investment_target_2017" :copy-mode="copyMode" />
-				<copy-td :value="totalRow.investment_target_2018" :copy-mode="copyMode" />
-				<copy-td :value="totalRow.investment_target_2019" :copy-mode="copyMode" />
-				<copy-td :value="totalRow.investment_target_2020" :copy-mode="copyMode" />
-				<copy-td :value="totalRow.investment_target_2021" :copy-mode="copyMode" />
-				<copy-td :value="totalRow.investment_target_2022" :copy-mode="copyMode" />
-				<copy-td :value="totalRow.investment_target_2023" :copy-mode="copyMode" />
-				<copy-td :value="totalRow.investment_target_2024" :copy-mode="copyMode" />
-				<copy-td :value="totalRow.investment_target_2025" :copy-mode="copyMode" />
-				<copy-td :value="totalRow.investment_target_total" :copy-mode="copyMode" />
+				<td-click :value="totalRow.investment_target_2016" />
+				<td-click :value="totalRow.investment_target_2017" />
+				<td-click :value="totalRow.investment_target_2018" />
+				<td-click :value="totalRow.investment_target_2019" />
+				<td-click :value="totalRow.investment_target_2020" />
+				<td-click :value="totalRow.investment_target_2021" />
+				<td-click :value="totalRow.investment_target_2022" />
+				<td-click :value="totalRow.investment_target_2023" />
+				<td-click :value="totalRow.investment_target_2024" />
+				<td-click :value="totalRow.investment_target_2025" />
+				<td-click :value="totalRow.investment_target_total" />
 			</q-tr>
 		</template>
 	</q-table>
 </template>
 
 <script>
-	import CopyTd from './CopyTd'
+  import TdClick from "components/projects/shared/TdClick";
 
 	export default {
 		name: 'VfsFinancials',
-		components: {CopyTd},
+		components: {
+		  TdClick
+    },
 		props: ['data'],
 		computed: {
 			totalRow() {
@@ -62,7 +61,7 @@
 					investment_target_total: 0,
 				}
 
-				data.reduce((acc, item) => {
+				data && data.reduce((acc, item) => {
 					acc['investment_target_2016'] += item['investment_target_2016']
 					acc['investment_target_2017'] += item['investment_target_2017']
 					acc['investment_target_2018'] += item['investment_target_2018']
