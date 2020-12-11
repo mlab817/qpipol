@@ -40,7 +40,7 @@
         style="margin-bottom: 70px;"
       >
 
-        <q-card square bordered flat class="bg-grey-2">
+        <card-info>
           <section-header
             title="Program Information"
             description="This will serve as tags for classification of the PAP." />
@@ -52,9 +52,9 @@
 
             <banner-program v-model="project.banner_program_id" />
           </q-card-section>
-        </q-card>
+        </card-info>
 
-        <q-card square bordered flat>
+        <card-info square bordered flat>
           <section-header title="General Information"></section-header>
 
           <q-card-section class="q-gutter-y-md">
@@ -84,9 +84,9 @@
               hint="Identify the Components of the Program/Project. If a Program, please identify the sub-programs/projects and explain the objective of the program/project in terms of responding to the PDP/RM."
             />
           </q-card-section>
-        </q-card>
+        </card-info>
 
-        <q-card square bordered flat class="bg-grey-2 q-mt-md">
+        <card-info>
           <section-header title="Implementing Agency" icon="account_balance"></section-header>
 
           <q-card-section>
@@ -95,10 +95,10 @@
               multiple
             ></implementing-agency>
           </q-card-section>
-        </q-card>
+        </card-info>
 
 
-        <q-card square bordered flat class="bg-grey-2 q-mt-md">
+        <card-info>
           <section-header title="Spatial Coverage" icon="map"></section-header>
 
           <q-card-section class="q-gutter-y-md">
@@ -113,12 +113,14 @@
               label="Region/s (select all that applies)"
             ></regions>
           </q-card-section>
-        </q-card>
+        </card-info>
 
-        <section-header
-          sectionTitle="Project for Inclusion in Which Programming Document"
-        ></section-header>
-        <q-card square bordered flat>
+
+        <card-info>
+          <section-header
+            title="Project for Inclusion in Which Programming Document"
+          ></section-header>
+
           <q-card-section>
             <div class="row q-col-gutter-sm">
               <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -170,12 +172,14 @@
               </div>
             </div>
           </q-card-section>
-        </q-card>
+        </card-info>
 
-				<section-header
-					sectionTitle="Three-Year Rolling Investment Program (Required only for TRIP PAPs)"
-				></section-header>
-				<q-card square flat bordered>
+				<card-info>
+          <section-header
+            title="Three-Year Rolling Investment Program (Required only for TRIP PAPs)"
+            icon="construction"
+          ></section-header>
+
 					<q-card-section class="q-gutter-sm">
 						<div class="row q-col-gutter-sm">
 							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -199,12 +203,13 @@
 							/>
 						</div>
 					</q-card-section>
-				</q-card>
+				</card-info>
 
-        <section-header
-          sectionTitle="Physical and Financial Status"
-        ></section-header>
-        <q-card square flat bordered>
+        <card-info>
+          <section-header
+            title="Physical and Financial Status"
+          ></section-header>
+
           <q-card-section class="q-gutter-sm">
             <project-status
               v-model="project.project_status_id"
@@ -339,7 +344,7 @@
               :rules="rules.required"
             />
           </q-card-section>
-        </q-card>
+        </card-info>
 
         <card-info>
           <section-header
@@ -382,14 +387,19 @@
           </q-card-section>
         </card-info>
 
-        <text-input
-          class="q-my-sm"
-          v-model="project.expected_outputs"
-          label="Expected Outputs"
-          type="textarea"
-          :rules="rules.required"
-          hint="Actual Deliverables, i.e. 100km of paved roads"
-        />
+        <card-info>
+          <section-header title="Expected Outputs"></section-header>
+          <q-card-section>
+            <text-input
+              class="q-my-sm"
+              v-model="project.expected_outputs"
+              label="Expected Outputs"
+              type="textarea"
+              :rules="rules.required"
+              hint="Actual Deliverables, i.e. 100km of paved roads"
+            />
+          </q-card-section>
+        </card-info>
 
         <card-info>
           <section-header title="Ten Point Agenda"></section-header>
@@ -399,7 +409,6 @@
             ></ten-point-agenda>
           </q-card-section>
         </card-info>
-
 
         <card-info>
           <section-header
@@ -413,24 +422,23 @@
           </q-card-section>
         </card-info>
 
-        <template v-if="project.cip">
+        <card-info>
           <section-header
-            sectionTitle="Gender and Development Responsiveness"
+            title="Gender and Development Responsiveness"
           ></section-header>
-          <q-card square flat bordered>
-            <q-card-section class="q-gutter-y-md">
-              <q-item-label class="text-caption">Required if CIP</q-item-label>
-              <gad
-                v-model="project.gad_id"
-                class="col"
-                :rules="rules.required"
-              />
-            </q-card-section>
-          </q-card>
-        </template>
 
-        <section-header sectionTitle="Implementation Period"></section-header>
-        <q-card square flat bordered>
+          <q-card-section class="q-gutter-y-md">
+            <q-item-label class="text-caption">Required if CIP</q-item-label>
+            <gad
+              v-model="project.gad_id"
+              class="col"
+              :rules="rules.required"
+            />
+          </q-card-section>
+        </card-info>
+
+        <card-info>
+          <section-header title="Implementation Period"></section-header>
           <q-card-section class="row q-col-gutter-sm">
             <div class="col">
 							<years
@@ -447,12 +455,13 @@
 								:min-value="project.target_start_year" />
             </div>
           </q-card-section>
-        </q-card>
+        </card-info>
 
-        <section-header
-          sectionTitle="Project Preparation Details"
-        ></section-header>
-        <q-card square flat bordered>
+        <card-info>
+          <section-header
+            title="Project Preparation Details"
+          ></section-header>
+
           <q-card-section class="q-gutter-sm">
             <project-document
               v-model="project.project_preparation_document_id"
@@ -513,11 +522,13 @@
               v-if="project.project_preparation_document_id === '99'"
             />
           </q-card-section>
-        </q-card>
+        </card-info>
 
-        <section-header sectionTitle="Pre-construction Costs"></section-header>
-        <q-card square flat bordered>
-          <q-card-section>
+
+        <card-info>
+          <section-header title="Pre-construction Costs"></section-header>
+
+          <q-card-section class="q-gutter-md">
             <checkbox-item
               v-model="project.has_row"
               label="Right of Way"
@@ -619,10 +630,11 @@
               ></text-input>
             </div>
           </q-card-section>
-        </q-card>
+        </card-info>
 
-        <section-header sectionTitle="Employment Generation"></section-header>
-        <q-card square flat bordered>
+        <card-info>
+          <section-header title="Employment Generation"></section-header>
+
           <q-card-section>
             <text-input
               v-model="project.employment_generated"
@@ -631,47 +643,45 @@
 							with-na
             />
           </q-card-section>
-        </q-card>
+        </card-info>
 
-        <section-header
-          sectionTitle="Funding Source and Mode of Implementation"
-        ></section-header>
-        <q-card square flat bordered>
-          <q-card-section>
-            <div class="row q-col-gutter-sm">
-              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <funding-source
-                  label="Main Funding Source"
-                  v-model="project.main_funding_source_id"
-									:rules="rules.required"
-                  class="q-mb-sm"
-                />
-                <q-item-label class="text-weight-bold text-caption"
-                  >Other Funding Sources</q-item-label
-                >
-                <q-option-group
-                  type="checkbox"
-                  v-model="project.selected_funding_sources"
-                  label="Other Funding Sources"
-                  :options="filteredFs"
-                ></q-option-group>
-              </div>
-              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <funding-institution
-                  v-model="project.funding_institution_id"
-                  :rules="rules.required"
-                ></funding-institution>
+        <card-info>
+          <section-header
+            title="Funding Source and Mode of Implementation"
+          ></section-header>
 
-                <implementation-mode
-                  v-model="project.implementation_mode_id"
-                  :rules="rules.required"
-                ></implementation-mode>
-              </div>
+          <q-card-section class="row q-col-gutter-md">
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 q-gutter-md">
+              <funding-source
+                label="Main Funding Source"
+                v-model="project.main_funding_source_id"
+                :rules="rules.required"
+                class="q-mb-sm"
+              />
+              <q-item-label class="text-weight-bold text-caption"
+                >Other Funding Sources</q-item-label
+              >
+              <q-option-group
+                type="checkbox"
+                v-model="project.selected_funding_sources"
+                label="Other Funding Sources"
+                :options="filteredFs"
+              ></q-option-group>
+            </div>
+
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 q-gutter-md">
+              <funding-institution
+                v-model="project.funding_institution_id"
+                :rules="project.main_funding_source_id === '2' || project.main_funding_source_id === '3' ? rules.required : []"
+              ></funding-institution>
+
+              <implementation-mode
+                v-model="project.implementation_mode_id"
+                :rules="rules.required"
+              ></implementation-mode>
             </div>
           </q-card-section>
-        </q-card>
-
-
+        </card-info>
 
         <q-card square flat bordered class="q-mt-md bg-grey-2">
           <section-header title="Project Cost" description="Some description"></section-header>

@@ -659,8 +659,8 @@ type Project {
   funding_source_infrastructures: [FundingSourceInfrastructure]
   infrastructure_subsectors: [InfrastructureSubsector]
   selected_infrastructure_subsectors: [ID]
-  preparation_document_id: ID
-  preparation_document: ProjectPreparationDocument
+  project_preparation_document_id: ID
+  project_preparation_document: ProjectPreparationDocument
   preparation_document_others: String
   selected_funding_sources: [ID]
   cip_type_id: ID
@@ -671,6 +671,10 @@ type Project {
   pipol_status: PipolStatus
   team: Team
   team_id: ID
+  selected_implementing_agencies: [ID]
+  other_implementing_agencies: [OperatingUnit]
+  can_edit: Boolean
+  can_delete: Boolean
 }
 
 type PrexcProgram {
@@ -1554,6 +1558,7 @@ type Mutation {
   uploadSignedCopy(id: ID!, signed_copy: Upload!): Project!
   validateProject(id: ID!): Project!
   attachActivities(id: ID!, activities: [ID]): Project!
+  unfinalizeProject(id: ID!): Project!
   createRegionFinancial(input: CreateRegionFinancialInput!): RegionFinancial
   updateRegionFinancial(input: UpdateRegionFinancialInput!): RegionFinancial
   deleteRegionFinancial(id: ID!): RegionFinancial

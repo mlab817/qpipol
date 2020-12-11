@@ -32,7 +32,11 @@
 						renderValue = value
 					} else if (typeof value === 'object') {
 					  if (value instanceof Array) {
-              renderValue = value && value.length && value.map(v => v.name).join('; ')
+					    if (value.length) {
+                renderValue = value && value.length && value.map(v => v.name).join('; ')
+              } else {
+					      renderValue = '-'
+              }
             } else {
               renderValue =  value && value.name
             }
@@ -42,7 +46,7 @@
 						renderValue = value > 10000 ? value.toLocaleString() : value
 					}
 				} else {
-					renderValue = ''
+					renderValue = '-'
 				}
 				// console.info(`${value} : ${typeof value} render ${renderValue}`)
 				return renderValue

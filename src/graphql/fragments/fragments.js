@@ -34,5 +34,11 @@ export const BASIC_INFORMATION_FRAGMENT = gql`
       name
     }
     pipol_status_id
+    permissions {
+      view
+      update
+      delete
+      restore
+    }
   }
 `;

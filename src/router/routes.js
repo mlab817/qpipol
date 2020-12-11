@@ -118,7 +118,7 @@ const routes = [
   },
   {
     path: '/projects',
-    component: () => import('@/layouts/MainLayout.vue'),
+    component: () => import('src/layouts/MainLayout.vue'),
     beforeEnter: requireAuth,
     children: [
       {
@@ -140,6 +140,23 @@ const routes = [
         path: 'add',
         name: 'project-add',
         component: () => import('src/pages/ProjectAdd.vue')
+      }
+    ]
+  },
+  {
+    path: '/user',
+    component: () => import('src/layouts/MainLayout.vue'),
+    beforeEnter: requireAuth,
+    children: [
+      {
+        path: 'edit-profile',
+        name: 'edit-profile',
+        component: () => import('src/pages/EditProfile.vue')
+      },
+      {
+        path: 'edit-account',
+        name: 'edit-account',
+        component: () => import('src/pages/EditAccount.vue')
       }
     ]
   },

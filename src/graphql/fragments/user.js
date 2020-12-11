@@ -5,24 +5,27 @@ export const USER_FRAGMENT = gql`
     id
     name
     email
+    username
     verified
     profile {
-        nickname
-        position
-        operating_unit_id
-        operating_unit {
-            id
-            image
-            name
-            operating_unit_type {
-                id
-                name
-            }
-        }
-        contact_number
+      id
+      user_id
+      first_name
+      last_name
+      nickname
+      position
+      contact_number
+      avatar
+      short_description
     }
     permissions
     discord_user_id
     discord_private_channel_id
+    operating_unit_id
+    operating_unit {
+      id
+      name
+      acronym
+    }
   }
 `;

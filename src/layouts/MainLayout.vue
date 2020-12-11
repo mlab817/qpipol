@@ -2,15 +2,13 @@
   <q-layout view="lhh Lpr lFf">
     <q-header elevated>
       <q-toolbar style="height: 72px;" class="bg-white">
-        <q-avatar class="gt-md">
-          <img
-            height="32"
-            src="src/statics/app-logo-128x128.svg"
-            @click="$router.push({ name: 'home' })"
-            class="cursor-pointer"
-            alt="ipms"
-          >
-        </q-avatar>
+        <img
+          height="32"
+          src="../statics/app-logo-128x128.svg"
+          @click="$router.push({ name: 'home' })"
+          class="cursor-pointer"
+          alt="ipms"
+        >
 
         <q-input
           v-model="search"
@@ -39,6 +37,15 @@
           <q-btn color="primary" flat :icon="$q.screen.gt.md ? void 0 : 'more_vert'" :label="$q.screen.gt.md ? 'More': void 0">
             <q-menu>
               <q-list>
+                <q-item clickable v-close-popup to="/user/edit-account">
+                  <q-item-section avatar>
+                    <q-icon name="person" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Account</q-item-label>
+                  </q-item-section>
+                </q-item>
+
                 <q-item clickable v-close-popup @click="openURL('https://discord.com/app', null, { target: '_blank' })">
                   <q-item-section avatar>
                     <q-icon name="fab fa-discord" />

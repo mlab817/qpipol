@@ -11,9 +11,6 @@
     <q-item-label header class="text-uppercase text-subtitle1"
       >Key Facts</q-item-label
     >
-		<div class="row q-pa-md text-h6">
-			{{project.title}}
-		</div>
     <div class="row">
       <div class="col-4">
         <q-item>
@@ -25,7 +22,7 @@
               {{
                 project.operating_unit
                   ? project.operating_unit.name
-                  : 'Not specified'
+                  : '-'
               }}
             </q-item-label>
           </q-item-section>
@@ -42,7 +39,7 @@
               {{
                 project.main_funding_source
                   ? project.main_funding_source.name
-                  : 'Not specified'
+                  : '-'
               }}
             </q-item-label>
           </q-item-section>
@@ -53,7 +50,7 @@
         <q-item>
           <q-item-section>
             <q-item-label caption>
-              Total Project Cost (in PhP)
+              Total Investment Requirements (in PhP)
             </q-item-label>
             <q-item-label class="text-body2">
               {{ project.investment_target_total | formatMoney }}
@@ -71,7 +68,7 @@
               Duration
             </q-item-label>
             <q-item-label class="text-body2">
-              {{ project.target_start_year + ' - ' + project.target_end_year }}
+              {{ (project.target_start_year ? project.target_start_year : '')  + ' - ' + (project.target_end_year ? project.target_end_year : '') }}
             </q-item-label>
           </q-item-section>
         </q-item>
@@ -87,7 +84,7 @@
               {{
                 project.spatial_coverage
                   ? project.spatial_coverage.name
-                  : 'Not specified'
+                  : '-'
               }}
             </q-item-label>
           </q-item-section>
@@ -104,7 +101,7 @@
               {{
                 project.project_status
                   ? project.project_status.name
-                  : 'Not specified'
+                  : '-'
               }}
             </q-item-label>
           </q-item-section>
@@ -117,7 +114,7 @@
         <q-item>
           <q-item-section>
             <q-item-label caption>
-              Added by <mini-help @click="showAddedByInfo" />
+              Added by
             </q-item-label>
             <q-item-label class="text-body2">
               {{ project.creator ? project.creator.name : '' }}
@@ -136,7 +133,7 @@
               Last Updated
             </q-item-label>
             <q-item-label class="text-body2">
-              {{ project.updater ? project.updater.name : '' }}
+              {{ project.updater ? project.updater.name : '-' }}
             </q-item-label>
             <q-item-label caption>
               {{ project.updated_at | formatDateTime }}
@@ -205,12 +202,11 @@
 
 <script>
 import { date } from 'quasar';
-import CardHeader from '@/ui/cards/CardHeader';
-import { timeAgo, formatDate } from '@/filters';
-import MiniHelp from '../../../ui/buttons/MiniHelp'
+import CardHeader from 'src/ui/cards/CardHeader';
+import { timeAgo, formatDate } from 'src/filters';
 
 export default {
-  components: {MiniHelp, CardHeader },
+  components: { CardHeader },
   name: 'KeyFacts',
   props: ['project'],
   computed: {
@@ -225,15 +221,7 @@ export default {
   },
   methods: {
     timeAgo,
-    formatDate,
-	  showAddedByInfo() {
-    	this.$q.dialog({
-				title: 'Help',
-				message: 'Only the user who <strong>added</strong> the project can edit it and the reviewer assigned to the operating unit.',
-				html: true,
-				cancel: true
-			})
-		}
+    formatDate
   },
   filters: {
     formatDate(val) {

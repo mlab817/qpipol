@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<q-item-label class="text-weight-bold text-caption">
-			Inter-regional (Select all that applies) <mini-refresh @click="refetch" />
+			Regions (Select all that applies) <mini-refresh @click="refetch" />
 		</q-item-label>
 		<template v-if="$apollo.loading">
 			<q-item v-for="i in 3" :key="i">
@@ -14,8 +14,8 @@
 			</q-item>
 		</template>
 		<template v-else>
-			<q-card flat>
-				<q-card-section>
+			<q-card flat class="bg-transparent">
+				<q-card-section class="q-pa-none">
 					<list-option-group
 						v-model="model"
 						:options="filteredRegions"

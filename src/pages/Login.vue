@@ -36,7 +36,7 @@
               <q-input
                 outlined
                 v-model="username"
-                label="Username"
+                label="Username/Email"
                 lazy-rules
                 :rules="[ val => !!val || '* Required' ]"
               >

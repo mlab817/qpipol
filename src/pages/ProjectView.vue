@@ -29,12 +29,12 @@
       </q-inner-loading>
     </div>
 
-    <div class="column q-pa-md q-mb-md bg-grey-9 text-white" style="min-height: 200px; background-color: #3c3b37">
+    <div class="column q-pa-md q-mb-md bg-grey-9 text-white" style="min-height: 200px; background-color: #3c3b37" v-if="!$apollo.loading">
       <div class="row">
         <q-breadcrumbs class="text-weight-bolder text-info">
-          <q-breadcrumbs-el :label="project.prexc_program && project.prexc_program.acronym" />
-          <q-breadcrumbs-el :label="project.prexc_subprogram && project.prexc_subprogram.acronym" />
-          <q-breadcrumbs-el :label="project.prexc_activity && project.prexc_activity.acronym" />
+          <q-breadcrumbs-el :label="project.prexc_program ? project.prexc_program.acronym : '-'" />
+          <q-breadcrumbs-el :label="project.prexc_subprogram ? project.prexc_subprogram.acronym : '-'" />
+          <q-breadcrumbs-el :label="project.prexc_activity ? project.prexc_activity.acronym : '-'" />
         </q-breadcrumbs>
       </div>
 
@@ -51,8 +51,8 @@
         <q-icon name="event" />  Last updated on {{ project.updated_at | showDate }}
       </div>
       <div class="row q-py-sm justify-start">
-        <q-btn v-if="project.can_edit" icon="edit" label="Edit" outline :to="`/projects/${$route.params.slug}/edit`" />
-        <q-btn v-if="project.can_delete" icon="delete" label="Delete" outline class="q-ml-sm" @click="confirmDelete" />
+        <q-btn v-if="project.permissions.update" icon="edit" label="Edit" outline :to="`/projects/${$route.params.slug}/edit`" />
+        <q-btn v-if="project.permissions.delete" icon="delete" label="Delete" outline class="q-ml-sm" @click="confirmDelete" />
         <q-btn icon="share" label="Share" outline class="q-ml-sm" @click="shareProject" />
       </div>
     </div>

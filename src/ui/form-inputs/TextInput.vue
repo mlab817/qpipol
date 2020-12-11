@@ -13,6 +13,7 @@
       :mask="mask"
       :placeholder="placeholder"
       dense
+      counter
     >
       <template v-slot:append>
         <q-btn

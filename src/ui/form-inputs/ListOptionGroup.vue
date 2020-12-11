@@ -1,7 +1,7 @@
 <template>
-  <div class="col q-pl-sm">
+  <div class="col">
     <span class="text-caption text-weight-bold">{{ label }}</span>
-    <div class="row q-col-gutter-sm q-gutter-y-sm">
+    <div class="row q-pa-none">
       <q-item
         tag="label"
         v-for="(option, index) in options"

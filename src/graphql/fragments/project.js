@@ -329,7 +329,11 @@ export const PROJECT_FRAGMENT = gql`
 	  pipol_status_id
 	  pipol_code
     selected_implementing_agencies
-    can_edit
-    can_delete
+    permissions {
+      view
+      update
+      delete
+      restore
+    }
   }
 `;

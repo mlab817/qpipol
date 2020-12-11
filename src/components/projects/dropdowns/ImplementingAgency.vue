@@ -3,7 +3,12 @@
     <q-expansion-item>
       <template v-slot:header>
         <q-item-section>
-          Implementing Agencies (including your agency)
+          <q-item-label>
+            Implementing Agencies (including your agency)
+          </q-item-label>
+          <q-item-label caption>
+            (Click to expand)
+          </q-item-label>
         </q-item-section>
 
         <q-item-section side>

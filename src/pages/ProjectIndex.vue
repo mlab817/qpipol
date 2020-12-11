@@ -101,12 +101,12 @@
             </template>
             <q-item v-for="project in projects" :key="project.id" v-else clickable :to="`/projects/${project.slug}`">
               <q-item-section>
-                <q-item-label class="text-weight-bold">
-                  {{ project.title }}
-                </q-item-label>
-                <q-item-label :lines="2">
-                  {{ project.description }}
-                </q-item-label>
+                <q-item-label
+                  class="text-weight-bold"
+                  v-html="$options.filters.searchHighlight(project.title, search)" />
+                <q-item-label
+                  :lines="2"
+                  v-html="$options.filters.searchHighlight(project.description, search)" />
                 <q-item-label caption>
                   {{ project.creator ? project.creator.name : '' }}
                 </q-item-label>
@@ -289,21 +289,6 @@ export default {
         }
       },
       fetchPolicy: 'network-only'
-      // query: PROJECTS,
-      // variables() {
-      //   return {
-      //     where: this.where,
-      //     orderBy: this.orderBy,
-      //     first: this.first,
-      //     page: this.page
-      //   }
-      // },
-      // result({ data }) {
-      //   console.log(data.projects)
-      //   this.projects = data.projects.data
-      //   this.lastPage = data.projects.paginatorInfo.lastPage
-      //   this.total = data.projects.paginatorInfo.total
-      // }
     },
     submission_statuses: {
       query: SUBMISSION_STATUSES
@@ -511,17 +496,14 @@ export default {
     getColor(type) {
       const name = type ? type.name.toLowerCase() : ''
       switch (name) {
-        case 'activity':
-          return 'red';
-          break;
         case 'program':
           return 'primary';
           break;
-        case 'locally funded project':
-          return 'green';
-          break;
-        case 'foreign assisted project':
+        case 'project':
           return 'secondary';
+          break;
+        case 'activity':
+          return 'red';
           break;
         default:
           return 'white';
@@ -537,10 +519,29 @@ export default {
     },
     formatDate(val) {
       return timeAgo(val);
+    },
+    searchHighlight(value, search) {
+      // if (search) {
+      //   let regex = new RegExp(search, 'ig');
+      //   return value && value.replace(regex, (match) => {
+      //     return `<span class="bg-yellow-6">${match}</span>`;
+      //   });
+      // }
+
+      const keywords = search.split(/[.,\/ -]/)
+
+      return keywords.reduce((value, word) => {
+        console.log(word)
+        let regex = new RegExp(word, 'ig');
+        const valueToReturn = value && value.replace(regex, (match) => {
+          return `<span class="bg-yellow-6">${match}</span>`;
+        });
+        console.log(valueToReturn)
+        return valueToReturn
+      }, value)
+
+      // return value;
     }
-  },
-  mounted() {
-    console.log(this.where)
   }
 };
 </script>
