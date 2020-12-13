@@ -22,6 +22,7 @@
     "dev:prod": "cross-env QENV=production quasar dev",
     "dev:staging": "cross-env QENV=staging quasar dev",
     "build": "cross-env QENV=production quasar build -m pwa",
+    "build:v2": "cross-env QENV=v2 quasar build -m pwa",
     "deploy": "cross-env QENV=production firebase deploy -P default --only hosting"
   },
   "dependencies": {
