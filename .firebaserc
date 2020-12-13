@@ -1,7 +1,7 @@
 {
   "projects": {
-    "default": "da-ipms2020",
-    "staging": "staging-ipms",
-    "v2": "ipms-v2"
+    "default": "ipms-v2",
+    "production": "da-ipms2020",
+    "staging": "staging-ipms"
   }
 }
