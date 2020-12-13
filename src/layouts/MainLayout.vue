@@ -12,6 +12,7 @@
 
         <q-input
           v-model="search"
+          class="q-ml-md"
           placeholder="Search for projects"
           rounded
           outlined

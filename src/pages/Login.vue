@@ -161,9 +161,10 @@ export default {
               user
             } = res.login
             LocalStorage.set('token', access_token)
-            LocalStorage.set('user', user)
-            LocalStorage.set('loggedIn', true)
-            this.$router.replace('/dashboard')
+            this.$store.dispatch('auth/onAuthStateChanged')
+            // LocalStorage.set('user', user)
+            // LocalStorage.set('loggedIn', true)
+            // this.$router.replace('/dashboard')
           })
           .catch(err => {
             showErrorNotification(err.message)

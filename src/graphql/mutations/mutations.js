@@ -19,7 +19,10 @@ export const LOGIN_MUTATION = gql`
           id
           name
         }
-        permissions
+        permissions {
+          id
+          name
+        }
         profile {
           id
           nickname

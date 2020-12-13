@@ -18,7 +18,10 @@ export const USER_FRAGMENT = gql`
       avatar
       short_description
     }
-    permissions
+    permissions {
+      id
+      name
+    }
     discord_user_id
     discord_private_channel_id
     operating_unit_id

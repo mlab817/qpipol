@@ -16,7 +16,11 @@ const actions = {
     dispatch('getCurrentUser').then(user => {
       console.log(user)
       if (!user) {
+        LocalStorage.remove('user');
+        LocalStorage.remove('loggedIn');
         this.$router.replace('/login', {})
+      } else {
+        this.$router.push('/dashboard')
       }
     })
   },
@@ -27,6 +31,7 @@ const actions = {
   getCurrentUser({ commit }) {
     return profileService.getCurrentUser().then(res => {
       LocalStorage.set('user', res.me);
+      LocalStorage.set('loggedIn', true);
       commit('SET_USER', res.me);
       return res.me
     });

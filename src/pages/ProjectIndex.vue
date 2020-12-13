@@ -7,7 +7,7 @@
           :label="$q.screen.lt.md ? void 0 : 'Add Project'"
 					icon="add"
           to="/projects/add"
-          v-if="isEncoder"
+          v-if="me.permissions.projects.create"
         ></q-btn>
       </page-title>
     </template>
@@ -528,19 +528,21 @@ export default {
       //   });
       // }
 
-      const keywords = search.split(/[.,\/ -]/)
+      const keywords = search && search.split(/[.,\/ -]/)
 
-      return keywords.reduce((value, word) => {
-        console.log(word)
-        let regex = new RegExp(word, 'ig');
-        const valueToReturn = value && value.replace(regex, (match) => {
-          return `<span class="bg-yellow-6">${match}</span>`;
-        });
-        console.log(valueToReturn)
-        return valueToReturn
-      }, value)
+      if (keywords && keywords.length) {
+        return keywords.reduce((value, word) => {
+          console.log(word)
+          let regex = new RegExp(word, 'ig');
+          const valueToReturn = value && value.replace(regex, (match) => {
+            return `<span class="bg-yellow-6">${match}</span>`;
+          });
+          console.log(valueToReturn)
+          return valueToReturn
+        }, value)
+      }
 
-      // return value;
+      return value;
     }
   }
 };
