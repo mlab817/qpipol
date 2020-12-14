@@ -34,6 +34,7 @@
       :columns="columns"
       :pagination="pagination"
       hide-bottom
+      dense
     >
       <template v-slot:top-right>
 				<plus-button @click="addRow" />

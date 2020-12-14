@@ -4,7 +4,7 @@
     v-model="money"
     :label="label"
     :rules="rules"
-		:dense="$q.screen.lt.md"
+		dense
 		:readonly="readonly"
   >
     <template v-slot:control="{ id, floatingLabel, value, emitValue }">

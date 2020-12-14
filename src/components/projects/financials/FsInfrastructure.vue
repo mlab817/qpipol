@@ -1,59 +1,72 @@
 <template>
 	<div class="col q-pa-md">
+    {{ data }}
 		<q-dialog v-model="addDialog" full-height
-							:position="$q.screen.xs ? void 0 : 'right'"
-							persistent
-							:maximized="$q.screen.xs"
-							transition-show="jump-left"
-							transition-hide="jump-right">
+      :position="$q.screen.xs ? void 0 : 'right'"
+      persistent
+      :maximized="$q.screen.xs"
+      transition-show="jump-left"
+      transition-hide="jump-right">
 			<add-infra :taken="taken" :edit-mode="false" :infrastructure-to-edit="infrastructureToSubmit" :project-id="projectId" @close="addDialog = false" />
 		</q-dialog>
 
 		<q-dialog v-model="editDialog" full-height
-							:position="$q.screen.xs ? void 0 : 'right'"
-							persistent
-							:maximized="$q.screen.xs"
-							transition-show="jump-left"
-							transition-hide="jump-right">
+      :position="$q.screen.xs ? void 0 : 'right'"
+      persistent
+      :maximized="$q.screen.xs"
+      transition-show="jump-left"
+      transition-hide="jump-right">
 			<add-infra :taken="taken" :edit-mode="true" :infrastructure-to-edit="infrastructureToSubmit" @close="editDialog = false"/>
 		</q-dialog>
 
 		<q-table
-				flat
-				bordered
-				separator="cell"
-				wrap-cells
-				title="Total Infrastructure Requirement by Funding Source (in absolute PhP)"
-				class="col"
-				:data="data"
-				:columns="columns"
-				:pagination="pagination"
-				hide-bottom
+      flat
+      bordered
+      separator="cell"
+      wrap-cells
+      title="Total Infrastructure Requirement by Funding Source (in absolute PhP)"
+      class="col"
+      :data="data"
+      :columns="columns"
+      :pagination="pagination"
+      hide-bottom
+      dense
 		>
 			<template v-slot:top-right>
 				<plus-button @click="addRow" />
 			</template>
 
-			<template v-slot:body-cell-actions="props">
-				<q-td :props="props">
-					<q-btn
-							icon="edit"
-							flat
-							round
-							size="sm"
-							@click="editRow(props.row)"
-							color="blue"
-					/>
-					<q-btn
-							icon="delete"
-							flat
-							round
-							size="sm"
-							@click="deleteRow(props.row)"
-							color="red"
-					/>
-				</q-td>
-			</template>
+      <template v-slot:body="props">
+        <q-tr :props="props">
+          <q-td :props="props" key="funding_source">
+            {{props.row.funding_source && props.row.funding_source.name}}
+            <q-popup-edit v-model="props.row.funding_source_id">
+              <funding-source v-model="props.row.funding_source_id"></funding-source>
+            </q-popup-edit>
+          </q-td>
+        </q-tr>
+      </template>
+
+<!--			<template v-slot:body-cell-actions="props">-->
+<!--				<q-td :props="props">-->
+<!--					<q-btn-->
+<!--            icon="edit"-->
+<!--            flat-->
+<!--            round-->
+<!--            size="sm"-->
+<!--            @click="editRow(props.row)"-->
+<!--            color="blue"-->
+<!--					/>-->
+<!--					<q-btn-->
+<!--            icon="delete"-->
+<!--            flat-->
+<!--            round-->
+<!--            size="sm"-->
+<!--            @click="deleteRow(props.row)"-->
+<!--            color="red"-->
+<!--					/>-->
+<!--				</q-td>-->
+<!--			</template>-->
 
 			<template v-slot:bottom-row>
 				<q-tr class="text-weight-bold">
@@ -71,10 +84,11 @@
 	import { projectService } from 'src/services';
 	import PlusButton from '../../../ui/buttons/PlusButton'
 	import AddInfra from './AddInfra'
+  import FundingSource from "components/projects/dropdowns/FundingSource";
 
 	export default {
 		name: 'FsInfrastructure',
-		components: {AddInfra, PlusButton },
+		components: { FundingSource, AddInfra, PlusButton },
 		props: ['data', 'projectId'],
 
 		computed: {
@@ -168,7 +182,7 @@
 						name: 'funding_source',
 						label: 'Funding Source',
 						field: row => row.funding_source && row.funding_source.name,
-						align: 'left'
+						align: 'left',
 					},
 					{
 						name: 'y1',

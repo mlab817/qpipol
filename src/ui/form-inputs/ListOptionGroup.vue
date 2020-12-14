@@ -1,10 +1,13 @@
 <template>
   <div class="col">
     <span class="text-caption text-weight-bold">{{ label }}</span>
+    <div class="row q-pa-md">
+      <q-input class="col" v-model="search" filled placeholder="Filter" clearable />
+    </div>
     <div class="row q-pa-none">
       <q-item
         tag="label"
-        v-for="(option, index) in options"
+        v-for="(option, index) in filteredItems"
         :key="index"
         v-ripple
         clickable
@@ -25,13 +28,10 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-
 export default {
   name: 'ListOptionGroup',
   props: ['options', 'value', 'label'],
   computed: {
-    ...mapState('settings', ['dense']),
     model: {
       get() {
         return this.$props.value;
@@ -39,6 +39,26 @@ export default {
       set(val) {
         this.$emit('input', val);
       }
+    },
+    filteredItems() {
+      const search = this.search,
+        options = this.options
+      const needle = search && search.toLowerCase()
+      console.log(needle)
+
+      if (needle) {
+        return options.filter(o => {
+          const valueToMatch = o.label && o.label.toLowerCase() || o.name && o.name.toLowerCase() || ''
+          return valueToMatch.indexOf(needle) > -1
+        })
+      }
+
+      return options
+    }
+  },
+  data() {
+    return {
+      search: ''
     }
   }
 };

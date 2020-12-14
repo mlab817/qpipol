@@ -32,31 +32,100 @@
 				:columns="columns"
 				:pagination="pagination"
 				hide-bottom
+        dense
 		>
 			<template v-slot:top-right>
 				<plus-button @click="addRow" />
 			</template>
 
-			<template v-slot:body-cell-actions="props">
-				<q-td :props="props">
-					<q-btn
-							icon="edit"
-							flat
-							round
-							size="sm"
-							@click="editRow(props.row)"
-							color="blue"
-					/>
-					<q-btn
-							icon="delete"
-							flat
-							round
-							size="sm"
-							@click="deleteRow(props.row)"
-							color="red"
-					/>
-				</q-td>
-			</template>
+      <template v-slot:body="props">
+        <q-tr :props="props">
+          <q-td :props="props" key="funding_source">
+            {{props.row.funding_source && props.row.funding_source.name}}
+            <q-popup-edit v-model="props.row.funding_source_id">
+              <funding-source v-model="props.row.funding_source_id"></funding-source>
+            </q-popup-edit>
+          </q-td>
+          <q-td :props="props" key="investment_target_2016">
+            {{props.row.investment_target_2016 | money}}
+            <q-popup-edit v-model="props.row.investment_target_2016">
+              <money-input v-model="props.row.investment_target_2016"></money-input>
+            </q-popup-edit>
+          </q-td>
+          <q-td :props="props" key="investment_target_2017">
+            {{props.row.investment_target_2017 | money}}
+            <q-popup-edit v-model="props.row.investment_target_2017">
+              <money-input v-model="props.row.investment_target_2017"></money-input>
+            </q-popup-edit>
+          </q-td>
+          <q-td :props="props" key="investment_target_2018">
+            {{props.row.investment_target_2018 | money}}
+            <q-popup-edit v-model="props.row.investment_target_2018">
+              <money-input v-model="props.row.investment_target_2018"></money-input>
+            </q-popup-edit>
+          </q-td>
+          <q-td :props="props" key="investment_target_2019">
+            {{props.row.investment_target_2019 | money}}
+            <q-popup-edit v-model="props.row.investment_target_2019">
+              <money-input v-model="props.row.investment_target_2019"></money-input>
+            </q-popup-edit>
+          </q-td>
+          <q-td :props="props" key="investment_target_2020">
+            {{props.row.investment_target_2020 | money}}
+            <q-popup-edit v-model="props.row.investment_target_2020">
+              <money-input v-model="props.row.investment_target_2020"></money-input>
+            </q-popup-edit>
+          </q-td>
+          <q-td :props="props" key="investment_target_2021">
+            {{props.row.investment_target_2021 | money}}
+            <q-popup-edit v-model="props.row.investment_target_2021">
+              <money-input v-model="props.row.investment_target_2021"></money-input>
+            </q-popup-edit>
+          </q-td>
+          <q-td :props="props" key="investment_target_2022">
+            {{props.row.investment_target_2022 | money}}
+            <q-popup-edit v-model="props.row.investment_target_2022">
+              <money-input v-model="props.row.investment_target_2022"></money-input>
+            </q-popup-edit>
+          </q-td>
+          <q-td :props="props" key="investment_target_2023">
+            {{props.row.investment_target_2023 | money}}
+            <q-popup-edit v-model="props.row.investment_target_2023">
+              <money-input v-model="props.row.investment_target_2023"></money-input>
+            </q-popup-edit>
+          </q-td>
+          <q-td :props="props" key="investment_target_2024">
+            {{props.row.investment_target_2024 | money}}
+            <q-popup-edit v-model="props.row.investment_target_2024">
+              <money-input v-model="props.row.investment_target_2024"></money-input>
+            </q-popup-edit>
+          </q-td>
+          <q-td :props="props" key="investment_target_2025">
+            {{props.row.investment_target_2025 | money}}
+            <q-popup-edit v-model="props.row.investment_target_2025">
+              <money-input v-model="props.row.investment_target_2025"></money-input>
+            </q-popup-edit>
+          </q-td>
+          <q-td :props="props" key="investment_target_total">
+            {{props.row.investment_target_total | money}}
+            <q-popup-edit v-model="props.row.investment_target_total">
+              <money-input v-model="props.row.investment_target_total"></money-input>
+            </q-popup-edit>
+          </q-td>
+          <q-td :props="props" key="actions">
+            <q-btn
+              icon="delete"
+              flat
+              round
+              size="sm"
+              @click="deleteRow(props.row)"
+              color="red"
+            />
+          </q-td>
+        </q-tr>
+      </template>
+
+
 
 			<template v-slot:bottom-row>
 				<q-tr class="text-weight-bold">
@@ -78,10 +147,12 @@
 	import { projectService } from 'src/services';
 	import PlusButton from '../../../ui/buttons/PlusButton'
 	import AddFs from './AddFs'
+  import MoneyInput from "src/ui/form-inputs/MoneyInput";
+	import FundingSource from "components/projects/dropdowns/FundingSource";
 
 	export default {
 		name: 'FsFinancials',
-		components: { AddFs, PlusButton },
+		components: {MoneyInput, AddFs, FundingSource, PlusButton },
 		props: ['data', 'projectId'],
 
 		computed: {
@@ -178,67 +249,67 @@
 						align: 'left'
 					},
 					{
-						name: 'y1',
+						name: 'investment_target_2016',
 						label: '2016 & Prior',
 						field: row => row.investment_target_2016,
 						format: (val, row) => val && val.toLocaleString(),
 					},
 					{
-						name: 'y2',
+						name: 'investment_target_2017',
 						label: '2017',
 						field: row => row.investment_target_2017,
 						format: (val, row) => val && val.toLocaleString(),
 					},
 					{
-						name: 'y3',
+						name: 'investment_target_2018',
 						label: '2018',
 						field: row => row.investment_target_2018,
 						format: (val, row) => val && val.toLocaleString(),
 					},
 					{
-						name: 'y4',
+						name: 'investment_target_2019',
 						label: '2019',
 						field: row => row.investment_target_2019,
 						format: (val, row) => val && val.toLocaleString(),
 					},
 					{
-						name: 'y5',
+						name: 'investment_target_2020',
 						label: '2020',
 						field: row => row.investment_target_2020,
 						format: (val, row) => val && val.toLocaleString(),
 					},
 					{
-						name: 'y6',
+						name: 'investment_target_2021',
 						label: '2021',
 						field: row => row.investment_target_2021,
 						format: (val, row) => val && val.toLocaleString(),
 					},
 					{
-						name: 'y7',
+						name: 'investment_target_2022',
 						label: '2022',
 						field: row => row.investment_target_2022,
 						format: (val, row) => val && val.toLocaleString(),
 					},
 					{
-						name: 'y8',
+						name: 'investment_target_2023',
 						label: '2023',
 						field: row => row.investment_target_2023,
 						format: (val, row) => val && val.toLocaleString(),
 					},
 					{
-						name: 'y9',
+						name: 'investment_target_2024',
 						label: '2024',
 						field: row => row.investment_target_2024,
 						format: (val, row) => val && val.toLocaleString(),
 					},
 					{
-						name: 'y10',
+						name: 'investment_target_2025',
 						label: '2025 & Beyond',
 						field: row => row.investment_target_2025,
 						format: (val, row) => val && val.toLocaleString(),
 					},
 					{
-						name: 'total',
+						name: 'investment_target_total',
 						label: 'Total',
 						field: row =>
 							row.investment_target_2016 +
@@ -253,19 +324,18 @@
 							row.investment_target_2025,
 						format: (val, row) => val && val.toLocaleString(),
 					},
-					{
-						name: 'actions',
-						label: 'Actions',
-						align: 'center'
-					}
+          {
+            name: 'actions',
+            label: ''
+          }
 				]
 			};
 		},
 		methods: {
 			addRow() {
 				// console.log('add row')
-				this.investmentToSubmit = {
-					// id: null,
+				const investmentToSubmit = {
+					id: null,
 					funding_source_id: null,
 					investment_target_2016: 0,
 					investment_target_2017: 0,
@@ -279,7 +349,8 @@
 					investment_target_2025: 0
 				};
 
-				this.addDialog = true;
+				// this.addDialog = true;
+        this.data.push(investmentToSubmit)
 			},
 			editRow(row) {
 				const {
@@ -329,6 +400,11 @@
 							.then(() => this.$q.loading.hide());
 					});
 			}
-		}
+		},
+    filters: {
+		  money(val) {
+		    return val && val.toLocaleString()
+      }
+    }
 	};
 </script>

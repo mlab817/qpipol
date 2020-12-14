@@ -649,8 +649,8 @@
         </q-card-section>
       </card-info>
 
-      <q-card square flat bordered class="q-mt-md bg-grey-2">
-        <section-header title="Project Cost" description="Some description"></section-header>
+      <card-info>
+        <section-header title="Project Cost"></section-header>
 
         <div class="row">
           <fs-infrastructure
@@ -672,9 +672,9 @@
             :project-id="project.id"
           />
         </div>
-      </q-card>
+      </card-info>
 
-      <q-card square bordered flat class="bg-grey-2 q-mt-md">
+      <card-info>
         <section-header
           title="Financial Accomplishments"
           description="Only GAA funds are accounted for in the accomplishments"
@@ -693,6 +693,7 @@
               class="col bg-transparent"
               wrap-cells
               square
+              dense
             >
               <thead>
                 <tr>
@@ -955,7 +956,7 @@
             <span class="text-caption">* Note: Actual Disbursement data must be as of September 30, 2020.</span>
           </div>
         </q-card-section>
-      </q-card>
+      </card-info>
 
       <!-- Edit Resettlement Action Plan Cost Dialog -->
       <q-dialog
@@ -1151,7 +1152,7 @@
 
 <script>
 import {
-  FETCH_FUNDING_SOURCES, FETCH_REGIONS
+  FETCH_FUNDING_SOURCES
 } from 'src/graphql';
 import BudgetTier from './dropdowns/BudgetTier';
 import CipTypes from './dropdowns/CipTypes';
@@ -1250,9 +1251,6 @@ export default {
           };
         });
       }
-    },
-    regions: {
-      query: FETCH_REGIONS
     }
   },
 
