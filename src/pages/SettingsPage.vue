@@ -18,7 +18,9 @@
           color="grey-8"
           icon="fab fa-discord"
           :label="discord ? 'CONNECTED' : 'CONNECT'"
-          @click="confirmDiscord"></q-btn>
+          type="a"
+          target="_blank"
+          :href="discordLoginUri" />
       </div>
     </div>
 
@@ -61,7 +63,8 @@ export default {
     return {
       compact: true,
       shortcuts: [],
-      changeLogDialog: false
+      changeLogDialog: false,
+      discordLoginUri: process.env.DISCORD_LOGIN_URI
     };
   },
 
@@ -85,7 +88,7 @@ export default {
         });
     },
     confirmDiscord() {
-      openURL('http://ipmsv2.test/auth/discord', null, {
+      openURL(process.env.DISCORD_LOGIN_URI, null, {
         target: '_blank'
       })
     }

@@ -15,7 +15,7 @@
           <text-input v-model="profileToEdit.position" placeholder="Position/Designation" />
           <text-input v-model="profileToEdit.contact_number" placeholder="Contact Number(s)" />
           <div class="row justify-center">
-            <q-btn label="Save" color="primary" no-caps type="submit" />
+            <q-btn label="Save" color="primary" no-caps type="submit" :loading="loading" />
           </div>
         </q-form>
       </q-card-section>
@@ -27,6 +27,7 @@
 import PageContainer from "src/ui/page/PageContainer";
 import TextInput from "src/ui/form-inputs/TextInput";
 import { UPDATE_PROFILE } from "src/graphql";
+import { showSuccessNotification } from "src/functions";
 
 export default {
   components: {TextInput, PageContainer },
@@ -34,11 +35,13 @@ export default {
   data() {
     return {
       profileToEdit: {},
-      id: null
+      id: null,
+      loading: false
     }
   },
   methods: {
-    handleSubmit() {
+    handleSubmit: function () {
+      this.loading = true
       // handle submit
       const profileToEdit = this.profileToEdit
       delete profileToEdit.__typename
@@ -52,8 +55,11 @@ export default {
           }
         }
       }).then(() => {
+        showSuccessNotification()
         this.$store.dispatch('auth/getCurrentUser')
       })
+        .catch(err => console.log(err.message))
+        .finally(() => (this.loading = false))
     }
   },
   mounted() {

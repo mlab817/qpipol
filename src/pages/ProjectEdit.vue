@@ -1,11 +1,5 @@
 <template>
   <page-container>
-    <template v-slot:title>
-      <page-title title="Update Project" icon="edit">
-				<refresh-button @click="refetchProject" />
-      </page-title>
-    </template>
-
     <div style="position: relative;">
       <div class="text-h6" v-if="$apollo.loading">Loading...</div>
       <template v-else>
@@ -32,26 +26,22 @@
           </div>
         </div>
 
-        <edit-pipol @saved="saved = true" :project="project" ></edit-pipol>
+        <edit-pipol :project="project" ></edit-pipol>
       </template>
     </div>
   </page-container>
 </template>
 
 <script>
-import PageTitle from '@/ui/page/PageTitle';
-import PageContainer from '@/ui/page/PageContainer';
+import PageContainer from 'src/ui/page/PageContainer';
 import EditPipol from '../components/projects/EditPipol';
-import { FETCH_PROJECT_QUERY } from '@/graphql';
-import RefreshButton from '../ui/buttons/RefreshButton'
-import {PROJECT_FIND_BY_SLUG} from "src/graphql";
+import { PROJECT_FIND_BY_SLUG } from "src/graphql";
+import {date} from "quasar";
 
 export default {
   components: {
-	  RefreshButton,
     EditPipol,
     PageContainer,
-    PageTitle
   },
 
   name: 'PageEditProject',
@@ -101,12 +91,11 @@ export default {
     } else {
       next();
     }
+  },
+  filters: {
+    showDate(val) {
+      return date.formatDate(val, 'MMM D, YYYY hh:mm:ss A');
+    }
   }
 };
 </script>
-
-<style scoped>
-hr >>> .q-separator {
-  width: 5px;
-}
-</style>

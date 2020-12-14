@@ -89,20 +89,7 @@ const actions = {
 };
 
 const mutations = {
-  SET_LOADING(state, payload) {
-    state.loading = payload;
-  },
-  SET_ERROR(state, payload) {
-    state.error = payload;
-  },
-  CLEAR_ERROR(state) {
-    state.error = null;
-  },
-  SET_ERROR_MESSAGE(state, payload) {
-    state.errorMessage = payload;
-  },
   SET_USER(state, payload) {
-    state.user = payload;
     state.me = payload;
   },
   CLEAR_USER(state) {
@@ -110,174 +97,11 @@ const mutations = {
   },
   CLEAR_TOKEN(state) {
     state.token = null;
-  },
-  SET_LOGGED_IN(state, payload) {
-    state.loggedIn = payload;
-  },
-  SET_TOKEN(state, payload) {
-    state.token = payload;
-  },
-  SET_EMAIL(state, payload) {
-    state.email = payload;
-  },
-  SET_ID(state, payload) {
-    state.id = payload;
-  },
-  SET_NAME(state, payload) {
-    state.name = payload;
-  },
-  SET_IMAGE_URL(state, payload) {
-    state.image_url = payload;
-  },
-  SET_OPERATING_UNIT(state, payload) {
-    state.operating_unit = payload;
-  },
-  SET_OPERATING_UNIT_ID(state, payload) {
-    state.operating_unit_id = payload;
-  },
-  SET_VERIFIED(state, payload) {
-    state.verified = payload;
-  },
-  SET_CONTACT_NUMBER(state, payload) {
-    state.contact_number = payload;
-  },
-  SET_POSITION(state, payload) {
-    state.position = payload;
-  },
-  SET_ROLE(state, payload) {
-    state.role = payload;
-  },
-  SET_USER_LOADED(state, payload) {
-    state.userLoaded = payload;
-  },
-  SET_UNREAD_NOTIFICATIONS(state, payload) {
-    state.unreadNotifications = payload;
-  },
-  SET_NOTIFICATIONS(state, payload) {
-    state.notifications = payload;
-  },
-  SET_ME(state, payload) {
-    state.me = payload;
-  },
-  SET_SHOW_VALIDATE_EMAIL_REMINDER(state, payload) {
-    state.showValidateEmailReminder = payload;
   }
 };
 
 const getters = {
-  avatar(state) {
-    if (state.user && state.user.avatar) {
-      return state.user.avatar;
-    } else {
-      return 'statics/default.png';
-    }
-  },
-  unreadNotifications(state) {
-    let unreadNotifications = [];
-    if (state.user && state.user.unreadNotifications) {
-      unreadNotifications = state.user.unreadNotifications;
-    }
-    return unreadNotifications;
-  },
-  isLoggedIn(state) {
-    return !!state.user;
-  },
-  loading(state) {
-    return state.loading;
-  },
-  error(state) {
-    return state.error;
-  },
-  user(state) {
-    return state.user;
-  },
-  isReviewer(state) {
-    if (state.user) {
-      return state.user.role ? state.user.role.name === 'reviewer' : false;
-    }
-    return false;
-  },
-  isLead(state) {
-    if (state.user) {
-      return state.user.role ? state.user.role.name === 'lead' : false;
-    }
-    return false;
-  },
-  isChief(state) {
-    if (state.user) {
-      return state.user.role ? state.user.role.name === 'chief' : false;
-    }
-    return false;
-  },
-  isSuperadmin(state) {
-    if (state.user) {
-      return state.user.role ? state.user.role.name === 'superadmin' : false;
-    }
-    return false;
-  },
-  isAdmin(state) {
-    if (state.user) {
-      return state.user.role
-        ? state.user.role.name === 'admin' ||
-            state.user.role.name === 'superadmin'
-        : false;
-    }
-    return false;
-  },
-  isEncoder(state) {
-    if (state.user) {
-      return state.user.role ? state.user.role.name === 'encoder' : false;
-    }
-    return false;
-  },
-  isVerified(state) {
-    if (state.user) {
-      return state.user.verified;
-    }
-    return false;
-  },
-  role(state) {
-    if (state.user) {
-      return state.user.role && state.user.role.name;
-    }
-    return null;
-  },
-  operatingUnitId(state) {
-    if (state.user) {
-      return state.user.operating_unit ? state.user.operating_unit.id : null;
-    }
-    return null;
-  },
-  compact(state) {
-    if (state.user && state.user.setting) {
-      return state.user.setting.compact;
-    }
-    return false;
-  },
-  dark(state) {
-    if (state.user && state.user.setting) {
-      return state.user.setting.dark;
-    }
-    return false;
-  },
-  isAa(state) {
-    if (state.user && state.user.operating_unit && state.user.operating_unit.operating_unit_type) {
-      return state.user.operating_unit.operating_unit_type.name === 'attached-agency'
-    }
-    return false
-  },
-  isAc(state) {
-    if (state.user && state.user.operating_unit && state.user.operating_unit.operating_unit_type) {
-      return state.user.operating_unit.operating_unit_type.name === 'attached-corporation'
-    }
-    return false
-  },
-  consolidates(state) {
-    if (state.user && state.user.consolidates && state.user.consolidates.length) {
-      return state.user.consolidates.map(x => x.name).join(', ')
-    }
-    return null
-  }
+  user: (state) => state.me
 };
 
 export default {

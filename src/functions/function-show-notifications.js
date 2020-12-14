@@ -1,16 +1,15 @@
 import { Notify } from 'quasar';
 
-export const showSuccessNotification = ({
+export const showSuccessNotification = (
   message = 'Success',
   icon = 'check',
   actions = null
-}) => {
+) => {
   Notify.create({
-    icon: icon,
-    position: 'bottom-right',
-    color: 'primary',
+    type: 'positive',
+    position: 'top-right',
     message: message,
-    timeout: 5000,
+    timeout: 2000,
     progress: true,
     actions: actions
   });
