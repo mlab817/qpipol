@@ -50,10 +50,10 @@
         <q-item>
           <q-item-section>
             <q-item-label caption>
-              Total Investment Requirements (in PhP)
+              Total Investment Requirements
             </q-item-label>
             <q-item-label class="text-body2">
-              {{ project.investment_target_total | formatMoney }}
+              PhP {{ project.investment_target_total | formatMoney }}
             </q-item-label>
           </q-item-section>
         </q-item>
@@ -65,7 +65,7 @@
         <q-item>
           <q-item-section>
             <q-item-label caption>
-              Duration
+              Implementation Period
             </q-item-label>
             <q-item-label class="text-body2">
               {{ (project.target_start_year ? project.target_start_year : '')  + ' - ' + (project.target_end_year ? project.target_end_year : '') }}
@@ -151,9 +151,9 @@
 						<q-item-label class="text-body2">
 							<q-badge>
 								{{
-								project.submission_status
-								? project.submission_status.name
-								: ''
+                  project.submission_status
+                  ? project.submission_status.name
+                  : ''
 								}}
 							</q-badge>
 						</q-item-label>
@@ -161,64 +161,16 @@
 				</q-item>
 			</div>
     </div>
-
-    <q-dialog v-model="history">
-      <q-card square style="min-width:360px">
-        <card-header title="History" @close="history = false"></card-header>
-        <q-card-section class="q-pa-none">
-          <template v-if="project.project_processing_statuses && project.project_processing_statuses.length">
-            <q-markup-table class="col" flat wrap-cells bordered square>
-              <thead>
-                <tr>
-                  <th>Status</th>
-                  <th>Processed by</th>
-                  <th>Processed on</th>
-                  <th>Remarks</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  v-for="pps in project.project_processing_statuses"
-                  :key="pps.id"
-                >
-                  <td class="text-uppercase">
-                    {{ pps.processing_status.name }}
-                  </td>
-                  <td>{{ pps.processor ? pps.processor.name : '' }}</td>
-                  <td>{{ pps.processed_at | formatDate }}</td>
-                  <td>{{ pps.remarks }}</td>
-                </tr>
-              </tbody>
-            </q-markup-table>
-          </template>
-          <template v-else>
-            No information available.
-          </template>
-        </q-card-section>
-      </q-card>
-    </q-dialog>
   </q-card>
 </template>
 
 <script>
 import { date } from 'quasar';
-import CardHeader from 'src/ui/cards/CardHeader';
 import { timeAgo, formatDate } from 'src/filters';
 
 export default {
-  components: { CardHeader },
   name: 'KeyFacts',
   props: ['project'],
-  computed: {
-    dark() {
-      return this.$store.state.settings.dark;
-    }
-  },
-  data() {
-    return {
-      history: false
-    };
-  },
   methods: {
     timeAgo,
     formatDate

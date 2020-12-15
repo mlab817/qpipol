@@ -44,7 +44,7 @@
           </div>
           <div class="col-md-3 col-sm-12 col-xs-12">
             <q-card>
-              <q-item style="background-color: #f88c2b" class="q-pa-none">
+              <q-item style="background-color: #f88c2b" class="q-pa-none" clickable to="/users">
                 <q-item-section class=" q-pa-md q-ml-none  text-white">
                   <q-item-label class="text-white text-h6 text-weight-bolder">82</q-item-label>
                   <q-item-label>Active Users</q-item-label>

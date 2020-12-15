@@ -1,6 +1,7 @@
 <template>
   <div class="column">
-    <q-item-label header class="q-pa-none text-weight-bold text-black text-caption">Locally-funded or Foreign-assisted
+    <q-item-label header class="q-pa-none text-weight-bold text-black text-caption">
+      PAP Type
       <mini-refresh @click="refetch" />
     </q-item-label>
     <radio-input
@@ -13,9 +14,8 @@
 </template>
 
 <script>
-import { RadioInput } from '@/ui'
+import { RadioInput, MiniRefresh } from 'src/ui'
 import { FETCH_TYPES } from 'src/graphql'
-import { MiniRefresh } from '@/ui'
 
 export default {
   components: {

@@ -13,7 +13,7 @@
 
         <q-item-section side>
           <div class="row items-center">
-            {{model.length}} selected
+            {{model && model.length}} selected
           </div>
         </q-item-section>
       </template>

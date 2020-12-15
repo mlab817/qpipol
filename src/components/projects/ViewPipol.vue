@@ -234,7 +234,7 @@
           <q-item-label class="text-weight-bold text-caption"
           >Feasibility Study Cost (in absolute PhP)</q-item-label
           >
-          <q-markup-table flat bordered class="col bg-transparent">
+          <q-markup-table flat bordered class="col bg-transparent" dense>
             <thead>
             <tr>
               <th></th>
@@ -251,13 +251,13 @@
             <tbody>
             <tr>
               <td>Feasibility Study</td>
-              <copy-td :copy-mode="copyMode" :value="project.fs_target_2017" />
-              <copy-td :copy-mode="copyMode" :value="project.fs_target_2018" />
-              <copy-td :copy-mode="copyMode" :value="project.fs_target_2019" />
-              <copy-td :copy-mode="copyMode" :value="project.fs_target_2020" />
-              <copy-td :copy-mode="copyMode" :value="project.fs_target_2021" />
-              <copy-td :copy-mode="copyMode" :value="project.fs_target_2022" />
-              <copy-td :copy-mode="copyMode" :value="project.fs_target_total" />
+              <td-click :value="project.fs_target_2017" />
+              <td-click :value="project.fs_target_2018" />
+              <td-click :value="project.fs_target_2019" />
+              <td-click :value="project.fs_target_2020" />
+              <td-click :value="project.fs_target_2021" />
+              <td-click :value="project.fs_target_2022" />
+              <td-click :value="project.fs_target_total" />
             </tr>
             </tbody>
           </q-markup-table>
@@ -280,10 +280,11 @@
 
         <div class="row" v-if="project.has_row">
           <q-markup-table
-              flat
-              bordered
-              class="col bg-transparent"
-              wrap-cells
+            flat
+            bordered
+            class="col bg-transparent"
+            wrap-cells
+            dense
           >
             <thead>
             <tr>
@@ -300,13 +301,13 @@
             <tbody>
             <tr>
               <td>Right of Way</td>
-              <copy-td :value="project.row_target_2017" />
-              <copy-td :value="project.row_target_2018" />
-              <copy-td :value="project.row_target_2019" />
-              <copy-td :value="project.row_target_2020" />
-              <copy-td :value="project.row_target_2021" />
-              <copy-td :value="project.row_target_2022" />
-              <copy-td :value="project.row_target_total" />
+              <td-click :value="project.row_target_2017" />
+              <td-click :value="project.row_target_2018" />
+              <td-click :value="project.row_target_2019" />
+              <td-click :value="project.row_target_2020" />
+              <td-click :value="project.row_target_2021" />
+              <td-click :value="project.row_target_2022" />
+              <td-click :value="project.row_target_total" />
             </tr>
             </tbody>
           </q-markup-table>
@@ -325,7 +326,7 @@
         />
 
         <div class="row" v-if="project.has_rap">
-          <q-markup-table flat bordered class="col bg-transparent">
+          <q-markup-table flat bordered class="col bg-transparent" dense>
             <thead>
             <tr>
               <th></th>
@@ -341,13 +342,13 @@
             <tbody>
               <tr>
                 <td>Resettlement Action Plan</td>
-                <copy-td :value="project.rap_target_2017" />
-                <copy-td :value="project.rap_target_2018" />
-                <copy-td :value="project.rap_target_2019" />
-                <copy-td :value="project.rap_target_2020" />
-                <copy-td :value="project.rap_target_2021" />
-                <copy-td :value="project.rap_target_2022" />
-                <copy-td :value="project.rap_target_total" />
+                <td-click :value="project.rap_target_2017" />
+                <td-click :value="project.rap_target_2018" />
+                <td-click :value="project.rap_target_2019" />
+                <td-click :value="project.rap_target_2020" />
+                <td-click :value="project.rap_target_2021" />
+                <td-click :value="project.rap_target_2022" />
+                <td-click :value="project.rap_target_total" />
               </tr>
             </tbody>
           </q-markup-table>
@@ -442,22 +443,23 @@
             class="col bg-transparent"
             wrap-cells
             square
+            dense
           >
-            <thead>
-            <tr>
-              <th>Item</th>
-              <th>2016 &amp; Prior</th>
-              <th>2017</th>
-              <th>2018</th>
-              <th>2019</th>
-              <th>2020</th>
-              <th>2021</th>
-              <th>2022</th>
-              <th>2023</th>
-              <th>2024</th>
-              <th>2025 &amp; Beyond</th>
-              <th>Total</th>
-            </tr>
+            <thead class="text-weight-bold">
+              <tr>
+                <th>Item</th>
+                <th>2016 &amp; Prior</th>
+                <th>2017</th>
+                <th>2018</th>
+                <th>2019</th>
+                <th>2020</th>
+                <th>2021</th>
+                <th>2022</th>
+                <th>2023</th>
+                <th>2024</th>
+                <th>2025 &amp; Beyond</th>
+                <th>Total</th>
+              </tr>
             </thead>
             <tbody>
             <tr>
@@ -484,7 +486,7 @@
             </tr>
             <tr>
               <td>
-                Infrastructure
+                <q-icon name="build" /> Infrastructure
               </td>
               <td-click :value="infraTotal.infrastructure_target_2016"></td-click>
               <td-click :value="infraTotal.infrastructure_target_2017"></td-click>
@@ -562,7 +564,6 @@
 
 <script>
 	import { date } from 'quasar';
-	import CopyTd from './financials/CopyTd';
 	import {
 	  LabelValue,
 		SectionHeader} from 'src/ui'
@@ -581,7 +582,6 @@
 			VfsInfrastructures,
 			VrFinancials,
 			VfsFinancials,
-			CopyTd,
 			LabelValue,
 			SectionHeader
 		},
@@ -608,17 +608,17 @@
 				if (fsf && fsf.length) {
 					investTotal = fsf.reduce((acc, val) => {
 						console.log(acc);
-						acc.infrastructure_target_2016 = val.infrastructure_target_2016;
-						acc.infrastructure_target_2017 = val.infrastructure_target_2017;
-						acc.infrastructure_target_2018 = val.infrastructure_target_2018;
-						acc.infrastructure_target_2019 = val.infrastructure_target_2019;
-						acc.infrastructure_target_2020 = val.infrastructure_target_2020;
-						acc.infrastructure_target_2021 = val.infrastructure_target_2021;
-						acc.infrastructure_target_2022 = val.infrastructure_target_2022;
-						acc.infrastructure_target_2023 = val.infrastructure_target_2023;
-						acc.infrastructure_target_2024 = val.infrastructure_target_2024;
-						acc.infrastructure_target_2025 = val.infrastructure_target_2025;
-						acc.infrastructure_target_total =
+						acc.infrastructure_target_2016 += val.infrastructure_target_2016;
+						acc.infrastructure_target_2017 += val.infrastructure_target_2017;
+						acc.infrastructure_target_2018 += val.infrastructure_target_2018;
+						acc.infrastructure_target_2019 += val.infrastructure_target_2019;
+						acc.infrastructure_target_2020 += val.infrastructure_target_2020;
+						acc.infrastructure_target_2021 += val.infrastructure_target_2021;
+						acc.infrastructure_target_2022 += val.infrastructure_target_2022;
+						acc.infrastructure_target_2023 += val.infrastructure_target_2023;
+						acc.infrastructure_target_2024 += val.infrastructure_target_2024;
+						acc.infrastructure_target_2025 += val.infrastructure_target_2025;
+						acc.infrastructure_target_total +=
 							val.infrastructure_target_2016 +
 							val.infrastructure_target_2017 +
 							val.infrastructure_target_2018 +
@@ -655,17 +655,17 @@
 				if (fsf && fsf.length) {
 					investTotal = fsf.reduce((acc, val) => {
 						console.log(acc);
-						acc.investment_target_2016 = val.investment_target_2016;
-						acc.investment_target_2017 = val.investment_target_2017;
-						acc.investment_target_2018 = val.investment_target_2018;
-						acc.investment_target_2019 = val.investment_target_2019;
-						acc.investment_target_2020 = val.investment_target_2020;
-						acc.investment_target_2021 = val.investment_target_2021;
-						acc.investment_target_2022 = val.investment_target_2022;
-						acc.investment_target_2023 = val.investment_target_2023;
-						acc.investment_target_2024 = val.investment_target_2024;
-						acc.investment_target_2025 = val.investment_target_2025;
-						acc.investment_target_total =
+						acc.investment_target_2016 += val.investment_target_2016;
+						acc.investment_target_2017 += val.investment_target_2017;
+						acc.investment_target_2018 += val.investment_target_2018;
+						acc.investment_target_2019 += val.investment_target_2019;
+						acc.investment_target_2020 += val.investment_target_2020;
+						acc.investment_target_2021 += val.investment_target_2021;
+						acc.investment_target_2022 += val.investment_target_2022;
+						acc.investment_target_2023 += val.investment_target_2023;
+						acc.investment_target_2024 += val.investment_target_2024;
+						acc.investment_target_2025 += val.investment_target_2025;
+						acc.investment_target_total +=
 							val.investment_target_2016 +
 							val.investment_target_2017 +
 							val.investment_target_2018 +
@@ -681,41 +681,6 @@
 				}
 
 				return investTotal;
-			},
-			isEncoder() {
-				return this.$store.getters['auth/isEncoder'];
-			},
-			user() {
-				return this.$store.getters['auth/user'];
-			},
-			dark() {
-				return this.$store.getters['settings/dark'];
-			},
-			risk() {
-				return this.project.implementation_risk;
-			},
-			projectUpdates() {
-				if (this.project.updates) {
-					const updatesDate = date.formatDate(
-						this.project.updates_date,
-						'MMM D, YYYY'
-					);
-					return `As of ${updatesDate}, ${this.project.updates}.`;
-				}
-				return '';
-			},
-			isOwner() {
-				return this.project.creator && this.project.creator.id === this.user.id;
-			},
-			implementationBases() {
-				const ib = this.project.implementation_bases
-					? this.project.implementation_bases
-					: [];
-				if (ib && ib.length) {
-					let ib_values = ib.map(x => x.name);
-					return ib_values.join(', ');
-				}
-				return 'None specified';
 			}
 		},
 		data() {
@@ -740,7 +705,6 @@
 		},
 		filters: {
 			formatDate(val) {
-				// let newDate = new Date(val)
 				if (!val) {
 					return '';
 				}

@@ -1,17 +1,5 @@
 <template>
-  <page-container>
-    <template v-slot:title>
-      <page-title title="Projects" icon="fas fa-tasks">
-        <q-btn
-					outline
-          :label="$q.screen.lt.md ? void 0 : 'Add Project'"
-					icon="add"
-          to="/projects/add"
-          v-if="me.permissions.projects.create"
-        ></q-btn>
-      </page-title>
-    </template>
-
+  <q-page class="q-pa-sm">
     <div class="row">
       <!-- hide sort and filter if search is on -->
       <div class="col" v-if="!search">
@@ -138,34 +126,25 @@
       >
       </q-pagination>
     </div>
-  </page-container>
+  </q-page>
 </template>
 
 <script>
 import { exportFile, openURL } from 'quasar';
 import {
-  PageContainer,
-  PageTitle
-} from 'src/ui/page';
-import {
   BANNER_PROGRAMS,
   FETCH_PROJECT_STATUSES,
   FETCH_TYPES,
-  PROJECTS, SEARCH_PROJECTS,
+  PROJECTS,
+  SEARCH_PROJECTS,
   SUBMISSION_STATUSES
 } from 'src/graphql';
 import { timeAgo, wrapCsvValue } from 'src/utils';
-
-import {projectService} from '../services'
+import { projectService } from '../services'
 import gql from "graphql-tag";
 
 export default {
-  components: {
-    PageContainer,
-    PageTitle
-  },
-
-  name: 'ProjectsIndex',
+  name: 'ProjectIndex',
 
   computed: {
     search() {
@@ -194,12 +173,6 @@ export default {
         default:
           return [{field: UPDATED_AT, order: DESC}]
       }
-    },
-  	isReviewer() {
-  		return this.$store.getters['auth/isReviewer']
-		},
-    isEncoder() {
-      return this.$store.getters['auth/isEncoder'];
     },
     filteredProjects() {
       const selected = this.selected;
@@ -245,7 +218,7 @@ export default {
         )
       }
 
-      return { AND: AND }
+      return AND.length ? { AND: AND } : null
     }
   },
 

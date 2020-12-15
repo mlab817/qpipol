@@ -7,23 +7,15 @@ const routes = [
   {
     path: '',
     name: 'landing',
+    beforeEnter: requireAuth,
     component: () =>
-      import(/* webpackChunkName: 'LandingPage' */ '../pages/Landing.vue')
+      import(/* webpackChunkName: 'Dashboard' */ '../pages/Dashboard.vue')
   },
   {
     path: '/',
     component: () => import('src/layouts/MainLayout.vue'),
     beforeEnter: requireAuth,
     children: [
-      {
-        path: 'review',
-        name: 'review',
-        component: () =>
-          import(/* webpackChunkName: 'Review' */ '../pages/Review.vue'),
-        meta: {
-          requiresAuth: true
-        }
-      },
       {
         path: 'dashboard',
         name: 'dashboard',
@@ -39,17 +31,6 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: 'SettingsPage' */ '../pages/SettingsPage.vue'
-          ),
-        meta: {
-          requiresAuth: true
-        }
-      },
-      {
-        path: 'profile',
-        name: 'profile',
-        component: () =>
-          import(
-            /* webpackChunkName: 'ProfilePage' */ '../pages/ProfilePage.vue'
           ),
         meta: {
           requiresAuth: true
@@ -117,6 +98,23 @@ const routes = [
     ]
   },
   {
+    path: '/users',
+    component: () => import('src/layouts/MainLayout.vue'),
+    beforeEnter: requireAuth,
+    children: [
+      {
+        path: '',
+        name: 'users-index',
+        component: () => import('src/pages/UserPage.vue')
+      },
+      {
+        path: ':slug',
+        name: 'user-page',
+        component: () => import('src/pages/UserPage.vue')
+      }
+    ]
+  },
+  {
     path: '/projects',
     component: () => import('src/layouts/MainLayout.vue'),
     beforeEnter: requireAuth,
@@ -127,6 +125,11 @@ const routes = [
         component: () => import('src/pages/ProjectIndex.vue')
       },
       {
+        path: 'add',
+        name: 'project-add',
+        component: () => import('src/pages/ProjectAdd.vue')
+      },
+      {
         path: ':slug/edit',
         name: 'project-edit',
         component: () => import('src/pages/ProjectEdit.vue')
@@ -135,11 +138,6 @@ const routes = [
         path: ':slug',
         name: 'project-view',
         component: () => import('src/pages/ProjectView.vue')
-      },
-      {
-        path: 'add',
-        name: 'project-add',
-        component: () => import('src/pages/ProjectAdd.vue')
       }
     ]
   },
@@ -157,20 +155,6 @@ const routes = [
         path: 'edit-account',
         name: 'edit-account',
         component: () => import('src/pages/EditAccount.vue')
-      }
-    ]
-  },
-  {
-    path: '/shared',
-    component: () => import('@/layouts/PublicLayout.vue'),
-    children: [
-      {
-        path: ':id',
-        name: 'shared-project',
-        component: () =>
-          import(
-            /* webpackChunkName: 'SharedProject' */ '@/pages/SharedProject.vue'
-          )
       }
     ]
   },

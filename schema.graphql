@@ -102,7 +102,6 @@ type Query {
   # Return an operating unit by ID
   operating_unit(id: ID!): OperatingUnit
   operating_unit_financials(project_id: ID!): [OperatingUnitFinancial]
-  permissions: [Permission]
   pipol_statuses: [PipolStatus]
   cost_structures: [CostStructure]
   prexc_programs: [PrexcProgram]
@@ -198,7 +197,6 @@ type Query {
   region_financials(project_id: ID!): [RegionFinancial]
   release(id: ID!): Release
   releases: [Release]
-  roles: [Role!]!
   submission_statuses: [SubmissionStatus]
   teams: [Team]
   useful_links: [UsefulLink]
@@ -221,13 +219,13 @@ type Query {
 
   # Get all encoders
   encoders: [User]
-  appVersions: [AppVersion]
-  appVersion(id: ID!): AppVersion
-  currentAppVersion: AppVersion
+  userFindBySlug(slug: String!): User
   pdp_chapters: [PdpChapter]
   pdp_outcomes: [PdpOutcome]
   pdp_suboutcomes: [PdpSuboutcome]
   pdp_indicators: [PdpIndicator]
+  permissions: [Permission]
+  roles: [Role]
   node(id: ID!): Node
 }
 
@@ -419,15 +417,19 @@ type User {
   project_count: Int
   tokens: [Token]
   token: Token
-  roles: [Role]
   currentTeam: Team
   profile: Profile
   teams: [Team]
   ownedTeams: [Team]
   invites: [TeamInvite]
-  permissions: [String]
   discord_user_id: ID
   discord_private_channel_id: ID
+  bookmarked_projects: [Project]
+  operating_unit: OperatingUnit
+  operating_unit_id: ID
+  username: String
+  permissions: [Permission]
+  roles: [Role]
 }
 
 # A paginated list of Project items.
@@ -675,6 +677,8 @@ type Project {
   other_implementing_agencies: [OperatingUnit]
   can_edit: Boolean
   can_delete: Boolean
+  permissions: ProjectPermissions
+  editors: [User]
 }
 
 type PrexcProgram {
@@ -1091,6 +1095,13 @@ type Team {
   owner_id: ID
 }
 
+type ProjectPermissions {
+  view: Boolean
+  update: Boolean
+  delete: Boolean
+  restore: Boolean
+}
+
 # A datetime string with format `Y-m-d H:i:s`, e.g. `2018-01-01 13:00:00`.
 scalar DateTime
 
@@ -1106,38 +1117,19 @@ type Token {
   expires_at: String
 }
 
-type Role implements Node {
-  id: ID!
-  name: String!
-  guard_name: String
-  users: [User]
-  permissions: [Permission]
-}
-
-# Node global interface
-interface Node {
-  # Global identifier that can be used to resolve any Node implementation.
-  id: ID!
-}
-
-type Permission implements Node {
-  id: ID!
-  name: String!
-  guard_name: String
-  is_enabled: Boolean
-  roles: [Role]
-}
-
 type Profile {
   id: ID
   user_id: ID
   nickname: String
+  short_description: String
   avatar: String
   contact_number: String
   position: String
   operating_unit_id: ID
   unit: String
   operating_unit: OperatingUnit
+  first_name: String
+  last_name: String
 }
 
 type TeamInvite implements Node {
@@ -1148,6 +1140,24 @@ type TeamInvite implements Node {
   email: String
   accept_token: String
   deny_token: String
+}
+
+# Node global interface
+interface Node {
+  # Global identifier that can be used to resolve any Node implementation.
+  id: ID!
+}
+
+type Permission {
+  id: ID
+  name: String
+  guard_name: String
+}
+
+type Role {
+  id: ID
+  name: String
+  guard_name: String
 }
 
 type OperatingUnitType {
@@ -1430,17 +1440,6 @@ type CheckEmailAvailabilityResponse {
   message: String!
 }
 
-type AppVersion {
-  id: ID!
-  version: String
-  change_type: String
-  change_log: String
-  notes: String
-  user: User
-  created_at: String
-  updated_at: String
-}
-
 type Mutation {
   createAnnouncement(input: CreateAnnouncementInput): Announcement
   updateAnnouncement(input: UpdateAnnouncementInput): Announcement
@@ -1490,11 +1489,6 @@ type Mutation {
     input: UpdateOperatingUnitFinancialInput!
   ): OperatingUnitFinancial
   deleteOperatingUnitFinancial(id: ID!): OperatingUnitFinancial
-  createPermission(input: CreatePermissionInput!): Permission
-  updatePermission(input: UpdatePermissionInput!): Permission
-  deletePermission(id: ID!): Permission
-  disablePermission(permission: String!): Permission
-  enablePermission(permission: String!): Permission
   createBannerProgram(input: CreateBannerProgramInput!): BannerProgram
   updateBannerProgram(input: UpdateBannerProgramInput!): BannerProgram
   deleteBannerProgram(id: ID!): BannerProgram
@@ -1527,7 +1521,7 @@ type Mutation {
   undoFinalizePrexcActivity(id: ID!): PrexcActivity
 
   # Update user profile
-  updateUser(input: UpdateUserInput!): User
+  updateProfile(input: UpdateUserInput!): User
 
   # Creates new project.
   createProject(input: CreateProjectInput!): Project!
@@ -1559,19 +1553,14 @@ type Mutation {
   validateProject(id: ID!): Project!
   attachActivities(id: ID!, activities: [ID]): Project!
   unfinalizeProject(id: ID!): Project!
+  bookmarkProject(id: ID!): User
+  unbookmarkProject(id: ID!): User
   createRegionFinancial(input: CreateRegionFinancialInput!): RegionFinancial
   updateRegionFinancial(input: UpdateRegionFinancialInput!): RegionFinancial
   deleteRegionFinancial(id: ID!): RegionFinancial
   createRelease(input: CreateReleaseInput!): Release
   updateRelease(input: UpdateReleaseInput!): Release
   deleteRelease(id: ID!): Release
-  createRole(input: CreateRoleInput!): Role
-  updateRole(input: UpdateRoleInput!): Role
-  deleteRole(id: ID!): Role
-  attachPermissions(input: AttachPermissionsInput!): Role
-
-  # Assign role to user
-  assignRole(user_id: ID!, roles: [String]): User
   createSubmissionStatus(name: String!): SubmissionStatus
   updateSubmissionStatus(id: ID!, name: String!): SubmissionStatus
   deleteSubmissionStatus(id: ID!): SubmissionStatus
@@ -1592,9 +1581,6 @@ type Mutation {
   # Upload avatar for the user
   uploadUserAvatar(image: Upload!): User
   chooseAvatar(image_id: ID!): User
-  createAppVersion(input: CreateAppVersionInput!): AppVersion
-  updateAppVersion(input: UpdateAppVersionInput!): AppVersion
-  deleteAppVersion(id: ID!): AppVersion
   login(input: LoginInput): AuthPayload!
   refreshToken(input: RefreshTokenInput): RefreshTokenPayload!
   logout: LogoutResponse!
@@ -1608,6 +1594,30 @@ type Mutation {
   updatePassword(input: UpdatePassword!): UpdatePasswordResponse!
   revokeToken(token: String!): Token
   revokeAllTokens: String
+
+  # Create a new role
+  createRole(input: CreateRoleInput!): Role!
+
+  # Create a new permission
+  createPermission(input: CreatePermissionInput!): Permission!
+
+  # Assign a role to user
+  assignRole(input: AssignRoleInput!): User!
+
+  # Assign a role to user
+  removeRole(input: RemoveRoleInput!): User!
+
+  # Give permission to user
+  givePermissionToUser(input: GivePermissionToUserInput!): String
+
+  # Giver permission to role
+  givePermissionToRole(input: GivePermissionToRoleInput!): String
+
+  # Revoke permission from user
+  revokePermissionToUser(input: RevokePermissionToUserInput!): String
+
+  # Revoke permission from role
+  revokePermissionToRole(input: RevokePermissionToRoleInput!): String
 }
 
 input CreateAnnouncementInput {
@@ -1996,17 +2006,6 @@ input UpdateOperatingUnitFinancialInput {
   infrastructure_target_total: Float
 }
 
-input CreatePermissionInput {
-  name: String!
-  guard_name: String
-}
-
-input UpdatePermissionInput {
-  id: ID!
-  name: String!
-  guard_name: String
-}
-
 input CreateBannerProgramInput {
   name: String
   acronym: String
@@ -2136,7 +2135,7 @@ input CreatePrexcActivityInput {
 }
 
 input UpdateUserInput {
-  id: ID!
+  id: ID
   profile: UpdateProfileHasOne
 }
 
@@ -2145,22 +2144,20 @@ input UpdateProfileHasOne {
 }
 
 input UpdateProfileInput {
-  id: ID!
+  id: ID
+  user_id: ID
   nickname: String
   contact_number: String
   position: String
-  operating_unit_id: ID
-  unit: String
+  first_name: String
+  last_name: String
+  short_description: String
 }
 
 # Input to create a new project.
 input CreateProjectInput {
-  prexc_program_id: ID
-  prexc_subprogram_id: ID
-  banner_program_id: ID
   title: String!
-  uacs_code: String
-  operating_unit_id: ID
+  type_id: ID!
 }
 
 input UpdateProjectInput {
@@ -2237,7 +2234,6 @@ input UpdateProjectInput {
   fs_target_2023: Float
   fs_target_2024: Float
   fs_target_2025: Float
-  fs_target_total: Float
   has_row: Boolean
   row_target_2017: Float
   row_target_2018: Float
@@ -2248,7 +2244,6 @@ input UpdateProjectInput {
   row_target_2023: Float
   row_target_2024: Float
   row_target_2025: Float
-  row_target_total: Float
   row_affected: String
   has_rap: Boolean
   rap_target_2017: Float
@@ -2260,30 +2255,7 @@ input UpdateProjectInput {
   rap_target_2023: Float
   rap_target_2024: Float
   rap_target_2025: Float
-  rap_target_total: Float
   rap_affected: String
-  investment_target_2016: Float
-  investment_target_2017: Float
-  investment_target_2018: Float
-  investment_target_2019: Float
-  investment_target_2020: Float
-  investment_target_2021: Float
-  investment_target_2022: Float
-  investment_target_2023: Float
-  investment_target_2024: Float
-  investment_target_2025: Float
-  investment_target_total: Float
-  infrastructure_target_2016: Float
-  infrastructure_target_2017: Float
-  infrastructure_target_2018: Float
-  infrastructure_target_2019: Float
-  infrastructure_target_2020: Float
-  infrastructure_target_2021: Float
-  infrastructure_target_2022: Float
-  infrastructure_target_2023: Float
-  infrastructure_target_2024: Float
-  infrastructure_target_2025: Float
-  infrastructure_target_total: Float
   nep_2016: Float
   nep_2017: Float
   nep_2018: Float
@@ -2294,7 +2266,6 @@ input UpdateProjectInput {
   nep_2023: Float
   nep_2024: Float
   nep_2025: Float
-  nep_total: Float
   gaa_2016: Float
   gaa_2017: Float
   gaa_2018: Float
@@ -2305,7 +2276,6 @@ input UpdateProjectInput {
   gaa_2023: Float
   gaa_2024: Float
   gaa_2025: Float
-  gaa_total: Float
   disbursement_2016: Float
   disbursement_2017: Float
   disbursement_2018: Float
@@ -2316,7 +2286,6 @@ input UpdateProjectInput {
   disbursement_2023: Float
   disbursement_2024: Float
   disbursement_2025: Float
-  disbursement_total: Float
   uacs_code: String
   updates: String
   updates_date: String
@@ -2526,26 +2495,6 @@ input UpdateReleaseInput {
   notes: String
 }
 
-input CreateRoleInput {
-  name: String!
-  guard_name: String
-}
-
-input UpdateRoleInput {
-  id: ID!
-  name: String!
-  guard_name: String
-}
-
-input AttachPermissionsInput {
-  id: ID!
-  permissions: SyncPermissions
-}
-
-input SyncPermissions {
-  sync: [ID!]
-}
-
 input CreateUsefulLinkInput {
   title: String
   description: String
@@ -2557,21 +2506,6 @@ input UpdateUsefulLinkInput {
   title: String
   description: String
   to: String
-}
-
-input CreateAppVersionInput {
-  version: String
-  change_type: String
-  change_log: String
-  notes: String
-}
-
-input UpdateAppVersionInput {
-  id: ID!
-  version: String
-  change_type: String
-  change_log: String
-  notes: String
 }
 
 input LoginInput {
@@ -2654,6 +2588,44 @@ input UpdatePassword {
 type UpdatePasswordResponse {
   status: String!
   message: String
+}
+
+input CreateRoleInput {
+  name: String!
+}
+
+input CreatePermissionInput {
+  name: String!
+}
+
+input AssignRoleInput {
+  user_id: ID!
+  role: String!
+}
+
+input RemoveRoleInput {
+  user_id: ID!
+  role: String!
+}
+
+input GivePermissionToUserInput {
+  user_id: ID!
+  permission: String!
+}
+
+input GivePermissionToRoleInput {
+  role: String!
+  permission: String!
+}
+
+input RevokePermissionToUserInput {
+  user_id: ID!
+  permission: String!
+}
+
+input RevokePermissionToRoleInput {
+  role: String!
+  permission: String!
 }
 
 type Link {

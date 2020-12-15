@@ -672,6 +672,13 @@
             :project-id="project.id"
           />
         </div>
+
+        <div class="row">
+          <table-financials
+            item="region"
+            :data="project.region_financials"
+            title="Table Financials" />
+        </div>
       </card-info>
 
       <card-info>
@@ -831,125 +838,6 @@
                 </tr>
               </tbody>
             </q-markup-table>
-
-            <!-- Edit NEP Dialog -->
-            <q-dialog
-              v-model="editNepDialog"
-              full-height
-              :position="$q.screen.xs ? void 0 : 'right'"
-              persistent
-              :maximized="$q.screen.xs"
-              transition-show="jump-left"
-              transition-hide="jump-right"
-            >
-              <q-card :style="$q.screen.gt.xs ? 'min-width:400px' : ''">
-                <card-header
-                  title="National Expenditure Program (NEP)"
-                ></card-header>
-
-                <div class="q-pa-sm q-gutter-y-sm">
-                  <money-input
-                    v-model="project.nep_2016"
-                    label="2016 &amp; Prior"
-                  />
-                  <money-input v-model="project.nep_2017" label="2017" />
-                  <money-input v-model="project.nep_2018" label="2018" />
-                  <money-input v-model="project.nep_2019" label="2019" />
-                  <money-input v-model="project.nep_2020" label="2020" />
-                  <money-input v-model="project.nep_2021" label="2021" />
-                  <money-input :value="nep_total" label="Total" readonly />
-                </div>
-                <q-card-actions align="right">
-                  <q-btn
-                    label="Close"
-                    color="primary"
-                    @click="editNepDialog = false"
-                  ></q-btn>
-                </q-card-actions>
-              </q-card>
-            </q-dialog>
-
-            <!-- Edit GAA Dialog -->
-            <q-dialog
-              v-model="editGaaDialog"
-              full-height
-              :position="$q.screen.xs ? void 0 : 'right'"
-              persistent
-              :maximized="$q.screen.xs"
-              transition-show="jump-left"
-              transition-hide="jump-right"
-            >
-              <q-card :style="$q.screen.gt.xs ? 'min-width:400px' : ''">
-                <card-header
-                  title="General Appropriations Act (GAA)"
-                ></card-header>
-
-                <div class="q-pa-sm q-gutter-y-sm">
-                  <money-input
-                    v-model="project.gaa_2016"
-                    label="2016 &amp; Prior"
-                  />
-                  <money-input v-model="project.gaa_2017" label="2017" />
-                  <money-input v-model="project.gaa_2018" label="2018" />
-                  <money-input v-model="project.gaa_2019" label="2019" />
-                  <money-input v-model="project.gaa_2020" label="2020" />
-                  <money-input :value="gaa_total" label="Total" readonly />
-                </div>
-                <q-card-actions align="right">
-                  <q-btn
-                    label="Close"
-                    color="primary"
-                    @click="editGaaDialog = false"
-                  ></q-btn>
-                </q-card-actions>
-              </q-card>
-            </q-dialog>
-
-            <!-- Edit Disbursement Dialog -->
-            <q-dialog
-              v-model="editDisbursementDialog"
-              full-height
-              :position="$q.screen.xs ? void 0 : 'right'"
-              persistent
-              :maximized="$q.screen.xs"
-              transition-show="jump-left"
-              transition-hide="jump-right"
-            >
-              <q-card :style="$q.screen.gt.xs ? 'min-width:400px' : ''">
-                <card-header title="Disbursement"></card-header>
-
-                <div class="q-pa-sm q-gutter-y-sm">
-                  <money-input
-                    v-model="project.disbursement_2016"
-                    label="2016 &amp; Prior"
-                  />
-                  <money-input
-                    v-model="project.disbursement_2017"
-                    label="2017"
-                  />
-                  <money-input
-                    v-model="project.disbursement_2018"
-                    label="2018"
-                  />
-                  <money-input
-                    v-model="project.disbursement_2019"
-                    label="2019"
-                  />
-                  <money-input
-                    v-model="project.disbursement_2020"
-                    label="2020"
-                  />
-                  <money-input :value="disbursement_total" label="Total" readonly />
-                </div>
-                <q-card-actions align="right">
-                  <q-btn
-                    label="Close"
-                    color="primary"
-                    @click="editDisbursementDialog = false"
-                  ></q-btn>
-                </q-card-actions>
-              </q-card>
-            </q-dialog>
           </div>
 
           <div class="row justify-end">
@@ -957,112 +845,6 @@
           </div>
         </q-card-section>
       </card-info>
-
-      <!-- Edit Resettlement Action Plan Cost Dialog -->
-      <q-dialog
-        v-model="editRowCostDialog"
-        full-height
-        :position="$q.screen.xs ? void 0 : 'right'"
-        persistent
-        :maximized="$q.screen.xs"
-        transition-show="jump-left"
-        transition-hide="jump-right"
-      >
-        <q-card :style="$q.screen.gt.xs ? 'min-width:400px' : ''">
-          <card-header title="Right of Way"></card-header>
-
-          <q-card-section class="q-pa-sm q-gutter-y-sm">
-            <money-input v-model="project.row_target_2017" label="2017" />
-            <money-input v-model="project.row_target_2018" label="2018" />
-            <money-input v-model="project.row_target_2019" label="2019" />
-            <money-input v-model="project.row_target_2020" label="2020" />
-            <money-input v-model="project.row_target_2021" label="2021" />
-            <money-input v-model="project.row_target_2022" label="2022" />
-            <q-input
-              label="Total"
-              stack-label
-              v-model="row_target_total"
-              type="number"
-              readonly
-            ></q-input>
-          </q-card-section>
-          <q-card-actions align="right">
-            <q-btn
-              label="Close"
-              color="primary"
-              @click="editRowCostDialog = false"
-            ></q-btn>
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
-
-      <!-- Edit Resettlement Action Plan Cost Dialog -->
-      <q-dialog
-        v-model="editRapCostDialog"
-        full-height
-        :position="$q.screen.xs ? void 0 : 'right'"
-        persistent
-        :maximized="$q.screen.xs"
-        transition-show="jump-left"
-        transition-hide="jump-right"
-      >
-        <q-card :style="$q.screen.gt.xs ? 'min-width:400px' : ''">
-          <card-header title="Resettlement Action Plan"></card-header>
-
-          <q-card-section class="q-pa-sm q-gutter-y-sm">
-            <money-input v-model="project.rap_target_2017" label="2017" />
-            <money-input v-model="project.rap_target_2018" label="2018" />
-            <money-input v-model="project.rap_target_2019" label="2019" />
-            <money-input v-model="project.rap_target_2020" label="2020" />
-            <money-input v-model="project.rap_target_2021" label="2021" />
-            <money-input v-model="project.rap_target_2022" label="2022" />
-            <money-input
-              label="Total"
-              stack-label
-              readonly
-              v-model="rap_target_total"
-            ></money-input>
-          </q-card-section>
-          <q-card-actions align="right">
-            <q-btn
-              label="Close"
-              color="primary"
-              @click="editRapCostDialog = false"
-            ></q-btn>
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
-
-      <!-- Edit Feasibility Study Cost Dialog -->
-      <q-dialog
-        v-model="editFSCostDialog"
-        full-height
-        :position="$q.screen.xs ? void 0 : 'right'"
-        persistent
-        :maximized="$q.screen.xs"
-        transition-show="jump-left"
-        transition-hide="jump-right"
-      >
-        <q-card :style="$q.screen.gt.xs ? 'min-width:400px' : ''">
-          <card-header title="Feasibility Study"></card-header>
-
-          <q-card-section class="q-pa-sm q-gutter-y-sm">
-            <money-input v-model="project.fs_target_2017" label="2017" />
-            <money-input v-model="project.fs_target_2018" label="2018" />
-            <money-input v-model="project.fs_target_2019" label="2019" />
-            <money-input v-model="project.fs_target_2020" label="2020" />
-            <money-input v-model="project.fs_target_2021" label="2021" />
-            <money-input v-model="project.fs_target_2022" label="2022" />
-          </q-card-section>
-          <q-card-actions align="right">
-            <q-btn
-              label="Close"
-              color="primary"
-              @click="editFSCostDialog = false"
-            ></q-btn>
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
 
       <!-- Add funding source dialog -->
       <q-dialog
@@ -1110,14 +892,14 @@
           label="Save"
           color="primary"
           @click="updateProject"
-          v-if="canUpdate"
+          v-if="project.permissions.can_edit"
         ></q-btn>
 
         <q-btn
           label="Finalize"
           color="secondary"
           @click="finalizeProject"
-          v-if="canFinalize"
+          v-if="project.permissions.can_edit"
         >
         </q-btn>
 
@@ -1125,7 +907,7 @@
           label="Validate"
           color="negative"
           @click="$emit('validate')"
-          v-if="canValidate"
+          v-if="project.permissions.can_edit"
         >
         </q-btn>
       </div>
@@ -1164,7 +946,6 @@ import InfrastructureSectors from './dropdowns/InfrastructureSectors';
 import SpatialCoverage from './dropdowns/SpatialCoverage';
 import TextInput from '@/ui/form-inputs/TextInput';
 import Typology from './dropdowns/Typology';
-import MoneyInput from '@/ui/form-inputs/MoneyInput';
 import CheckboxInput from '@/ui/form-inputs/CheckboxInput';
 import DateInput from '@/ui/form-inputs/DateInput';
 // dropdowns
@@ -1193,9 +974,11 @@ import TdMoney from '../../ui/components/TdMoney'
 import Years from './dropdowns/Years'
 import Types from './dropdowns/Types'
 import CardInfo from "components/projects/shared/CardInfo";
+import TableFinancials from "components/projects/financials/TableFinancials";
 
 export default {
   components: {
+    TableFinancials,
     CardInfo,
 	  Years,
 	  TdMoney,
@@ -1210,7 +993,6 @@ export default {
     ProjectStatus,
     ImplementingAgency,
     DateInput,
-    MoneyInput,
     TextInput,
     CheckboxInput,
     SectionHeader,
@@ -1255,48 +1037,6 @@ export default {
   },
 
   computed: {
-    submission_status() {
-      const name = this.project.submission_status ? this.project.submission_status.name : ''
-
-      return name
-    },
-    canUpdate() {
-      const submissionStatus = this.submission_status
-      const isReviewer = this.isReviewer,
-        isEncoder = this.isEncoder;
-        console.log(
-          `submissionStatus: ${submissionStatus}, isReviewer: ${isReviewer}, isEncoder: ${isEncoder}`
-        );
-      let res = false;
-
-      if (isReviewer && submissionStatus === 'Endorsed') {
-        res = true;
-      } else if (submissionStatus === 'Draft' && isEncoder) {
-        res = true;
-      } else {
-        res = false;
-      }
-      return res;
-    },
-    canFinalize() {
-      const finalized = this.project.finalized || false,
-        endorsed = this.project.endorsed || false,
-        isEncoder = this.isEncoder;
-
-      if (!finalized && !endorsed && isEncoder) {
-        return true;
-      }
-      return false;
-    },
-    canValidate() {
-      return this.project.endorsed && this.isReviewer;
-    },
-    isEncoder() {
-      return this.$store.getters['auth/isEncoder'];
-    },
-    isReviewer() {
-      return this.$store.getters['auth/isReviewer'];
-    },
     infraTotal() {
       const fsf = this.project.funding_source_infrastructures;
 
@@ -1538,38 +1278,10 @@ export default {
 
   data() {
     return {
-      bases: [],
       finalizeProjectDialog: false,
       agree: false,
       signed_copy: null,
       remarks: '',
-      newFundingSource: {
-        id: null,
-        funding_source_id: null,
-        target_2016: 0,
-        target_2017: 0,
-        target_2018: 0,
-        target_2019: 0,
-        target_2020: 0,
-        target_2021: 0,
-        target_2022: 0,
-        target_2023: 0
-      },
-      newRegion: {
-        id: null,
-        region_id: null,
-        target_2016: 0,
-        target_2017: 0,
-        target_2018: 0,
-        target_2019: 0,
-        target_2020: 0,
-        target_2021: 0,
-        target_2022: 0,
-        target_2023: 0
-      },
-      types: [],
-      years: [],
-      tiers: [],
       trueOrFalse: [
         {
           label: 'No',
@@ -1594,112 +1306,17 @@ export default {
         required: [val => !!val || '* Required'],
         selectOne: [val => (!!val && val.length > 0) || '* Required']
       },
-      editFSCostDialog: false,
-      editRowCostDialog: false,
-      editRegionFinancialDialog: false,
-      addFundingSourceFinancialDialog: false,
-      editFundingSourceFinancialDialog: false,
       regions: [],
       funding_sources: [],
       validationErrors: [],
-      gad_form: null,
-      uploadGadForm: false,
       uploadSignedCopyDialog: false
     };
   },
 
   methods: {
-    addRegionRow(evt) {
-      this.project.regions.push(evt);
-
-      this.addRegionFinancialDialog = false;
-    },
-
-    deleteRegionRow(index) {
-      this.project.regions.splice(index, 1);
-    },
-
-    updateRegionRow(index, evt) {
-      this.project.regions.splice(index, 1, evt);
-    },
-
-    showAddFundingSourceFinancial() {
-      this.addFundingSourceFinancialDialog = true;
-    },
-
-    addFsRow(evt) {
-      this.project.funding_sources.push(evt);
-
-      this.addFundingSourceFinancialDialog = false;
-    },
-
-    deleteFsRow(index) {
-      this.project.funding_sources.splice(index, 1);
-    },
-
-    updateFsRow(index, evt) {
-      this.project.funding_sources.splice(index, 1, evt);
-    },
-
-    validateData() {
-      // return true if data is valid
-      // validate project and save
-      return this.$refs.editForm.validate().then(success => {
-        // if success, save data
-        if (success) {
-          this.saveProject();
-        } else {
-          alert('Please check the form for errors');
-          return false;
-        }
-      });
-    },
-
     updateProject() {
-      const project = this.project,
-        investTotal = this.investTotal,
-        infraTotal = this.infraTotal,
-      	nep_total = this.nep_total,
-				gaa_total = this.gaa_total,
-				disbursement_total = this.disbursement_total
+      const project = this.project
 
-      project.investment_target_2016 = investTotal.investment_target_2016;
-      project.investment_target_2017 = investTotal.investment_target_2017;
-      project.investment_target_2018 = investTotal.investment_target_2018;
-      project.investment_target_2019 = investTotal.investment_target_2019;
-      project.investment_target_2020 = investTotal.investment_target_2020;
-      project.investment_target_2021 = investTotal.investment_target_2021;
-      project.investment_target_2022 = investTotal.investment_target_2022;
-      project.investment_target_2023 = investTotal.investment_target_2023;
-      project.investment_target_2024 = investTotal.investment_target_2024;
-      project.investment_target_2025 = investTotal.investment_target_2025;
-      project.investment_target_total = investTotal.investment_target_total;
-      project.infrastructure_target_2016 =
-        infraTotal.infrastructure_target_2016;
-      project.infrastructure_target_2017 =
-        infraTotal.infrastructure_target_2017;
-      project.infrastructure_target_2018 =
-        infraTotal.infrastructure_target_2018;
-      project.infrastructure_target_2019 =
-        infraTotal.infrastructure_target_2019;
-      project.infrastructure_target_2020 =
-        infraTotal.infrastructure_target_2020;
-      project.infrastructure_target_2021 =
-        infraTotal.infrastructure_target_2021;
-      project.infrastructure_target_2022 =
-        infraTotal.infrastructure_target_2022;
-      project.infrastructure_target_2023 =
-        infraTotal.infrastructure_target_2023;
-      project.infrastructure_target_2024 =
-        infraTotal.infrastructure_target_2024;
-      project.infrastructure_target_2025 =
-        infraTotal.infrastructure_target_2025;
-      project.infrastructure_target_total =
-        infraTotal.infrastructure_target_total;
-      project.disbursement_total = disbursement_total
-	    project.gaa_total = gaa_total
-	    project.nep_total = nep_total
-      // confirm submission
       this.$q
         .dialog({
           title: 'Confirm',
@@ -1726,49 +1343,7 @@ export default {
       this.$refs.editForm.validate().then(success => {
         // if success, save data
         if (success) {
-	        const project = this.project,
-		        investTotal = this.investTotal,
-		        infraTotal = this.infraTotal,
-		        nep_total = this.nep_total,
-		        gaa_total = this.gaa_total,
-		        disbursement_total = this.disbursement_total
-
-	        project.investment_target_2016 = investTotal.investment_target_2016;
-	        project.investment_target_2017 = investTotal.investment_target_2017;
-	        project.investment_target_2018 = investTotal.investment_target_2018;
-	        project.investment_target_2019 = investTotal.investment_target_2019;
-	        project.investment_target_2020 = investTotal.investment_target_2020;
-	        project.investment_target_2021 = investTotal.investment_target_2021;
-	        project.investment_target_2022 = investTotal.investment_target_2022;
-	        project.investment_target_2023 = investTotal.investment_target_2023;
-	        project.investment_target_2024 = investTotal.investment_target_2024;
-	        project.investment_target_2025 = investTotal.investment_target_2025;
-	        project.investment_target_total = investTotal.investment_target_total;
-	        project.infrastructure_target_2016 =
-		        infraTotal.infrastructure_target_2016;
-	        project.infrastructure_target_2017 =
-		        infraTotal.infrastructure_target_2017;
-	        project.infrastructure_target_2018 =
-		        infraTotal.infrastructure_target_2018;
-	        project.infrastructure_target_2019 =
-		        infraTotal.infrastructure_target_2019;
-	        project.infrastructure_target_2020 =
-		        infraTotal.infrastructure_target_2020;
-	        project.infrastructure_target_2021 =
-		        infraTotal.infrastructure_target_2021;
-	        project.infrastructure_target_2022 =
-		        infraTotal.infrastructure_target_2022;
-	        project.infrastructure_target_2023 =
-		        infraTotal.infrastructure_target_2023;
-	        project.infrastructure_target_2024 =
-		        infraTotal.infrastructure_target_2024;
-	        project.infrastructure_target_2025 =
-		        infraTotal.infrastructure_target_2025;
-	        project.infrastructure_target_total =
-		        infraTotal.infrastructure_target_total;
-	        project.disbursement_total = disbursement_total
-	        project.gaa_total = gaa_total
-	        project.nep_total = nep_total
+	        const project = this.project
 
           this.$q
             .dialog({

@@ -6,7 +6,8 @@
     :pagination="pagination"
     :columns="columns"
     bordered
-    flat>
+    flat
+    dense>
 		<template v-slot:body="props">
 			<q-tr :props="props">
 				<q-td>
