@@ -1,5 +1,6 @@
 <template>
 	<div class="col q-pa-md">
+    {{ data }}
 		<q-dialog v-model="addDialog"
 			full-height
 			:position="$q.screen.xs ? void 0 : 'right'"
@@ -40,77 +41,74 @@
 
       <template v-slot:body="props">
         <q-tr :props="props">
-          <q-td :props="props" key="funding_source">
-            {{props.row.funding_source && props.row.funding_source.name}}
-            <q-popup-edit v-model="props.row.funding_source_id">
+          <q-td :props="props" key="funding_source_id">
+            {{ getFs(props.row.funding_source_id) }}
+            <q-popup-edit v-model="props.row.funding_source_id" buttons title="Funding Source">
               <funding-source v-model="props.row.funding_source_id"></funding-source>
             </q-popup-edit>
           </q-td>
           <q-td :props="props" key="investment_target_2016">
             {{props.row.investment_target_2016 | money}}
-            <q-popup-edit v-model="props.row.investment_target_2016">
+            <q-popup-edit v-model="props.row.investment_target_2016" buttons>
               <money-input v-model="props.row.investment_target_2016"></money-input>
             </q-popup-edit>
           </q-td>
           <q-td :props="props" key="investment_target_2017">
             {{props.row.investment_target_2017 | money}}
-            <q-popup-edit v-model="props.row.investment_target_2017">
+            <q-popup-edit v-model="props.row.investment_target_2017" buttons>
               <money-input v-model="props.row.investment_target_2017"></money-input>
             </q-popup-edit>
           </q-td>
           <q-td :props="props" key="investment_target_2018">
             {{props.row.investment_target_2018 | money}}
-            <q-popup-edit v-model="props.row.investment_target_2018">
+            <q-popup-edit v-model="props.row.investment_target_2018" buttons>
               <money-input v-model="props.row.investment_target_2018"></money-input>
             </q-popup-edit>
           </q-td>
           <q-td :props="props" key="investment_target_2019">
             {{props.row.investment_target_2019 | money}}
-            <q-popup-edit v-model="props.row.investment_target_2019">
+            <q-popup-edit v-model="props.row.investment_target_2019" buttons>
               <money-input v-model="props.row.investment_target_2019"></money-input>
             </q-popup-edit>
           </q-td>
           <q-td :props="props" key="investment_target_2020">
             {{props.row.investment_target_2020 | money}}
-            <q-popup-edit v-model="props.row.investment_target_2020">
+            <q-popup-edit v-model="props.row.investment_target_2020" buttons>
               <money-input v-model="props.row.investment_target_2020"></money-input>
             </q-popup-edit>
           </q-td>
           <q-td :props="props" key="investment_target_2021">
             {{props.row.investment_target_2021 | money}}
-            <q-popup-edit v-model="props.row.investment_target_2021">
+            <q-popup-edit v-model="props.row.investment_target_2021" buttons>
               <money-input v-model="props.row.investment_target_2021"></money-input>
             </q-popup-edit>
           </q-td>
           <q-td :props="props" key="investment_target_2022">
             {{props.row.investment_target_2022 | money}}
-            <q-popup-edit v-model="props.row.investment_target_2022">
+            <q-popup-edit v-model="props.row.investment_target_2022" buttons>
               <money-input v-model="props.row.investment_target_2022"></money-input>
             </q-popup-edit>
           </q-td>
           <q-td :props="props" key="investment_target_2023">
             {{props.row.investment_target_2023 | money}}
-            <q-popup-edit v-model="props.row.investment_target_2023">
+            <q-popup-edit v-model="props.row.investment_target_2023" buttons>
               <money-input v-model="props.row.investment_target_2023"></money-input>
             </q-popup-edit>
           </q-td>
           <q-td :props="props" key="investment_target_2024">
             {{props.row.investment_target_2024 | money}}
-            <q-popup-edit v-model="props.row.investment_target_2024">
+            <q-popup-edit v-model="props.row.investment_target_2024" buttons>
               <money-input v-model="props.row.investment_target_2024"></money-input>
             </q-popup-edit>
           </q-td>
           <q-td :props="props" key="investment_target_2025">
             {{props.row.investment_target_2025 | money}}
-            <q-popup-edit v-model="props.row.investment_target_2025">
+            <q-popup-edit v-model="props.row.investment_target_2025" buttons>
               <money-input v-model="props.row.investment_target_2025"></money-input>
             </q-popup-edit>
           </q-td>
           <q-td :props="props" key="investment_target_total">
             {{props.row.investment_target_total | money}}
-            <q-popup-edit v-model="props.row.investment_target_total">
-              <money-input v-model="props.row.investment_target_total"></money-input>
-            </q-popup-edit>
           </q-td>
           <q-td :props="props" key="actions">
             <q-btn
@@ -149,11 +147,18 @@
 	import AddFs from './AddFs'
   import MoneyInput from "src/ui/form-inputs/MoneyInput";
 	import FundingSource from "components/projects/dropdowns/FundingSource";
+  import {FETCH_FUNDING_SOURCES} from "src/graphql";
 
 	export default {
 		name: 'FsFinancials',
 		components: {MoneyInput, AddFs, FundingSource, PlusButton },
 		props: ['data', 'projectId'],
+
+    apollo: {
+		  funding_sources: {
+		    query: FETCH_FUNDING_SOURCES
+      }
+    },
 
 		computed: {
 			editMode() {
@@ -243,9 +248,9 @@
 				},
 				columns: [
 					{
-						name: 'funding_source',
+						name: 'funding_source_id',
 						label: 'Funding Source',
-						field: row => row.funding_source && row.funding_source.name,
+						field: row => row.funding_source_id,
 						align: 'left'
 					},
 					{
@@ -399,7 +404,13 @@
 							.deleteFundingSourceFinancial({ id: row.id })
 							.then(() => this.$q.loading.hide());
 					});
-			}
+			},
+      getFs(fsId) {
+			  console.log(fsId)
+			  const fs = this.funding_sources.find(fs => parseInt(fs.id) === parseInt(fsId))
+        console.log(fs)
+        return fs && fs.name
+      }
 		},
     filters: {
 		  money(val) {

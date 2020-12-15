@@ -70,15 +70,13 @@
 
 <script>
 import {
-	PageTitle,
 	PageContainer
-} from '@/ui'
-import ViewPipol from '@/components/projects/ViewPipol';
-// import { FETCH_PROJECT_QUERY } from '@/graphql/queries';
-import { showError, generateDocx } from '@/utils';
+} from 'src/ui'
+import ViewPipol from 'src/components/projects/ViewPipol';
+import { generateDocx } from 'src/utils';
 import { openURL, exportFile } from 'quasar'
 import UploadSigned from '../components/projects/shared/UploadSigned';
-import { projectService } from '@/services'
+import { projectService } from 'src/services'
 import { PROJECT_FIND_BY_SLUG } from "src/graphql";
 import { date } from 'quasar'
 import ShareLink from "components/ShareLink";

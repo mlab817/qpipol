@@ -1,6 +1,5 @@
 <template>
 	<div class="col q-pa-md">
-    {{ data }}
 		<q-dialog v-model="addDialog" full-height
       :position="$q.screen.xs ? void 0 : 'right'"
       persistent

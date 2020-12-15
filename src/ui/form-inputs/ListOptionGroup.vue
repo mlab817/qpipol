@@ -2,7 +2,7 @@
   <div class="col">
     <span class="text-caption text-weight-bold">{{ label }}</span>
     <div class="row q-pa-md">
-      <q-input class="col" v-model="search" filled placeholder="Filter" clearable />
+      <q-input class="col" v-model="search" square debounce="200" filled placeholder="Filter" clearable />
     </div>
     <div class="row q-pa-none">
       <q-item
