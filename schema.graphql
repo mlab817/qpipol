@@ -169,10 +169,22 @@ type Query {
     # Allows to filter if trashed elements should be fetched.
     trashed: Trashed
   ): [Project]
-  ownProjects: [Project]
+  ownProjects(
+    # Limits number of fetched elements. Maximum allowed value: 25.
+    first: Int = 10
+
+    # The offset from which elements are returned.
+    page: Int
+  ): ProjectPaginator
 
   # Return projects of the operating unit
-  ouProjects: [Project]
+  ouProjects(
+    # Limits number of fetched elements. Maximum allowed value: 25.
+    first: Int = 10
+
+    # The offset from which elements are returned.
+    page: Int
+  ): ProjectPaginator
 
   # Return all projects belonging to the team
   teamProjects: [Project]
@@ -181,7 +193,15 @@ type Query {
   allTeamProjects: [Project]
 
   # Return projects for review by operating unit
-  projectsForReview(operating_unit_id: ID!): [Project]
+  projectsForReview(
+    operating_unit_id: ID!
+
+    # Limits number of fetched elements. Maximum allowed value: 25.
+    first: Int = 10
+
+    # The offset from which elements are returned.
+    page: Int
+  ): ProjectPaginator
 
   # Search for projects based on key word
   searchProjects(
@@ -428,6 +448,7 @@ type User {
   operating_unit: OperatingUnit
   operating_unit_id: ID
   username: String
+  slug: String
   permissions: [Permission]
   roles: [Role]
 }

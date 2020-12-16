@@ -1,35 +1,41 @@
 <template>
   <page-container>
-    <div
-      class="row justify-center q-pb-md relative-position"
-      v-if="project.finalized && !project.endorsed && !project.signed_copy"
-    >
-      <q-banner
-        class="bg-green-5 text-white col-xl-6 col-lg-6 col-md-8 col-sm-9 col-xs-12"
-      >
-        <template v-slot:avatar>
-          <q-icon name="info" color="white" />
-        </template>
-        This project has been finalized. It cannot be edited. Upload a signed
-        copy to endorse it to IPD.
-        <template v-slot:action>
-          <!-- <q-btn flat label="Changed my Mind" @click="revertToDraftProject" color="negative" /> -->
-          <q-btn flat label="Download" @click="downloadFile" />
-          <q-btn
-            flat
-            color="white"
-            label="Upload Signed Copy"
-            @click="uploadSignedCopyDialog = true"
-          />
-        </template>
-      </q-banner>
+    <div class="column q-pa-md q-mb-md q-gutter-y-sm bg-grey-9 text-white" style="min-height: 200px; background-color: #3c3b37"  v-if="$apollo.loading">
+      <div class="row">
+        <q-breadcrumbs class="text-weight-bolder text-info">
+          <q-skeleton type="text" style="width: 100px"/> /
+          <q-skeleton type="text" style="width: 100px"/> /
+          <q-skeleton type="text" style="width: 100px"/>
+        </q-breadcrumbs>
+      </div>
 
-      <q-inner-loading :showing="$apollo.loading">
-        <q-spinner />
-      </q-inner-loading>
+      <div class="row text-h4">
+        <q-skeleton height="50px" width="100%" />
+      </div>
+
+      <div class="row text-h4">
+        <q-skeleton height="50px" width="70%" />
+      </div>
+
+      <div class="row text-subtitle1">
+        <q-skeleton height="25px" width="100%" />
+      </div>
+      <div class="row text-subtitle1">
+        <q-skeleton height="25px" width="80%" />
+      </div>
+      <div class="row text-subtitle2">
+        Created by &nbsp;<q-skeleton type="rect" width="100px" />
+      </div>
+      <div class="row text-subtitle2 items-center">
+        <q-icon name="event" />  Last updated on &nbsp;<q-skeleton type="rect" width="100px" />
+      </div>
+      <div class="row q-py-sm q-gutter-sm justify-start">
+        <q-skeleton type="QBtn" />
+        <q-skeleton type="QBtn" />
+      </div>
     </div>
 
-    <div class="column q-pa-md q-mb-md bg-grey-9 text-white" style="min-height: 200px; background-color: #3c3b37" v-if="!$apollo.loading">
+    <div class="column q-pa-md q-mb-md bg-grey-9 text-white" style="min-height: 200px; background-color: #3c3b37" v-else>
       <div class="row">
         <q-breadcrumbs class="text-weight-bolder text-info">
           <q-breadcrumbs-el :label="project.prexc_program ? project.prexc_program.acronym : '-'" />
@@ -50,10 +56,11 @@
       <div class="row text-subtitle2 items-center">
         <q-icon name="event" />  Last updated on {{ project.updated_at | showDate }}
       </div>
-      <div class="row q-py-sm justify-start">
-        <q-btn v-if="project.permissions.update" icon="edit" label="Edit" outline :to="`/projects/${$route.params.slug}/edit`" />
-        <q-btn v-if="project.permissions.delete" icon="delete" label="Delete" outline class="q-ml-sm" @click="confirmDelete" />
-        <q-btn icon="share" label="Share" outline class="q-ml-sm" @click="shareProject" />
+      <div class="row q-py-sm q-gutter-sm justify-start">
+        <q-btn v-if="project.permissions && project.permissions.update" icon="edit" label="Edit" outline :to="`/projects/${$route.params.slug}/edit`" />
+        <q-btn v-if="project.permissions && project.permissions.delete" icon="delete" label="Delete" outline @click="confirmDelete" />
+        <q-btn icon="archive" label="Download" outline @click="downloadFile" />
+        <q-btn icon="share" label="Share" outline @click="shareProject" />
       </div>
     </div>
 
@@ -105,7 +112,8 @@ export default {
       },
       result({ data }) {
         this.project = data.projectFindBySlug
-      }
+      },
+      fetchPolicy: 'network-only'
     }
   },
   data() {

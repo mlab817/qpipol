@@ -10,7 +10,9 @@ export const USERS = gql`
       email
       slug
       discord_private_channel_id
+      discord_user_id
       profile {
+        id
         operating_unit {
           id
           acronym

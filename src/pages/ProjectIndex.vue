@@ -18,7 +18,7 @@
       </div>
     </div>
 
-    <div class="row q-mt-sm q-col-gutter-sm">
+    <div class="row q-mt-sm q-col-gutter-md">
       <transition
         appear
         enter-active-class="animated slideInLeft"
@@ -261,7 +261,7 @@ export default {
           this.total = data.projects.paginatorInfo.total
         }
       },
-      fetchPolicy: 'network-only'
+      // fetchPolicy: 'network-only'
     },
     submission_statuses: {
       query: SUBMISSION_STATUSES

@@ -6,7 +6,7 @@ import {
 const routes = [
   {
     path: '',
-    name: 'landing',
+    name: 'home',
     beforeEnter: requireAuth,
     component: () =>
       import(/* webpackChunkName: 'Dashboard' */ '../pages/Dashboard.vue')
@@ -147,9 +147,9 @@ const routes = [
     beforeEnter: requireAuth,
     children: [
       {
-        path: 'edit-profile',
-        name: 'edit-profile',
-        component: () => import('src/pages/EditProfile.vue')
+        path: 'projects',
+        name: 'user-projects',
+        component: () => import('src/pages/MyProjects.vue')
       },
       {
         path: 'edit-account',

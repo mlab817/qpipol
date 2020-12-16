@@ -6,7 +6,8 @@
       :filter="search"
       :pagination="pagination"
       hide-bottom
-      grid>
+      grid
+      :loading="$apollo.loading">
       <template v-slot:top>
         <q-input v-model="search" filled square placeholder="Search users..." class="col q-ma-none" />
       </template>

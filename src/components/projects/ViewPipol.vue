@@ -2,24 +2,6 @@
 	<div v-if="project" style="margin-bottom: 70px;">
     <key-facts :project="project" />
 
-    <!-- hide if project is finalized or endorsed and if the user is not a reviewer -->
-    <template v-if="error">
-      <q-banner class="bg-grey-2">
-        <template v-slot:avatar>
-          <q-icon name="warning" color="red" />
-        </template>
-        {{ errorMessage }}
-        <template v-slot:action>
-          <q-btn
-              flat
-              label="GO TO PROJECTS"
-              color="negative"
-              to="/projects/draft"
-          ></q-btn>
-        </template>
-      </q-banner>
-    </template>
-
     <card-info>
       <section-header title="Program Information"></section-header>
 
@@ -41,7 +23,7 @@
 
         <label-value label="PAP Type" :value="project.type ? project.type.name : null" />
 
-        <label-value label="Basis for Implementation" :value="project.bases" />
+        <list-items label="Basis for Implementation" :value="project.bases" />
 
         <label-value label="Project Component and Objectives" :value="project.description"></label-value>
       </q-card-section>
@@ -61,7 +43,7 @@
       <q-card-section class="q-gutter-y-md">
         <label-value label="Spatial Coverage" :value="project.spatial_coverage" />
 
-        <label-value label="Regions" :value="project.regions" />
+        <list-items label="Regions" :value="project.regions" />
       </q-card-section>
     </card-info>
 
@@ -103,7 +85,7 @@
         ></section-header>
 
         <q-card-section class="q-gutter-sm">
-          <label-value label="Infrastructure Sectors" :value="project.infrastructure_subsectors"></label-value>
+          <list-items label="Infrastructure Sectors" :value="project.infrastructure_subsectors"></list-items>
           <label-value label="Technical Readiness" :value="project.technical_readinesses"></label-value>
           <label-value label="Implementation Risk &amp; Mitigation Strategy" :value="project.implementation_risk" />
         </q-card-section>
@@ -153,11 +135,11 @@
 
       <q-card-section class="q-gutter-sm">
         <label-value label="Main PDP Chapter" :value="project.pdp_chapter"></label-value>
-        <label-value label="Other PDP Chapters" :value="project.pdp_chapters"></label-value>
-        <label-value
-            label="Results Matrices Indicators"
-            v-model="project.pdp_indicators"
-        ></label-value>
+        <list-items label="Other PDP Chapters" :value="project.pdp_chapters"></list-items>
+        <list-items
+          label="Results Matrices Indicators"
+          v-model="project.pdp_indicators"
+        ></list-items>
       </q-card-section>
     </card-info>
 
@@ -179,7 +161,7 @@
       <section-header title="Ten Point Agenda"></section-header>
 
       <q-card-section class="q-gutter-sm">
-        <label-value label="Ten Point Agenda" :value="project.ten_point_agenda"></label-value>
+        <list-items label="Ten Point Agenda" :value="project.ten_point_agenda"></list-items>
       </q-card-section>
     </card-info>
 
@@ -189,10 +171,7 @@
       ></section-header>
 
       <q-card-section class="q-gutter-sm">
-        <label-value
-          label="Sustainable Development Goals"
-          :value="project.sustainable_development_goals"
-        />
+        <list-items label="Sustainable Development Goals" :value="project.sustainable_development_goals" />
       </q-card-section>
     </card-info>
 
@@ -573,9 +552,11 @@
 	import KeyFacts from './shared/KeyFacts'
   import CardInfo from "components/projects/shared/CardInfo";
   import TdClick from "components/projects/shared/TdClick";
+  import ListItems from "src/ui/components/ListItems";
 
 	export default {
 		components: {
+      ListItems,
       TdClick,
       CardInfo,
 			KeyFacts,
