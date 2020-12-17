@@ -122,6 +122,7 @@ export default {
   },
   methods: {
     redirectToGoogle() {
+      console.log(process.env.GOOGLE_LOGIN_URI)
       window.location.href = process.env.GOOGLE_LOGIN_URI
     },
     showForgotPasswordDialog() {

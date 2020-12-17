@@ -160,20 +160,20 @@ const routes = [
     ]
   },
   {
-    path: '/auth',
-    name: 'login',
-    component: () =>
-      import(/* webpackChunkName: 'LoginPage' */ '../pages/Login.vue'),
-    beforeEnter: requireGuest,
+    path: '/auth/:provider/callback',
+    name: 'login-callback',
+    component: () => import(/* webpackChunkName: 'LoginPage' */ '../pages/Login.vue'),
+    beforeEnter: resolveLogin,
     meta: {
       guest: true
     }
   },
   {
-    path: '/auth/:provider/login',
-    name: 'login-callback',
-    component: () => import(/* webpackChunkName: 'LoginPage' */ '../pages/Login.vue'),
-    beforeEnter: resolveLogin,
+    path: '/auth',
+    name: 'login',
+    component: () =>
+      import(/* webpackChunkName: 'LoginPage' */ '../pages/Login.vue'),
+    beforeEnter: requireGuest,
     meta: {
       guest: true
     }

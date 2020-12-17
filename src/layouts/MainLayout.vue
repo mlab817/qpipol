@@ -157,7 +157,10 @@ export default {
       }).onOk(() => {
         this.$store.dispatch('auth/signoutUser')
           .then(() => {
-            this.$router.replace('/login')
+            this.$q.notify({
+              type: 'positive',
+              message: 'See you soon!'
+            })
           })
           .catch(err => console.log(err.message))
       })

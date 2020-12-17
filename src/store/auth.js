@@ -1,4 +1,4 @@
-import { LocalStorage } from 'quasar';
+import {Loading, LocalStorage} from 'quasar';
 import { client, persistor } from 'boot/apollo';
 
 import { authService, profileService } from 'src/services';
@@ -13,6 +13,7 @@ const state = () => {
 
 const actions = {
   onAuthStateChanged({ dispatch }) {
+    Loading.show('Retrieving user information')
     dispatch('getCurrentUser').then(user => {
       console.log(user)
       if (!user) {
@@ -23,6 +24,7 @@ const actions = {
         this.$router.push('/dashboard')
       }
     })
+      .finally(() => Loading.hide())
   },
   signinUser({}, payload) {
     // clear token so it does not get sent to server
