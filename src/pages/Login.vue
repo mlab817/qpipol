@@ -109,6 +109,7 @@ import {
 } from 'src/functions/function-show-notifications';
 import { authService } from "src/services";
 import { LocalStorage } from "quasar";
+import store from "src/store";
 
 export default {
   name: 'PageLogin',
@@ -119,6 +120,19 @@ export default {
       username: '',
       password: ''
     };
+  },
+  watch: {
+    $route(to, from) {
+      const access_token = to.query.access_token
+
+      if (access_token) {
+        LocalStorage.set('token', access_token)
+        store
+          .dispatch('auth/onAuthStateChanged')
+          .then(() => console.log('ok'))
+          .catch(err => console.log(err.message))
+      }
+    }
   },
   methods: {
     redirectToGoogle() {

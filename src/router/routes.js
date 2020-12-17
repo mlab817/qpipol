@@ -1,7 +1,6 @@
 import {
   requireAuth,
-  requireGuest,
-  resolveLogin
+  requireGuest
 } from "src/router/middleware";
 
 const routes = [
@@ -163,7 +162,6 @@ const routes = [
     path: '/auth/:provider/callback',
     name: 'login-callback',
     component: () => import(/* webpackChunkName: 'LoginPage' */ '../pages/Login.vue'),
-    beforeEnter: resolveLogin,
     meta: {
       guest: true
     }
