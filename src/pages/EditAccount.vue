@@ -8,7 +8,7 @@
       <q-separator />
       <q-card-section>
         <q-form class="column q-gutter-md" @submit="handleSubmit">
-          <text-input v-model="profileToEdit.first_name" placeholder="First Name" />
+          <text-input class="col-md-6" v-model="profileToEdit.first_name" placeholder="First Name" />
           <text-input v-model="profileToEdit.last_name" placeholder="Last Name" />
           <text-input v-model="profileToEdit.nickname" placeholder="Nickname" />
           <text-input v-model="profileToEdit.short_description" placeholder="Describe yourself briefly" type="textarea" />

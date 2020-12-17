@@ -30,7 +30,16 @@
               @submit="handleSubmit"
             >
               <div>
-                <q-btn push icon="fab fa-google" label="Continue with Google" type="button" text-color="red-5" color="white" class="full-width" size="lg" no-caps />
+                <q-btn
+                  push
+                  icon="fab fa-google"
+                  label="Continue with Google"
+                  type="button" text-color="red-5"
+                  color="white"
+                  class="full-width"
+                  size="lg"
+                  no-caps
+                  @click="redirectToGoogle" />
               </div>
 
               <q-input
@@ -98,8 +107,8 @@ import {
   showErrorNotification,
   showSuccessNotification
 } from 'src/functions/function-show-notifications';
-import {authService} from "src/services";
-import {LocalStorage} from "quasar";
+import { authService } from "src/services";
+import { LocalStorage } from "quasar";
 
 export default {
   name: 'PageLogin',
@@ -112,6 +121,9 @@ export default {
     };
   },
   methods: {
+    redirectToGoogle() {
+      window.location.href = process.env.GOOGLE_LOGIN_URI
+    },
     showForgotPasswordDialog() {
       this.$q
         .dialog({
