@@ -121,19 +121,6 @@ export default {
       password: ''
     };
   },
-  watch: {
-    $route(to, from) {
-      const access_token = to.query.access_token
-
-      if (access_token) {
-        LocalStorage.set('token', access_token)
-        store
-          .dispatch('auth/onAuthStateChanged')
-          .then(() => console.log('ok'))
-          .catch(err => console.log(err.message))
-      }
-    }
-  },
   methods: {
     redirectToGoogle() {
       console.log(process.env.GOOGLE_LOGIN_URI)

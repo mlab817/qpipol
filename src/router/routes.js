@@ -161,7 +161,7 @@ const routes = [
   {
     path: '/auth/:provider/callback',
     name: 'login-callback',
-    component: () => import(/* webpackChunkName: 'LoginPage' */ '../pages/Login.vue'),
+    component: () => import(/* webpackChunkName: 'LoginCallback' */ '../pages/LoginCallback.vue'),
     meta: {
       guest: true
     }
