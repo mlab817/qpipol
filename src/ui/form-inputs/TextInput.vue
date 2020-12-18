@@ -13,7 +13,7 @@
       :mask="mask"
       :placeholder="placeholder"
       dense
-      counter
+      :counter="counter"
     >
       <template v-slot:append>
         <q-btn
@@ -46,6 +46,10 @@ export default {
     withNa: {
       type: Boolean,
       default: false
+    },
+    counter: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {

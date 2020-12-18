@@ -1,6 +1,10 @@
 <template>
   <q-layout>
-    <div>Retrieving user information</div>
+    <q-page-container>
+      <q-page padding>
+        <div>Retrieving user information...</div>
+      </q-page>
+    </q-page-container>
   </q-layout>
 </template>
 

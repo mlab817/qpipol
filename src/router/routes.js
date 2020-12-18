@@ -155,6 +155,11 @@ const routes = [
         path: 'edit-account',
         name: 'edit-account',
         component: () => import('src/pages/EditAccount.vue')
+      },
+      {
+        path: 'teams',
+        name: 'teams',
+        component: () => import('src/pages/Teams.vue')
       }
     ]
   },

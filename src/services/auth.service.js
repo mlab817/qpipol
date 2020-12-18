@@ -1,5 +1,5 @@
-import { client } from '@/boot/apollo';
-import { handleResponse, handleError } from '@/utils';
+import { client } from 'boot/apollo';
+import { handleResponse, handleError } from 'src/utils';
 
 import {
   REGISTER_MUTATION,
@@ -12,8 +12,10 @@ import {
   UPDATE_FORGOTTEN_PASSWORD,
   UPDATE_SETTING,
   REQUEST_ACCOUNT,
-  CHECK_EMAIL_AVAILABILITY_QUERY
+  CHECK_EMAIL_AVAILABILITY_QUERY, REVOKE_ALL_TOKENS
 } from 'src/graphql';
+import gql from "graphql-tag";
+import {Loading, LocalStorage} from "quasar";
 
 export const authService = {
   register({ name, email, password, password_confirmation }) {
@@ -144,5 +146,14 @@ export const authService = {
       })
       .then(handleResponse)
       .catch(handleError);
+  },
+
+  revokeAllTokens() {
+    return client
+      .mutate({
+        mutation: REVOKE_ALL_TOKENS
+      })
+      .then(handleResponse)
+      .catch(handleError)
   }
 };

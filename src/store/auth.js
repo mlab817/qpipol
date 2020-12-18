@@ -13,13 +13,15 @@ const state = () => {
 
 const actions = {
   onAuthStateChanged({ dispatch }) {
-    Loading.show('Retrieving user information')
+    Loading.show({
+      message: 'Retrieving user information'
+    })
     dispatch('getCurrentUser').then(user => {
       console.log(user)
       if (!user) {
         LocalStorage.remove('user');
         LocalStorage.remove('loggedIn');
-        this.$router.replace('/login', {})
+        this.$router.replace({ name: 'login' })
       } else {
         this.$router.push('/dashboard')
       }
@@ -103,7 +105,8 @@ const mutations = {
 };
 
 const getters = {
-  user: (state) => state.me
+  user: (state) => state.me,
+  permissions: (state) => (state.me && state.me.permissions) || []
 };
 
 export default {

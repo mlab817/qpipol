@@ -76,6 +76,15 @@
                   </q-item-section>
                 </q-item>
 
+                <q-item clickable v-close-popup to="/user/teams">
+                  <q-item-section avatar>
+                    <q-icon name="fas fa-users" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Manage My Teams</q-item-label>
+                  </q-item-section>
+                </q-item>
+
                 <q-item clickable v-close-popup @click="openURL('https://discord.com/app', null, { target: '_blank' })">
                   <q-item-section avatar>
                     <q-icon name="fab fa-discord" />

@@ -25,6 +25,7 @@
 import { client } from 'boot/apollo';
 import gql from 'graphql-tag';
 import { Loading, LocalStorage } from 'quasar';
+import {REVOKE_ALL_TOKENS} from "src/graphql";
 
 export default {
   name: 'RevokeTokens',
@@ -44,11 +45,7 @@ export default {
       Loading.show();
       client
         .mutate({
-          mutation: gql`
-            mutation revokeAllTokens {
-              revokeAllTokens
-            }
-          `,
+          mutation: REVOKE_ALL_TOKENS,
           variables: {}
         })
         .then(() => {

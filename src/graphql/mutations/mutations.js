@@ -105,6 +105,13 @@ export const UPDATE_PASSWORD_MUTATION = gql`
   }
 `;
 
+export const REVOKE_ALL_TOKENS = gql`
+  mutation revokeAllTokens {
+    revokeAllTokens
+  }
+`;
+
+
 export const FORGOT_PASSWORD_MUTATION = gql`
   mutation forgotPassword($email: String!) {
     forgotPassword(input: { email: $email }) {

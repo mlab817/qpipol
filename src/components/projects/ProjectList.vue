@@ -5,7 +5,6 @@
       <transition
         appear
         enter-active-class="animated slideInLeft"
-        leave-active-class="animated slideOutLeft"
       >
         <!-- hide if filter is off or search is on (since they are not compatible) -->
         <div class="col-3" v-if="filter && !search">
@@ -14,19 +13,35 @@
           </div>
           <q-separator />
           <q-expansion-item label="PAP Types">
-            <q-option-group color="secondary" :options="types" type="checkbox" v-model="selectedTypes"></q-option-group>
+            <q-option-group
+              color="secondary"
+              :options="types"
+              type="checkbox"
+              v-model="selectedTypes" />
           </q-expansion-item>
           <q-separator/>
           <q-expansion-item label="Operating Units">
-            <q-option-group color="secondary" :options="operating_units" type="checkbox" v-model="selectedOperatingUnits"></q-option-group>
+            <q-option-group
+              color="secondary"
+              :options="operating_units"
+              type="checkbox"
+              v-model="selectedOperatingUnits" />
           </q-expansion-item>
           <q-separator  />
           <q-expansion-item label="Banner Program">
-            <q-option-group color="secondary" :options="banner_programs" type="checkbox" v-model="selectedBannerPrograms"></q-option-group>
+            <q-option-group
+              color="secondary"
+              :options="banner_programs"
+              type="checkbox"
+              v-model="selectedBannerPrograms" />
           </q-expansion-item>
           <q-separator />
           <q-expansion-item label="Project Status">
-            <q-option-group color="secondary" :options="project_statuses" type="checkbox" v-model="selectedProjectStatuses"></q-option-group>
+            <q-option-group
+              color="secondary"
+              :options="project_statuses"
+              type="checkbox"
+              v-model="selectedProjectStatuses" />
           </q-expansion-item>
           <q-separator />
         </div>
@@ -66,7 +81,7 @@
               <q-banner class="bg-purple text-white">
                 No projects found.
                 <template v-slot:action>
-                  <q-btn flat color="white" label="Add" to="/projects/add" />
+                  <q-btn v-if="permissions && permissions.includes('projects.create')" flat color="white" label="Add" to="/projects/add" />
                 </template>
               </q-banner>
             </template>
@@ -109,6 +124,7 @@
         :max="lastPage"
         :max-pages="10"
         :boundary-links="true"
+        v-if="projects && projects.length"
       >
       </q-pagination>
     </div>
@@ -116,9 +132,54 @@
 </template>
 
 <script>
+import {BANNER_PROGRAMS, FETCH_OPERATING_UNITS, FETCH_PROJECT_STATUSES, FETCH_TYPES} from "src/graphql";
+
+const convertToLabelValue = (options) => {
+  if (options && Array.isArray(options)) {
+    return options.map(o => {
+      return {
+        value: o.id,
+        label: o.name
+      }
+    })
+  }
+  return []
+}
+
 export default {
   name: 'ProjectList',
-  props: ['loading','lastPage','projects','currentPage'],
+  props: [
+    'loading',
+    'lastPage',
+    'projects',
+    'currentPage'
+  ],
+  apollo: {
+    types: {
+      query: FETCH_TYPES,
+      result({ data }) {
+        this.types = convertToLabelValue(data.types)
+      }
+    },
+    operating_units: {
+      query: FETCH_OPERATING_UNITS,
+      result({ data }) {
+        this.operating_units = convertToLabelValue(data.operating_units)
+      }
+    },
+    banner_programs: {
+      query: BANNER_PROGRAMS,
+      result({ data }) {
+        this.banner_programs = convertToLabelValue(data.banner_programs)
+      }
+    },
+    project_statuses: {
+      query: FETCH_PROJECT_STATUSES,
+      result({ data }) {
+        this.project_statuses = convertToLabelValue(data.project_statuses)
+      }
+    }
+  },
   computed: {
     page: {
       get() {
@@ -127,6 +188,12 @@ export default {
       set(val) {
         this.$emit('update-page', val)
       }
+    },
+    permissions() {
+      return this.$store.getters['auth/permissions']
+    },
+    search() {
+      return this.$store.state.projects.search
     }
   },
   data() {
@@ -136,6 +203,10 @@ export default {
       operating_units: [],
       banner_programs: [],
       project_statuses: [],
+      selectedTypes: [],
+      selectedOperatingUnits: [],
+      selectedBannerPrograms: [],
+      selectedProjectStatuses: [],
     }
   },
   methods: {
@@ -154,6 +225,12 @@ export default {
         default:
           return 'white';
       }
+    },
+    clearFilters() {
+      this.selectedTypes = []
+      this.selectedOperatingUnits = []
+      this.selectedBannerPrograms = []
+      this.selectedProjectStatuses = []
     }
   },
   filters: {
