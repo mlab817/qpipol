@@ -1,10 +1,9 @@
 import gql from 'graphql-tag';
+
 import {
-  USER_FRAGMENT,
-  NOTIFICATION_FRAGMENT,
   PROJECT_FRAGMENT,
-  PREXC_ACTIVITY_FRAGMENT
-} from '../fragments';
+  ACTIVITY_FRAGMENT
+} from 'src/graphql';
 
 /* Auth */
 export const CHECK_EMAIL_AVAILABILITY_QUERY = gql`
@@ -14,15 +13,6 @@ export const CHECK_EMAIL_AVAILABILITY_QUERY = gql`
       status
     }
   }
-`;
-
-export const GET_CURRENT_USER = gql`
-  query me {
-    me {
-      ...user
-    }
-  }
-  ${USER_FRAGMENT}
 `;
 
 export const FETCH_DISTRICTS = gql`
@@ -1096,7 +1086,7 @@ export const PREXC_ACTIVITY = gql`
       ...prexcActivityFragment
     }
   }
-  ${PREXC_ACTIVITY_FRAGMENT}
+  ${ACTIVITY_FRAGMENT}
 `;
 
 export const INFRASTRUCTURE_SECTORS = gql`

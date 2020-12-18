@@ -37,22 +37,6 @@ const actions = {
   deleteProject({}, payload) {
     return projectService.delete(payload);
   },
-  endorseProjects({}, payload) {
-    return projectService.endorse(payload);
-  },
-  finalizeProject({}, project) {
-    const payload = preparePayload(project);
-    // add finalized to payload
-    payload.finalized = true;
-
-    return projectService.finalize(payload);
-  },
-  selectProject({ commit }, payload) {
-    commit('SELECT_PROJECT', payload);
-  },
-  removeProject({ commit }, payload) {
-    commit('REMOVE_PROJECT', payload);
-  },
   returnProject({}, payload) {
     return projectService.return(payload);
   },
@@ -64,12 +48,6 @@ const actions = {
   },
   approveProject({}, payload) {
     return projectService.approveProject(payload);
-  },
-  saveReviewAsDraft({}, payload) {
-    return projectService.saveReviewAsDraft(payload);
-  },
-  submitReview({}, payload) {
-    return projectService.submitReview(payload);
   },
   deleteAttachment({}, payload) {
     return projectService.deleteAttachment(payload);

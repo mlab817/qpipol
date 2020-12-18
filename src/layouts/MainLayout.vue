@@ -63,7 +63,6 @@
               </q-list>
             </q-menu>
           </q-btn>
-          <q-btn color="primary" flat :label="$q.screen.gt.md ? 'Settings': void 0" :icon="$q.screen.gt.md ? void 0 : 'settings'" to="/settings"></q-btn>
           <q-btn color="primary" flat :icon="$q.screen.gt.md ? void 0 : 'more_vert'" :label="$q.screen.gt.md ? 'More': void 0">
             <q-menu>
               <q-list>
@@ -84,6 +83,17 @@
                     <q-item-label>Manage My Teams</q-item-label>
                   </q-item-section>
                 </q-item>
+
+                <q-item clickable v-close-popup to="/settings">
+                  <q-item-section avatar>
+                    <q-icon name="fas fa-cog" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Settings</q-item-label>
+                  </q-item-section>
+                </q-item>
+
+                <q-separator />
 
                 <q-item clickable v-close-popup @click="openURL('https://discord.com/app', null, { target: '_blank' })">
                   <q-item-section avatar>

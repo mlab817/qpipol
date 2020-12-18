@@ -13,7 +13,6 @@ import {
   UPDATE_PROJECT_MUTATION,
   VALIDATE_PROJECT_MUTATION,
   RETURN_PROJECT_MUTATION,
-  FINALIZE_PROJECT_MUTATION,
   ACCEPT_PROJECT_MUTATION,
   APPROVE_PROJECT_MUTATION,
   SAVE_REVIEW,
@@ -154,35 +153,6 @@ export const projectService = {
 
 					store.writeQuery({
 						query: ALL_PROJECTS,
-						data
-					});
-				}
-			})
-			.then(handleResponse)
-			.catch(handleError);
-	},
-
-	finalize(payload) {
-		return client
-			.mutate({
-				mutation: FINALIZE_PROJECT_MUTATION,
-				variables: payload,
-				update: (store, {data: {finalizeProject}}) => {
-					console.log('store', store);
-					const data = store.readQuery({
-						query: FETCH_PROJECT_QUERY,
-						variables: {
-							id: finalizeProject.id
-						}
-					});
-
-					data.finalized = true;
-
-					store.writeQuery({
-						query: FETCH_PROJECT_QUERY,
-						variables: {
-							id: finalizeProject.id
-						},
 						data
 					});
 				}

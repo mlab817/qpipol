@@ -20,7 +20,7 @@
           :label="discord ? 'CONNECTED' : 'CONNECT'"
           type="a"
           target="_blank"
-          :href="discordLoginUri" />
+          :href="discord ? void 0 : discordLoginUri" />
       </div>
     </div>
 

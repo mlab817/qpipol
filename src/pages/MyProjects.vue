@@ -10,35 +10,14 @@
 
 <script>
 import ProjectList from "components/projects/ProjectList";
-import gql from "graphql-tag";
-import {PROJECT_FRAGMENT} from "src/graphql/fragments";
+import { OWNED_PROJECTS } from 'src/graphql'
 
 export default {
   name: 'MyProjects',
   components: { ProjectList },
   apollo: {
     ownProjects: {
-      query: gql`
-       query (
-        $first: Int!
-        $page: Int!
-        ) {
-         ownProjects (
-            first: $first
-            page: $page
-         ) {
-            data {
-                ...projectFragment
-            }
-            paginatorInfo {
-                total
-                lastPage
-                currentPage
-            }
-         }
-       }
-       ${PROJECT_FRAGMENT}
-      `,
+      query: OWNED_PROJECTS,
       variables() {
         return {
           first: this.first,

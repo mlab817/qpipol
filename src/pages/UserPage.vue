@@ -41,14 +41,14 @@
 </template>
 
 <script>
-import { USERS } from "src/graphql";
+import { User } from "src/graphql";
 import { openURL } from "quasar";
 
 export default {
   name: 'UserPage',
   apollo: {
     users: {
-      query: USERS
+      query: User
     }
   },
   data() {

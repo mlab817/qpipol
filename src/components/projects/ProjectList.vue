@@ -7,7 +7,7 @@
         enter-active-class="animated slideInLeft"
       >
         <!-- hide if filter is off or search is on (since they are not compatible) -->
-        <div class="col-3" v-if="filter && !search">
+        <div class="col-3" v-if="filter && !search && projects && projects.length">
           <div class="row q-gutter-sm q-py-sm justify-end">
             <q-btn label="Clear Filters" color="red" size="sm" @click="clearFilters" />
           </div>
@@ -78,12 +78,12 @@
           </template>
           <template v-else>
             <template v-if="!projects || !projects.length">
-              <q-banner class="bg-purple text-white">
-                No projects found.
-                <template v-slot:action>
-                  <q-btn v-if="permissions && permissions.includes('projects.create')" flat color="white" label="Add" to="/projects/add" />
-                </template>
-              </q-banner>
+              <div class="row justify-center">
+                <img width="50%" src="../../statics/undraw/undraw_empty_xct9.svg">
+              </div>
+              <div class="row justify-center q-mt-md">
+                Oops. Nothing here.
+              </div>
             </template>
             <template v-else>
               <q-item v-for="project in projects" :key="project.id" clickable :to="`/projects/${project.slug}`">

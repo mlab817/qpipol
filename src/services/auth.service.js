@@ -12,7 +12,8 @@ import {
   UPDATE_FORGOTTEN_PASSWORD,
   UPDATE_SETTING,
   REQUEST_ACCOUNT,
-  CHECK_EMAIL_AVAILABILITY_QUERY, REVOKE_ALL_TOKENS
+  CHECK_EMAIL_AVAILABILITY_QUERY,
+  REVOKE_ALL_TOKENS
 } from 'src/graphql';
 import gql from "graphql-tag";
 import {Loading, LocalStorage} from "quasar";

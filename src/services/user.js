@@ -6,7 +6,7 @@ export const userService = {
     // return all users
     return client
       .query({
-        query: USERS
+        query: User
       })
       .then(handleResponse)
       .catch(handleError)
